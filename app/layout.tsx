@@ -11,7 +11,6 @@ export const metadata: Metadata = {
   description:
     "A multidisciplinary Nigerian enterprise bringing together built-environment expertise, technology and business development.",
   applicationName: "BABTEK Core Nigeria Limited",
-  metadataBase: new URL("https://example.com"),
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
