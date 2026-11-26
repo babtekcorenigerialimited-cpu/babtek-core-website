@@ -1,12 +1,12 @@
 const divisions = [
-  { number: "01", name: "Design & Construction", detail: "Architecture, engineering coordination, construction and project delivery.", group: "BUILT ENVIRONMENT" },
-  { number: "02", name: "Interiors", detail: "Interior architecture, space planning, furniture and finishing solutions.", group: "BUILT ENVIRONMENT" },
-  { number: "03", name: "Real Estate", detail: "Property development, consultancy, acquisition and investment opportunities.", group: "BUILT ENVIRONMENT" },
-  { number: "04", name: "Smart Solutions", detail: "Software, automation, digital transformation and professional technology.", group: "TECHNOLOGY & INNOVATION" },
-  { number: "05", name: "Academy", detail: "Technical learning, CAD, BIM, visualisation and professional development.", group: "BUSINESS & ENTERPRISE" },
-  { number: "06", name: "Ventures", detail: "Strategic partnerships, business development and venture opportunities.", group: "BUSINESS & ENTERPRISE" },
-  { number: "07", name: "Products & Supply", detail: "Building products, materials, procurement and equipment sourcing.", group: "BUSINESS & ENTERPRISE" },
-  { number: "08", name: "Research & Innovation", detail: "Sustainable systems, smart buildings, research and emerging technologies.", group: "TECHNOLOGY & INNOVATION" },
+  { slug: "design-construction", number: "01", name: "Design & Construction", detail: "Architecture, engineering coordination, construction and project delivery.", group: "BUILT ENVIRONMENT" },
+  { slug: "interiors", number: "02", name: "Interiors", detail: "Interior architecture, space planning, furniture and finishing solutions.", group: "BUILT ENVIRONMENT" },
+  { slug: "real-estate", number: "03", name: "Real Estate", detail: "Property development, consultancy, acquisition and investment opportunities.", group: "BUILT ENVIRONMENT" },
+  { slug: "smart-solutions", number: "04", name: "Smart Solutions", detail: "Software, automation, digital transformation and professional technology.", group: "TECHNOLOGY & INNOVATION" },
+  { slug: "academy", number: "05", name: "Academy", detail: "Technical learning, CAD, BIM, visualisation and professional development.", group: "BUSINESS & ENTERPRISE" },
+  { slug: "ventures", number: "06", name: "Ventures", detail: "Strategic partnerships, business development and venture opportunities.", group: "BUSINESS & ENTERPRISE" },
+  { slug: "products-supply", number: "07", name: "Products & Supply", detail: "Building products, materials, procurement and equipment sourcing.", group: "BUSINESS & ENTERPRISE" },
+  { slug: "research-innovation", number: "08", name: "Research & Innovation", detail: "Sustainable systems, smart buildings, research and emerging technologies.", group: "TECHNOLOGY & INNOVATION" },
 ];
 
 export default function HomePage() {
@@ -59,7 +59,7 @@ export default function HomePage() {
                 <div className="division-meta"><span>{division.number}</span><span>{division.group}</span></div>
                 <h3>BABTEK {division.name}</h3>
                 <p>{division.detail}</p>
-                <a href="#contact" aria-label={`Enquire about BABTEK ${division.name}`}>Discuss this area <span aria-hidden="true">↗</span></a>
+                <a href={`/divisions/${division.slug}`} aria-label={`Explore BABTEK ${division.name}`}>Explore division <span aria-hidden="true">↗</span></a>
               </article>
             ))}
           </div>
