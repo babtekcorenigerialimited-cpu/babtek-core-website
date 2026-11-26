@@ -1,0 +1,3 @@
+import { PageHero } from "@/components/page-hero";
+
+export default function InsightsPage(){return <main><PageHero eyebrow="INSIGHTS & UPDATES" title="Ideas, knowledge" accent="and company news." description="A future home for BABTEK announcements, project insights, professional perspectives and developments across our business areas."/><section className="section-space"><div className="container"><div className="note-panel"><strong>Updates are being prepared</strong><p>Official news, articles and announcements will be published here as they are approved. We will not display invented articles, fabricated project stories or unverified company announcements.</p></div></div></section></main>}
