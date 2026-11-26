@@ -1,10 +1,12 @@
 import Link from "next/link";
 
 const links = [
-  { label: "About", href: "#about" },
-  { label: "Divisions", href: "#divisions" },
-  { label: "Projects", href: "#projects" },
-  { label: "Technology", href: "#technology" },
+  { label: "About", href: "/about" },
+  { label: "Divisions", href: "/divisions" },
+  { label: "Services", href: "/services" },
+  { label: "Projects", href: "/projects" },
+  { label: "Technology", href: "/technology" },
+  { label: "Insights", href: "/insights" },
 ];
 
 export function SiteHeader() {
@@ -20,11 +22,11 @@ export function SiteHeader() {
         </Link>
         <nav className="desktop-nav" aria-label="Main navigation">
           {links.map((link) => (
-            <a key={link.label} href={link.href}>{link.label}</a>
+            <Link key={link.label} href={link.href}>{link.label}</Link>
           ))}
-          <a className="button button-small" href="#contact">Start a project <span aria-hidden="true">↗</span></a>
+          <Link className="button button-small" href="/contact">Start a project <span aria-hidden="true">↗</span></Link>
         </nav>
-        <a className="mobile-contact" href="#contact">Enquire ↗</a>
+        <Link className="mobile-contact" href="/divisions">Explore BABTEK ↗</Link>
       </div>
     </header>
   );
