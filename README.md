@@ -1,30 +1,73 @@
-# BABTEK Core Nigeria Limited — Official Website
+# BABTEK Core Nigeria Limited — Corporate Website
 
-This repository contains the static corporate website for BABTEK Core Nigeria Limited.
+This repository is being developed into the public corporate website and, progressively, the shared digital platform for BABTEK Core Nigeria Limited.
 
-## Brand direction
-- Visual identity: modern corporate blue and white
-- Tagline: **Building Ideas. Engineering Possibilities. Creating Value.**
-- Preferred domain: `babtekcore.com` (availability and registration have not yet been confirmed)
+## Approved brand direction
 
-## Website sections
-- Home
-- About
-- Services
-- Our Approach
-- Technology
-- Contact
+- Primary identity: blue, white and charcoal.
+- Corporate tagline: **Building a Better Future.**
+- Homepage headline: **Building Ideas. Engineering Possibilities. Creating Value.**
+- Homepage visual direction: architecture-led.
+- Domain: undecided; configure before production deployment.
+
+## Product architecture
+
+The long-term platform consists of five connected systems:
+
+1. Corporate website.
+2. Client management system.
+3. Project operations platform.
+4. BABTEK administration dashboard.
+5. Technology ecosystem.
+
+The current implementation focuses on the corporate website and its reusable application foundation.
+
+## Technology
+
+- Next.js App Router
+- React and TypeScript
+- Tailwind CSS
+- Supabase/PostgreSQL planned for backend services
+
+Supabase is not yet configured. Do not commit credentials, service-role keys or other secrets.
 
 ## Run locally
-Open `index.html` in a modern web browser. The current website is self-contained in this file, including its styles and JavaScript.
 
-## Before publishing
-1. Confirm and register the preferred domain, if available.
-2. Confirm both listed phone numbers are approved for WhatsApp enquiries and test their links.
-3. Confirm the official email address and test the contact form's email-draft behaviour.
-4. Verify the published phone numbers, email address and Instagram profile link.
-5. Add approved project photographs and review all service descriptions.
-6. Connect a secure form backend if direct website submissions are required. The current form does not store or send enquiries to a server; it opens an email draft addressed to BABTEK's listed email.
+Requirements: Node.js 20.9 or later and npm.
 
-## Deployment
-This is a static HTML website and can be hosted using GitHub Pages or another static hosting provider. Review all contact placeholders and company claims before making it public.
+```bash
+npm install
+npm run dev
+```
+
+Open http://localhost:3000.
+
+Create a production build with:
+
+```bash
+npm run build
+```
+
+## Repository structure
+
+- `app/` — application routes and global styles.
+- `components/` — shared interface components.
+- `documentation/` — architecture and implementation plans.
+- `public/` — approved brand and project assets (to be populated).
+
+The original `index.html` is retained during the transition and is not the new application entry point.
+
+## Before production launch
+
+- Select and configure the official domain.
+- Configure production environment variables and backend services.
+- Verify the CAC registration number and public business address.
+- Confirm all contact details.
+- Obtain permission for all project photography and case studies.
+- Verify project statuses and professional credentials where relevant.
+- Implement and test secure enquiry submission and data access controls.
+- Configure hosting, backups, monitoring and deployment workflows.
+
+## Development status
+
+The application foundation and initial corporate homepage are being established on the `development/platform-foundation` branch. The `main` branch remains unchanged during this development stage.
