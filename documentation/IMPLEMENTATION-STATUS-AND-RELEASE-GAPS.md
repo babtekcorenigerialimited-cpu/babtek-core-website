@@ -161,3 +161,12 @@ A fresh build of the corrected `ad75c8e` commit is still unverified. Vercel has 
 - Vercel's deployment API remains blocked by the team's Hobby-plan deployment rate limit. A Render alternative has been identified and suggested, but it is not connected and no host migration has occurred.
 - The repository currently has no npm lockfile, so CI uses `npm install` rather than `npm ci`. The install output reported two dependency advisories (one moderate, one high); review with `npm audit` and resolve deliberately before production release rather than applying a breaking forced update.
 - The partner application privacy acknowledgement is enforced by both the API route and database policy. Automatic account matching is deliberately conservative: when a verified email maps to multiple active partner records, the system does not automatically grant access across those records.
+
+
+## Partner relationship lifecycle controls (27 November 2026)
+- Founder can search and filter the relationship network by name/email, relationship stage, relationship type and BABTEK division.
+- Each record supports relationship-stage updates and notes. Stages are prospect, active, paused, inactive and blacklisted.
+- Prospect, inactive and blacklisted relationships have their portal account links removed. This immediately removes access through the partner-link-based RLS boundaries. Active relationships may be re-linked automatically only when a unique verified email match exists; legacy manual linking requires an active record, a verified account and a matching email.
+- Paused relationships retain access to their already assigned work so current delivery can be completed, but BABTEK cannot create new engagements or assign new tasks to a paused partner.
+- Reactivating an inactive relationship can restore a unique verified email match. If the email is ambiguous or no account exists, the founder must review and link the correct account.
+- Partner relationship status changes and access-link revocations are recorded in the audit log. These controls require adversarial RLS testing before production.
