@@ -447,3 +447,28 @@ a{color:inherit;text-decoration:none}
 .partner-task form select{width:100%;padding:10px;border:1px solid #ccd7e2;background:#fff}
 .partner-task form button{border:0;background:var(--blue);color:#fff;padding:11px;font-size:10px;font-weight:800;cursor:pointer}
 @media(max-width:760px){.project-delivery-manager{padding:12px}.project-delivery-list article,.project-document-list article{grid-template-columns:1fr;gap:6px}.partner-task{grid-template-columns:1fr}}
+
+/* Project milestone delivery centre */
+.project-milestone-manager{background:#f5f8fb}
+.project-milestone-list{display:grid;gap:12px}
+.project-milestone-card{background:#fff;border:1px solid var(--line);padding:16px}
+.project-milestone-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.project-milestone-heading h5{margin:7px 0;color:var(--blue);font-size:14px}
+.project-milestone-heading>strong{font-size:19px;color:var(--blue)}
+.project-milestone-card>p{font-size:11px;line-height:1.65;color:#62778b}
+.project-milestone-progress,.client-milestone-bar{display:block;height:7px;background:#e8edf2;border-radius:20px;overflow:hidden;margin:12px 0}
+.project-milestone-progress span,.client-milestone-bar i{display:block;height:100%;background:var(--blue);border-radius:20px}
+.project-milestone-facts{display:flex;gap:8px 18px;flex-wrap:wrap;font-size:10px;color:#6e8194;margin:12px 0}
+.project-milestone-delay{padding:10px;background:#fff6e8;border-left:3px solid #c58a36;color:#805a25!important}
+.project-milestone-update{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding-top:13px;border-top:1px solid var(--line)}
+.project-milestone-update label,.project-milestone-create label{display:grid;gap:5px;font-size:10px;font-weight:800;color:var(--blue)}
+.project-milestone-update input:not([type=checkbox]),.project-milestone-update select,.project-milestone-update textarea{width:100%;min-width:0;border:1px solid #ccd7e2;background:#fff;padding:9px;font:inherit;font-size:11px;color:var(--ink)}
+.project-milestone-wide{grid-column:1/-1}
+.project-milestone-check{display:flex!important;align-items:center;gap:8px;grid-column:1/-1}
+.project-milestone-check input{width:auto}
+.project-milestone-update button{justify-self:start;border:0;background:var(--blue);color:#fff;padding:10px 14px;font-size:10px;font-weight:800;cursor:pointer}
+.project-milestone-create h5{margin:0;color:var(--blue);font-size:13px}
+.client-milestone-deliverable{display:block;color:#718396;font-size:10px;line-height:1.5;margin-top:4px}
+.client-milestone-bar{height:5px;max-width:220px;margin:7px 0 0}
+@media(max-width:900px){.project-milestone-update{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.project-milestone-update{grid-template-columns:1fr}.project-milestone-facts{display:grid}.project-milestone-heading{align-items:flex-start}}
