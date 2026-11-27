@@ -406,3 +406,23 @@ a{color:inherit;text-decoration:none}
 .partner-review-actions button:last-child{background:#7b3b32}
 .partner-review-form .admin-status{justify-self:start}
 @media(max-width:760px){.partner-progress-controls{grid-template-columns:1fr}.partner-link-form,.partner-review-form{width:100%}.partner-admin-record{display:grid!important}.partner-progress-form{padding:13px}}
+
+
+/* Project-to-partner engagement and payment controls */
+.project-partner-manager{grid-column:1/-1;margin-top:18px;padding:18px;background:#f7f9fc;border-top:1px solid var(--line);width:100%}
+.project-partner-manager .admin-panel-heading{margin-bottom:12px}
+.project-partner-manager h4{margin:0;color:var(--blue);font-size:14px}
+.project-partner-engagement{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.8fr);gap:18px;padding:15px 0;border-top:1px solid var(--line)}
+.project-partner-engagement p{font-size:12px;margin:5px 0;color:var(--muted)}
+.project-partner-engagement small{font-size:10px;color:var(--muted)}
+.project-payment-schedule{padding:12px;background:#fff;border:1px solid var(--line)}
+.project-payment-schedule>strong{font-size:11px;color:var(--blue)}
+.partner-schedule-form{display:grid;grid-template-columns:1.3fr .8fr .8fr auto;gap:7px;margin-top:10px}
+.partner-schedule-form input,.project-engagement-form input,.project-engagement-form select,.project-engagement-form textarea{width:100%;border:1px solid #ccd7e2;background:#fff;padding:10px 11px;font:inherit;font-size:12px;color:var(--ink)}
+.partner-schedule-form button,.project-engagement-form button{border:0;background:var(--blue);color:#fff;padding:10px 12px;font-size:10px;font-weight:800;cursor:pointer}
+.project-engagement-form{display:grid;gap:10px;margin-top:15px;padding:15px;background:#fff;border:1px solid var(--line)}
+.project-engagement-form label{display:grid;gap:5px;font-size:10px;font-weight:800;color:var(--blue)}
+.project-engagement-fields{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.project-engagement-form>small{color:var(--muted);font-size:10px}
+@media(max-width:900px){.project-partner-engagement{grid-template-columns:1fr}.partner-schedule-form{grid-template-columns:1fr 1fr}.project-engagement-fields{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.partner-schedule-form,.project-engagement-fields{grid-template-columns:1fr}.project-partner-manager{padding:12px}}
