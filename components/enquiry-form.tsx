@@ -10,6 +10,7 @@ export function EnquiryForm({ defaultSubject }: Props) {
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const formElement = event.currentTarget;
     setStatus("sending");
     setMessage("");
     const form = new FormData(event.currentTarget);
@@ -24,7 +25,7 @@ export function EnquiryForm({ defaultSubject }: Props) {
       if (!response.ok) throw new Error(result.error || "Unable to submit your enquiry.");
       setStatus("success");
       setMessage(`Thank you. Your enquiry reference is ${result.reference}.`);
-      event.currentTarget.reset();
+      formElement.reset();
     } catch (error) {
       setStatus("error");
       setMessage(error instanceof Error ? error.message : "Please try again or contact BABTEK by email.");
