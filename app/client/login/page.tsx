@@ -1,0 +1,4 @@
+import Link from "next/link";
+import {ClientAuthForm} from "@/components/client/client-auth-form";
+export const dynamic="force-dynamic";
+export default function ClientLoginPage(){return <main className="admin-auth-screen"><section className="admin-auth-card"><Link className="admin-brand" href="/">BABTEK <span>CORE</span></Link><p className="admin-kicker">CLIENT ACCESS</p><h1>Welcome back.</h1><p className="admin-auth-copy">Sign in to view your BABTEK project information and communicate with our team.</p><ClientAuthForm mode="login"/><p className="admin-form-note">New to the portal? <Link href="/client/register">Create a client account</Link></p><Link className="admin-back-link" href="/">← Corporate website</Link></section><p className="admin-auth-foot">BABTEK CORE NIGERIA LIMITED · BUILDING A BETTER FUTURE</p></main>}
