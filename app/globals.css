@@ -1049,3 +1049,29 @@ a{color:inherit;text-decoration:none}
 @media(max-width:850px){.finance-analytics-grid{grid-template-columns:1fr}}
 @media(max-width:520px){.finance-analytics-panel{padding:14px}.finance-trend-currency{align-items:flex-start;flex-direction:column;gap:4px}.finance-trend-currency span{text-align:left}.finance-trend-chart{gap:4px}.finance-trend-bars{gap:2px}.finance-trend-bars>i{width:35%}}
 @media(prefers-reduced-motion:reduce){.finance-trend-bars>i>b,.finance-status-row>i>b{transition:none}}
+
+
+/* Client relationship command views — live database-derived summaries */
+.crm-command-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:22px 0 18px}
+.crm-command-card{position:relative;min-height:142px;padding:20px 21px;background:#fff;border:1px solid #dce5ee;border-radius:12px;overflow:hidden}
+.crm-command-card:after{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:#65b4f3}
+.crm-command-label{display:block;font-size:9px;letter-spacing:1.5px;font-weight:800;color:#6b8196}
+.crm-command-card strong{display:block;margin-top:9px;font-size:31px;line-height:1.15;letter-spacing:-1px;color:#123b68;font-variant-numeric:tabular-nums}
+.crm-command-card strong em{font-size:15px;font-style:normal;color:#91a2b2;letter-spacing:0}
+.crm-command-card p{font-size:11px;line-height:1.6;color:#6a7e91;margin:7px 0 0}
+.crm-command-card small{display:block;font-size:9px;color:#6c8194;margin-top:9px}
+.crm-command-feature{background:linear-gradient(135deg,#f4f8fc,#fff)}
+.crm-coverage-track,.crm-pipeline-track{display:flex;width:100%;height:7px;border-radius:20px;background:#e8eef4;overflow:hidden;margin-top:13px}
+.crm-coverage-track i{display:block;height:100%;background:#2878bd;border-radius:20px;transition:width .5s ease}
+.crm-pipeline-track{gap:2px}
+.crm-pipeline-track i{display:block;min-width:2px;background:#8bbde5}
+.crm-pipeline-track i[data-stage="new"]{background:#2878bd}
+.crm-pipeline-track i[data-stage="reviewing"]{background:#65a6d7}
+.crm-pipeline-track i[data-stage="qualified"]{background:#3c8b9e}
+.crm-pipeline-track i[data-stage="quoted"]{background:#7c91c5}
+.crm-pipeline-track i[data-stage="converted"]{background:#3b9878}
+.crm-pipeline-track i[data-stage="declined"]{background:#c17a7a}
+.crm-pipeline-track i[data-stage="closed"]{background:#9ba9b7}
+.crm-enquiry-command{grid-template-columns:1.4fr repeat(4,minmax(0,1fr))}
+@media(max-width:1050px){.crm-enquiry-command{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){.crm-command-grid,.crm-enquiry-command{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.crm-command-card{padding:15px;min-height:128px}.crm-command-card strong{font-size:26px}.crm-command-feature{grid-column:1/-1}}
