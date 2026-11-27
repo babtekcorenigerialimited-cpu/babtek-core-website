@@ -8,19 +8,27 @@ on:
   pull_request:
     branches:
       - main
+      - development/platform-foundation
+  workflow_dispatch:
+
+concurrency:
+  group: babtek-validation-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
+          cache: npm
       - name: Install dependencies
-        run: npm install
+        run: npm ci
       - name: Type-check
         run: npm run typecheck
       - name: Build application
