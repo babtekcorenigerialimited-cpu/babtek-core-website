@@ -637,3 +637,46 @@ a{color:inherit;text-decoration:none}
 .partner-management-actions button{border:0;border-radius:8px;padding:10px 12px;background:#145b96;color:#fff;font-weight:700;cursor:pointer}
 @media(max-width:1000px){.partner-network-filters{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.partner-network-filters{grid-template-columns:1fr}}
+
+
+/* Visual five-engine BABTEK ecosystem diagram */
+.five-architecture{position:relative;overflow:hidden;margin:34px 0;padding:clamp(20px,3vw,38px);border:1px solid #d8e5f1;border-radius:24px;background:radial-gradient(ellipse at 50% 0%,#e4f1ff 0%,#f7fbff 44%,#fff 100%);box-shadow:0 18px 55px #123b6810}
+.five-architecture::before,.five-architecture::after{content:"";position:absolute;width:280px;height:280px;border:1px solid #4e8fbe18;border-radius:50%;pointer-events:none}
+.five-architecture::before{top:-190px;left:-100px;box-shadow:0 0 0 28px #4e8fbe08,0 0 0 58px #4e8fbe05}
+.five-architecture::after{right:-150px;bottom:-190px;box-shadow:0 0 0 28px #4e8fbe08,0 0 0 58px #4e8fbe05}
+.five-architecture-heading{position:relative;z-index:1;text-align:center;max-width:760px;margin:0 auto 30px}
+.five-architecture-heading>span{font-size:10px;font-weight:900;letter-spacing:.2em;color:#3477ad}
+.five-architecture-heading h2{margin:10px 0;color:#10385f;font-size:clamp(23px,3.5vw,36px);letter-spacing:-.035em}
+.five-architecture-heading p{margin:0;color:#647b91;font-size:13px;line-height:1.7}
+.five-architecture-scene{position:relative;max-width:1120px;margin:0 auto}
+.five-architecture-orbit{position:absolute;left:5%;right:5%;top:47%;height:2px;background:linear-gradient(90deg,transparent,#9ec3df 10%,#5e9bc6 50%,#9ec3df 90%,transparent);opacity:.75}
+.five-architecture-orbit i{position:absolute;top:-4px;width:10px;height:10px;border:2px solid #5b9bc8;border-radius:50%;background:#fff;animation:platform-node-pulse 3.5s ease-in-out infinite}
+.five-architecture-orbit i:nth-child(1){left:10%}.five-architecture-orbit i:nth-child(2){left:30%;animation-delay:.4s}.five-architecture-orbit i:nth-child(3){left:50%;animation-delay:.8s}.five-architecture-orbit i:nth-child(4){left:70%;animation-delay:1.2s}.five-architecture-orbit i:nth-child(5){left:90%;animation-delay:1.6s}
+.five-architecture-grid{position:relative;z-index:1;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.five-architecture-card{position:relative;min-width:0;min-height:220px;padding:17px 14px 16px;border:1px solid #d7e5f1;border-top:3px solid #3d83b8;border-radius:16px;background:#ffffffed;box-shadow:0 10px 28px #173c5d0d;transition:transform .3s ease,box-shadow .3s ease,border-color .3s ease;animation:platform-rise .65s both}
+.five-architecture-card:nth-child(2){animation-delay:.08s}.five-architecture-card:nth-child(3){animation-delay:.16s}.five-architecture-card:nth-child(4){animation-delay:.24s}.five-architecture-card:nth-child(5){animation-delay:.32s}
+.five-architecture-card.clients{border-top-color:#39949b}.five-architecture-card.projects{border-top-color:#4e78b2}.five-architecture-card.admin{border-top-color:#234f7a}.five-architecture-card.technology{border-top-color:#7b75c2}
+.five-architecture-card:hover{transform:translateY(-8px);border-color:#80b1d5;box-shadow:0 20px 38px #123b681c}
+.five-architecture-card-top{display:flex;align-items:center;justify-content:space-between;gap:5px}
+.five-architecture-card-top>span{font-size:10px;font-weight:950;letter-spacing:.1em;color:#397eaf}
+.five-architecture-card-top>i{font-style:normal;font-size:8px;font-weight:850;letter-spacing:.08em;text-align:right;color:#8295a8}
+.five-architecture-symbol{display:grid;place-items:center;width:49px;height:49px;margin:19px 0 12px;border-radius:15px;background:linear-gradient(145deg,#e8f4ff,#d7eafb);color:#1e6399;font-size:27px;box-shadow:inset 0 0 0 1px #b8d6ed}
+.five-architecture-card.clients .five-architecture-symbol{background:#e3f4f3;color:#287d7d}.five-architecture-card.projects .five-architecture-symbol{background:#eaf0fb;color:#456ba2}.five-architecture-card.admin .five-architecture-symbol{background:#e8eef6;color:#244a70}.five-architecture-card.technology .five-architecture-symbol{background:#efedfb;color:#6b63a8}
+.five-architecture-card h3{margin:0 0 12px;color:#173f66;font-size:clamp(13px,1.25vw,16px);line-height:1.25}
+.five-architecture-tags{display:grid;gap:6px}
+.five-architecture-tags span{display:block;padding:5px 7px;border-radius:6px;background:#f4f8fc;color:#60768a;font-size:9px;line-height:1.3}
+.five-architecture-core{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px;max-width:760px;margin:27px auto 0;padding:16px 20px;border:1px solid #376b96;border-radius:16px;background:linear-gradient(110deg,#0d3155,#164c78 65%,#1b5b87);color:#fff;box-shadow:0 14px 35px #123b6829}
+.five-architecture-core::before{content:"";position:absolute;left:50%;bottom:100%;height:28px;border-left:2px dashed #6fa8d0;opacity:.8}
+.five-core-symbol{display:grid;place-items:center;width:48px;height:48px;flex:0 0 48px;border:1px solid #ffffff70;border-radius:14px;background:#ffffff13;font-size:25px;font-weight:950;animation:core-breathe 4s ease-in-out infinite}
+.five-architecture-core>div{display:grid;gap:4px}
+.five-architecture-core strong{font-size:14px;letter-spacing:.13em}
+.five-architecture-core small{font-size:8px;font-weight:800;letter-spacing:.12em;color:#c8e1f4}
+.five-core-connectors{flex-basis:100%;text-align:center;padding-top:9px;border-top:1px solid #ffffff27;color:#d3e6f4;font-size:8px;font-weight:800;letter-spacing:.08em}
+.five-architecture-foot{position:relative;z-index:1;max-width:780px;margin:19px auto 0;text-align:center}
+.five-architecture-foot>span{color:#377cab;font-size:9px;font-weight:950;letter-spacing:.18em}
+.five-architecture-foot p{margin:7px 0 0;color:#71859a;font-size:10px;line-height:1.65}
+@keyframes platform-node-pulse{0%,100%{transform:scale(.8);box-shadow:0 0 0 0 #4f9acb00}50%{transform:scale(1.2);box-shadow:0 0 0 7px #4f9acb18}}
+@media(max-width:1000px){.five-architecture-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.five-architecture-orbit{display:none}.five-architecture-card{min-height:200px}}
+@media(max-width:620px){.five-architecture{padding:20px 14px;border-radius:18px}.five-architecture-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.five-architecture-card{min-height:190px;padding:13px 11px}.five-architecture-card-top>i{font-size:7px}.five-architecture-symbol{width:42px;height:42px;margin:14px 0 10px}.five-architecture-card h3{font-size:13px}.five-architecture-tags span{font-size:8px}.five-architecture-core{margin-top:23px;padding:14px 12px}.five-core-connectors{font-size:7px}}
+@media(max-width:380px){.five-architecture-grid{grid-template-columns:1fr}.five-architecture-card{min-height:auto}.five-architecture-card h3{font-size:15px}}
+@media(prefers-reduced-motion:reduce){.five-architecture-card,.five-architecture-symbol,.five-core-symbol,.five-architecture-orbit i{animation:none!important;transition:none!important}}
