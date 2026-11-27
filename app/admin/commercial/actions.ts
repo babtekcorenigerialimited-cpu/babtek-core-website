@@ -60,7 +60,8 @@ export async function updateQuotationStatus(form:FormData){
 export async function createInvoiceFromQuotation(form:FormData){
  const {sb,user}=await access();const id=String(form.get("quotation_id")||"");if(!idPattern.test(id))fail("invoice");
  const {data:q}=await sb.from("quotations").select("id,quotation_number,project_id,client_id,status,currency_code,subtotal,discount_amount,tax_amount,total_amount,terms").eq("id",id).maybeSingle();
- if(!q||!["issued","signed"].includes(q.status))fail("invoice");
+ if(!q)redirect("/admin/commercial?error=invoice");
+ if(!["issued","signed"].includes(q.status))fail("invoice");
  const {data:existingInvoice}=await sb.from("invoices").select("id").eq("quotation_id",id).limit(1).maybeSingle();if(existingInvoice)fail("invoice");
  const {data:items}=await sb.from("quotation_items").select("description,quantity,unit,unit_price,line_total,display_order").eq("quotation_id",id).order("display_order");
  if(!items?.length)fail("invoice");
