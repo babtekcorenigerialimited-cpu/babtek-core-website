@@ -35,11 +35,11 @@ on storage.objects
 for insert to authenticated
 with check (
  bucket_id='babtek-private'
- and (storage.foldername(name))[1]=auth.uid()::text
+ and (storage.foldername(objects.name))[1]=auth.uid()::text
  and exists (
   select 1 from public.projects p
   join public.client_contacts c on c.client_id=p.client_id
-  where p.id::text=(storage.foldername(name))[2]
+  where p.id::text=(storage.foldername(objects.name))[2]
     and c.user_id=auth.uid()
  )
 );
