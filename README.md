@@ -27,9 +27,10 @@ The current implementation focuses on the corporate website and its reusable app
 - Next.js App Router
 - React and TypeScript
 - Tailwind CSS
-- Supabase/PostgreSQL planned for backend services
+- Supabase/PostgreSQL schema foundation added under `supabase/migrations/`
+- Supabase project, application connection and authentication are not yet configured
 
-Supabase is not yet configured. Do not commit credentials, service-role keys or other secrets.
+See `documentation/DATA-ARCHITECTURE.md` for schema scope, security assumptions and setup. Do not commit credentials, service-role keys or other secrets.
 
 ## Run locally
 
@@ -65,7 +66,9 @@ The original `index.html` is retained during the transition and is not the new a
 - Confirm all contact details.
 - Obtain permission for all project photography and case studies.
 - Verify project statuses and professional credentials where relevant.
-- Implement and test secure enquiry submission and data access controls.
+- Apply and review the Supabase migration in a BABTEK-controlled project.
+- Configure private Storage buckets and bucket-level access policies.
+- Implement and test secure enquiry submission, authentication and portal access controls.
 - Configure hosting, backups, monitoring and deployment workflows.
 
 ## Development status
