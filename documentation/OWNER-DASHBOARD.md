@@ -37,7 +37,7 @@ The existing variable name is retained for compatibility with the public enquiry
 
 1. Configure environment variables in the hosting provider.
 2. Install dependencies and run `npm run typecheck` and `npm run build`.
-3. Test owner sign-in, sign-out, session refresh, and non-owner denial.
+3. Test owner sign-in, sign-out, session refresh, non-owner denial, and enquiry/project status changes.
 4. Test RLS with owner, client and partner test accounts.
 5. Add password recovery and stronger account lifecycle controls.
 6. Add paginated registers, filters, detail views and controlled create/update workflows.
