@@ -107,7 +107,7 @@ begin
  if tg_table_name='project_tasks' then
   if tg_op='INSERT' or new.assigned_user_id is distinct from old.assigned_user_id or new.assigned_partner_id is distinct from old.assigned_partner_id or new.status is distinct from old.status then
    v_key:='task:'||new.id||':'||new.updated_at;
-   if new.assigned_user_id is not null and new.assigned_user_id is distinct from new.created_by then
+   if new.assigned_user_id is not null and new.assigned_user_id is distinct from auth.uid() then
     perform public.create_babtek_notification(new.assigned_user_id,v_key||':user','task','Task assignment or update','Task "'||new.title||'" has been assigned or updated.','/admin/projects',new.id);
    end if;
    if new.assigned_partner_id is not null then
