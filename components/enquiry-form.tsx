@@ -24,7 +24,7 @@ export function EnquiryForm({ defaultSubject }: Props) {
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || "Unable to submit your enquiry.");
       setStatus("success");
-      setMessage(`Thank you. Your enquiry reference is ${result.reference}.`);
+      setMessage(result.message || "Thank you. Your enquiry has been received.");
       formElement.reset();
     } catch (error) {
       setStatus("error");
