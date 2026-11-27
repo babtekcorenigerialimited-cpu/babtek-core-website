@@ -25,7 +25,7 @@ export async function createPartnerPaymentSchedule(form:FormData){
  const {data:existing}=await sb.from("partner_payment_schedules").select("amount,status").eq("engagement_id",engagementId).neq("status","cancelled");
  const committed=(existing||[]).reduce((s:number,x:any)=>s+Number(x.amount||0),0);
  if(committed+amount>Number(engagement.agreed_fee)+0.005)fail("schedule_over");
- const {error}=await sb.from("partner_payment_schedules").insert({engagement_id:engagementId,description,amount,currency_code:engagement.currency_code,due_date:dueDate||null,status:"planned",paid_amount:0});
+ const {error}=await sb.from("partner_payment_schedules").insert({engagement_id:engagementId,description,amount,due_date:dueDate||null,status:"planned",paid_amount:0});
  if(error){console.error("Partner schedule create failed",error.message);fail("schedule");}
  await sb.from("audit_logs").insert({actor_id:user.id,action:"partner_payment_schedule.created",table_name:"partner_payment_schedules",metadata:{engagement_id:engagementId,amount,currency_code:engagement.currency_code}});
  revalidatePath("/admin/finance/partners");revalidatePath("/admin/finance");revalidatePath("/partner");
