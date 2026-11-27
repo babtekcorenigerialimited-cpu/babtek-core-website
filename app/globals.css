@@ -342,3 +342,19 @@ a{color:inherit;text-decoration:none}
 .finance-disclaimer{margin:18px 0;padding:14px 16px;background:#f5f8fb;border:1px solid var(--line)}
 @media(max-width:900px){.admin-finance-layout{grid-template-columns:1fr}}
 @media(max-width:600px){.finance-form-row{grid-template-columns:1fr}}
+
+/* Founder division governance */
+.division-admin-list{display:grid;gap:14px}
+.division-admin-card{padding:20px;border:1px solid var(--line);border-radius:5px;background:#fff}
+.division-admin-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.division-admin-heading>div>span{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#6d8398;font-weight:800}
+.division-admin-heading h3{font-size:17px;color:var(--blue);margin:7px 0 3px}
+.division-admin-heading p{font-size:10px;color:#8393a2;margin:0}
+.division-admin-summary{font-size:11px;line-height:1.7;color:#63798d;margin:13px 0}
+.division-admin-form{display:flex;align-items:end;gap:12px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid #edf1f5}
+.division-admin-form label{display:grid;gap:6px;font-size:10px;font-weight:800;color:#536b80}
+.division-admin-form select,.division-admin-form input[type=number]{min-width:140px;padding:10px;border:1px solid #d4dee8;background:#fff;color:#17334d;font:inherit;font-size:11px}
+.division-admin-form .division-public-toggle{display:flex;align-items:center;gap:8px;font-weight:600}
+.division-admin-form button{border:0;background:var(--blue);color:#fff;padding:11px 15px;font-size:10px;font-weight:800;cursor:pointer}
+.division-hidden{background:#f7eeee;color:#925252}
+@media(max-width:620px){.division-admin-heading{flex-direction:column}.division-admin-form{align-items:stretch;flex-direction:column}.division-admin-form label,.division-admin-form select,.division-admin-form input[type=number]{width:100%}.division-admin-form .division-public-toggle{flex-direction:row}}
