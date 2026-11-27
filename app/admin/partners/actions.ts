@@ -22,7 +22,8 @@ export async function createPartner(formData: FormData) {
   const website = String(formData.get("website") || "").trim().slice(0, 255);
   const notes = String(formData.get("notes") || "").trim().slice(0, 2000);
   const registration_details = String(formData.get("registration_details") || "").trim().slice(0, 500);
-  if (!legal_name) redirect("/admin/partners?error=required");
+  const allowedPartnerTypes = ["professional","technology","supplier","venture","strategic","research","education","other"];
+  if (!legal_name || !allowedPartnerTypes.includes(partner_type)) redirect("/admin/partners?error=required");
   const { error } = await supabase.from("professional_partners").insert({
     legal_name, trading_name: trading_name || null, email: email || null,
     phone: phone || null, professional_category: professional_category || null,
