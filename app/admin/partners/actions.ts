@@ -34,3 +34,28 @@ export async function createPartner(formData: FormData) {
   revalidatePath("/admin");
   redirect("/admin/partners?created=1");
 }
+
+
+export async function updatePartnerRelationshipStatus(formData: FormData) {
+  const partnerId = String(formData.get("partner_id") || "");
+  const status = String(formData.get("relationship_status") || "");
+  const notes = String(formData.get("notes") || "").trim().slice(0, 2000);
+  if (!/^[0-9a-f-]{36}$/i.test(partnerId) || !["prospect","active","paused","inactive","blacklisted"].includes(status)) {
+    redirect("/admin/partners?error=status");
+  }
+  const supabase = await createSupabaseServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/admin/login");
+  const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", user.id);
+  if (!roles?.some((item) => item.role === "owner")) redirect("/admin");
+  const { error } = await supabase.rpc("update_partner_relationship_status", {
+    p_partner_id: partnerId, p_status: status, p_notes: notes || null
+  });
+  if (error) {
+    console.error("Partner relationship status update failed", error.message);
+    redirect("/admin/partners?error=status");
+  }
+  revalidatePath("/admin/partners"); revalidatePath("/admin/partner-applications");
+  revalidatePath("/partner"); revalidatePath("/admin/projects");
+  redirect("/admin/partners?status_updated=1");
+}
