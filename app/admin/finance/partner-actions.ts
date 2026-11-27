@@ -14,7 +14,7 @@ const fail=(code:string):never=>redirect("/admin/finance/partners?error="+code);
 const uuid=/^[0-9a-f-]{36}$/i;
 
 export async function createPartnerPaymentSchedule(form:FormData){
- const {sb,user}=await financeAccess();
+ const {sb}=await financeAccess();
  const engagementId=String(form.get("engagement_id")||"");
  const description=String(form.get("description")||"").trim().slice(0,300);
  const amount=Number(form.get("amount"));
@@ -24,7 +24,6 @@ export async function createPartnerPaymentSchedule(form:FormData){
  if(!engagement||engagement.status==="cancelled")fail("schedule");
  const {error}=await sb.rpc("create_partner_payment_schedule",{p_engagement_id:engagementId,p_description:description,p_amount:amount,p_due_date:dueDate||null});
  if(error){console.error("Partner schedule create failed",error.message);fail(error.message.toLowerCase().includes("exceed")?"schedule_over":"schedule");}
- await sb.from("audit_logs").insert({actor_id:user.id,action:"partner_payment_schedule.created_by_ui",table_name:"partner_payment_schedules",metadata:{engagement_id:engagementId,amount}});
  revalidatePath("/admin/finance/partners");revalidatePath("/admin/finance");revalidatePath("/partner");
  redirect("/admin/finance/partners?saved=schedule");
 }
