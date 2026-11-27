@@ -104,9 +104,16 @@ A fresh build of the corrected `ad75c8e` commit is still unverified. Vercel has 
 
 
 ## Partner conversation privacy hardening (27 November 2026)
-- Added `partner_engagement_id` to `communication_messages`, referencing the exact professional engagement.
+- Added `partner_engagement_id` to `communication_messages`, referencing the exact professional engagement. The migration is recorded in Supabase as `20261127172711` and stored in the repository under the matching migration filename.
 - Replaced project-wide partner read/insert RLS policies with engagement-scoped policies. A linked partner account can read and send only when the engagement belongs to one of its linked professional partner records and the message's project matches that engagement.
 - Updated partner messaging actions to require an engagement ID and derive the project ID from the verified engagement record.
 - Updated partner portal to show a separate thread per engagement, and founder Communication Centre to display/reply to each engagement independently.
 - The new constraint requires engagement linkage for new partner messages. It is `NOT VALID` so historical project-wide partner messages remain in the staff archive without being incorrectly attributed to one professional. Historical partner messages are not automatically exposed to any partner account.
 - This privacy boundary still requires end-to-end tests using two distinct partner accounts assigned to the same project.
+
+
+## Latest partner-message access review
+- Confirmed in the live Supabase schema that `partner_engagement_id` exists and references the partner engagement.
+- Confirmed the old project-wide partner message policies have been replaced by engagement-scoped SELECT and INSERT policies.
+- Confirmed the database check requires a non-null engagement ID for new `partner_update` messages. The constraint is intentionally `NOT VALID` to preserve historical records that cannot safely be attributed to a single partner.
+- Confirmed the GitHub Actions/Vercel commit status remains blocked by Vercel's Hobby deployment-rate limit (build-rate-limit). No new successful build result is available for the latest messaging changes.
