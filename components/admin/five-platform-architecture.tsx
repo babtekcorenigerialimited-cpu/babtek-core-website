@@ -1,15 +1,23 @@
 const platforms=[
- {n:"01",title:"Corporate website",sub:"Public presence & enquiries",tone:"website",items:["Company profile & divisions","Services, projects & insights","Brand, media & public content"]},
- {n:"02",title:"Client management",sub:"Relationship & commercial journey",tone:"clients",items:["Client accounts & enquiries","Quotations, agreements & invoices","Client conversations & payments"]},
- {n:"03",title:"Project operations",sub:"Delivery & specialist coordination",tone:"projects",items:["Projects, milestones & tasks","Documents & partner engagements","Progress, quality & close-out"]},
- {n:"04",title:"Administration",sub:"Founder control & governance",tone:"admin",items:["People, roles & permissions","Finance, reports & reconciliation","Audit, settings & oversight"]},
- {n:"05",title:"Technology ecosystem",sub:"Products, automation & innovation",tone:"technology",items:["AEC Workspace & Commercial","CADWAL-X & WAL-X Portfolio","BABTEK AI, Studio & BABTEK-OS"]}
+ {n:"01",title:"Corporate website",sub:"PUBLIC EXPERIENCE",symbol:"◎",tone:"website",tags:["Company & divisions","Services & portfolio","Enquiries & media"]},
+ {n:"02",title:"Client management",sub:"CLIENT RELATIONSHIPS",symbol:"◉",tone:"clients",tags:["Client accounts","Commercial records","Secure conversations"]},
+ {n:"03",title:"Project operations",sub:"DELIVERY ENGINE",symbol:"⌘",tone:"projects",tags:["Projects & milestones","Tasks & documents","Partner coordination"]},
+ {n:"04",title:"Administration",sub:"FOUNDER GOVERNANCE",symbol:"⬡",tone:"admin",tags:["People & permissions","Finance & reporting","Enterprise oversight"]},
+ {n:"05",title:"Technology ecosystem",sub:"INNOVATION LAYER",symbol:"✳",tone:"technology",tags:["AEC Workspace","CADWAL-X & WAL-X","BABTEK AI & Studio"]}
 ];
 export function FivePlatformArchitecture(){
- return <section className="five-architecture" aria-label="Five integrated BABTEK platform components">
-  <div className="five-architecture-heading"><span>ONE CONNECTED ENTERPRISE</span><h2>Five platforms. One BABTEK ecosystem.</h2><p>Each component has a distinct role, connected through shared identity, data, permissions, communications and business workflows.</p></div>
-  <div className="five-architecture-grid">{platforms.map((p)=><article className={"five-architecture-card "+p.tone} key={p.n}><div className="five-architecture-card-top"><span>{p.n}</span><i>{p.sub}</i></div><h3>{p.title}</h3><ul>{p.items.map(item=><li key={item}>{item}</li>)}</ul></article>)}</div>
-  <div className="five-architecture-core"><span className="five-core-symbol">B</span><div><strong>BABTEK CORE PLATFORM</strong><small>Shared authentication · central database · role-based access · communications · documents · notifications · APIs</small></div></div>
-  <p className="five-architecture-foot">The five components are integrated parts of BABTEK Core Nigeria Limited—not five separate websites or companies. Capabilities marked as in development remain subject to staged implementation.</p>
+ return <section className="five-architecture" aria-label="Visual architecture of the five integrated BABTEK platform components">
+  <div className="five-architecture-heading"><span>THE BABTEK DIGITAL ECOSYSTEM</span><h2>One enterprise. Five connected engines.</h2><p>A single operating environment where every platform contributes to one coordinated BABTEK experience.</p></div>
+  <div className="five-architecture-scene">
+   <div className="five-architecture-orbit" aria-hidden="true"><i/><i/><i/><i/><i/></div>
+   <div className="five-architecture-grid">{platforms.map((p)=><article className={"five-architecture-card "+p.tone} key={p.n}>
+    <div className="five-architecture-card-top"><span>{p.n}</span><i>{p.sub}</i></div>
+    <div className="five-architecture-symbol" aria-hidden="true">{p.symbol}</div>
+    <h3>{p.title}</h3>
+    <div className="five-architecture-tags">{p.tags.map(tag=><span key={tag}>{tag}</span>)}</div>
+   </article>)}</div>
+   <div className="five-architecture-core"><span className="five-core-symbol">B</span><div><strong>BABTEK CORE</strong><small>THE SHARED ENTERPRISE FOUNDATION</small></div><span className="five-core-connectors">IDENTITY&nbsp; • &nbsp;DATA&nbsp; • &nbsp;ACCESS&nbsp; • &nbsp;MESSAGING&nbsp; • &nbsp;DOCUMENTS</span></div>
+  </div>
+  <div className="five-architecture-foot"><span>CONNECTED BY DESIGN</span><p>Shared authentication, permissions, project records, communications and business data connect all five components. The visual represents the target integrated architecture; individual capabilities continue through staged implementation.</p></div>
  </section>;
 }
