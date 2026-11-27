@@ -4,7 +4,8 @@ import {createSupabaseServerClient} from "@/lib/supabase/server";
 import {SignOutButton} from "@/components/admin/signout-button";
 
 export const dynamic="force-dynamic";
-const money=(v:number)=>new Intl.NumberFormat("en-NG",{style:"currency",currency:"NGN",maximumFractionDigits:0}).format(v);
+const money=(v:number,currency="NGN")=>new Intl.NumberFormat("en-NG",{style:"currency",currency:currency||"NGN",maximumFractionDigits:0}).format(v);
+const totals=(rows:any[],valueKey:string,currencyKey="currency_code")=>{const map=new Map<string,number>();for(const row of rows){const code=String(row[currencyKey]||"NGN").trim();map.set(code,(map.get(code)||0)+Number(row[valueKey]||0));}return map.size?[...map.entries()].map(([code,value])=>money(value,code)).join(" · "):"—";};
 async function countRows(sb:any,table:string){const {count,error}=await sb.from(table).select(table==="user_roles"?"user_id":"id",{count:"exact",head:true});return error?null:(count??0);}
 function Stat({label,value,detail,href}:{label:string;value:string|number;detail:string;href?:string}){
  const body=<><span>{label}</span><strong>{value}</strong><small>{detail}</small></>;return href?<Link className="admin-metric" href={href}>{body}</Link>:<div className="admin-metric">{body}</div>;
@@ -25,17 +26,19 @@ export default async function AdminDashboardPage(){
   sb.from("invoices").select("total_amount,status,currency_code").limit(1000),
   sb.from("client_payments").select("amount,status,currency_code").limit(1000),
   sb.from("expenses").select("amount,currency_code").limit(1000),
-  sb.from("partner_payment_schedules").select("amount,paid_amount,status").limit(1000),
+  sb.from("partner_payment_schedules").select("amount,paid_amount,status,engagement_id").limit(1000),
   sb.from("enquiries").select("id,reference_code,full_name,subject,status,created_at").order("created_at",{ascending:false}).limit(6),
   sb.from("projects").select("id,project_code,name,status,target_end_date").order("created_at",{ascending:false}).limit(6),
   sb.from("audit_logs").select("id,action,table_name,record_id,created_at").order("created_at",{ascending:false}).limit(8),
   sb.from("brand_settings").select("is_published").eq("id",true).maybeSingle()
  ]);
  const invoices=invRes.data??[],payments=payRes.data??[],expenses=expenseRes.data??[],partnerPays=partnerPayRes.data??[];
- const outstanding=invoices.filter((x:any)=>["issued","partially_paid","overdue"].includes(x.status)).reduce((s:number,x:any)=>s+Number(x.total_amount||0),0);
- const received=payments.filter((x:any)=>["confirmed","paid","completed"].includes(String(x.status).toLowerCase())).reduce((s:number,x:any)=>s+Number(x.amount||0),0);
- const expenseTotal=expenses.reduce((s:number,x:any)=>s+Number(x.amount||0),0);
- const partnerDue=partnerPays.filter((x:any)=>["due","partially_paid"].includes(x.status)).reduce((s:number,x:any)=>s+Math.max(0,Number(x.amount||0)-Number(x.paid_amount||0)),0);
+ const outstandingRows=invoices.filter((x:any)=>["issued","partially_paid","overdue"].includes(x.status));
+ const receivedRows=payments.filter((x:any)=>["confirmed","paid","completed"].includes(String(x.status).toLowerCase()));
+ const engagementIds=[...new Set(partnerPays.map((x:any)=>x.engagement_id))];
+ const {data:engagementCurrencies}=engagementIds.length?await sb.from("project_partner_engagements").select("id,currency_code").in("id",engagementIds):{data:[] as any[]};
+ const engagementCurrencyMap=new Map((engagementCurrencies||[]).map((x:any)=>[x.id,x.currency_code]));
+ const partnerDueRows=partnerPays.filter((x:any)=>["due","partially_paid","planned"].includes(x.status)).map((x:any)=>({...x,balance:Math.max(0,Number(x.amount||0)-Number(x.paid_amount||0)),currency_code:engagementCurrencyMap.get(x.engagement_id)||"NGN"}));
  const first=(profile.data?.full_name||"Founder").split(" ")[0];
  const modules=[
   {number:"01",title:"Corporate website",description:"Control the public BABTEK experience and what visitors see.",status:"FOUNDATION LIVE",href:"/admin/platforms",items:["Pages, services and divisions","Portfolio, insights and media","Careers and partnership publishing","Brand identity and logo"]},
@@ -61,7 +64,7 @@ export default async function AdminDashboardPage(){
  <div className="admin-five-grid">{modules.map(m=><Module key={m.number} {...m}/>)}</div>
  <div className="admin-section-heading" id="administration"><div><h2>Founder’s enterprise oversight</h2><p>Operational, commercial, content and governance snapshots.</p></div></div>
  <div className="admin-content-grid">
- <section className="admin-panel"><div className="admin-panel-heading"><div><h2>Finance snapshot</h2><p>Amounts derived from currently recorded transactions.</p></div><span>NGN</span></div><div className="admin-finance-rows"><div><span>Outstanding invoice value</span><strong>{money(outstanding)}</strong></div><div><span>Recorded completed receipts</span><strong>{money(received)}</strong></div><div><span>Recorded expenses</span><strong>{money(expenseTotal)}</strong></div><div><span>Unpaid partner schedules</span><strong>{money(partnerDue)}</strong></div></div><p className="admin-footnote">These are separate operational snapshots, not a reconciled cashbook, net profit, tax statement or audited accounts. Totals use up to 1,000 latest rows per table.</p></section>
+ <section className="admin-panel"><div className="admin-panel-heading"><div><h2>Finance snapshot</h2><p>Amounts derived from currently recorded transactions and grouped by currency.</p></div><span>MULTI-CURRENCY</span></div><div className="admin-finance-rows"><div><span>Outstanding invoice value</span><strong>{totals(outstandingRows,"total_amount")}</strong></div><div><span>Recorded completed receipts</span><strong>{totals(receivedRows,"amount")}</strong></div><div><span>Recorded expenses</span><strong>{totals(expenses,"amount")}</strong></div><div><span>Unpaid partner schedules</span><strong>{totals(partnerDueRows,"balance")}</strong></div></div><p className="admin-footnote">These are separate operational snapshots, not a reconciled cashbook, net profit, tax statement or audited accounts. Totals use up to 1,000 latest rows per table and are grouped by currency; verify each figure against bank evidence.</p></section>
  <section className="admin-panel"><div className="admin-panel-heading"><div><h2>Website and publishing</h2><p>Content inventory and brand approval status.</p></div><span>{brand.data?.is_published?"BRAND PUBLISHED":"BRAND DRAFT"}</span></div><div className="admin-inventory-grid"><div><strong>{n.site_pages??"—"}</strong><span>Website pages</span></div><div><strong>{n.services??"—"}</strong><span>Services</span></div><div><strong>{n.projects_public??"—"}</strong><span>Public portfolio</span></div><div><strong>{n.insights??"—"}</strong><span>Insights</span></div><div><strong>{n.media_assets??"—"}</strong><span>Media assets</span></div><div><strong>{n.careers??"—"}</strong><span>Career listings</span></div><div><strong>{n.partnership_opportunities??"—"}</strong><span>Partnership notices</span></div><div><strong>{n.product_initiatives??"—"}</strong><span>Product initiatives</span></div></div><Link className="admin-inline-link" href="/admin/brand">Manage corporate brand →</Link></section>
  </div>
  <div className="admin-content-grid admin-lower-grid">
