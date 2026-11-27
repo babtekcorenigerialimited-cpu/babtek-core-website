@@ -38,12 +38,9 @@ export async function createPartnerPaymentSchedule(formData:FormData){
  const description=String(formData.get("description")||"").trim().slice(0,300);
  const amount=Number(formData.get("amount"));
  const dueDate=String(formData.get("due_date")||"").trim();
- if(!/^[0-9a-f-]{36}$/i.test(engagementId)||description.length<2||!Number.isFinite(amount)||amount<0)redirect("/admin/projects?error=schedule");
- const {sb,user}=await requireOwner();
- const {error}=await sb.from("partner_payment_schedules").insert({
-  engagement_id:engagementId,description,amount,due_date:dueDate||null,status:"planned"
- });
+ if(!/^[0-9a-f-]{36}$/i.test(engagementId)||description.length<3||!Number.isFinite(amount)||amount<=0||!(dueDate===""||/^\\d{4}-\\d{2}-\\d{2}$/.test(dueDate)))redirect("/admin/projects?error=schedule");
+ const {sb}=await requireOwner();
+ const {error}=await sb.rpc("create_partner_payment_schedule",{p_engagement_id:engagementId,p_description:description,p_amount:amount,p_due_date:dueDate||null});
  if(error){console.error("Partner payment schedule creation failed",error.message);redirect("/admin/projects?error=schedule");}
- await sb.from("audit_logs").insert({actor_id:user.id,action:"partner.payment_schedule_created",table_name:"partner_payment_schedules",metadata:{engagement_id:engagementId,amount}});
- revalidatePath("/admin/projects");revalidatePath("/partner");redirect("/admin/projects?scheduled=1");
+ revalidatePath("/admin/projects");revalidatePath("/admin/finance/partners");revalidatePath("/partner");redirect("/admin/projects?scheduled=1");
 }
