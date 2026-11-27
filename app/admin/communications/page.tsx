@@ -3,14 +3,14 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { SignOutButton } from "@/components/admin/signout-button";
-import { sendCommunicationMessage, sendClientProjectReply } from "./actions";
+import { sendCommunicationMessage, sendClientProjectReply, sendPartnerProjectReply } from "./actions";
 
 export const metadata: Metadata = { title: "Communication Centre | BABTEK" };
 export const dynamic = "force-dynamic";
 
 const dateLabel = (value: string) => new Intl.DateTimeFormat("en-NG", { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
 
-export default async function CommunicationsPage({ searchParams }: { searchParams: Promise<{ sent?: string; replied?: string; error?: string }> }) {
+export default async function CommunicationsPage({ searchParams }: { searchParams: Promise<{ sent?: string; replied?: string; partner_replied?:string; error?: string }> }) {
   const params = await searchParams;
   const supabase = await createSupabaseServerClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -56,7 +56,7 @@ export default async function CommunicationsPage({ searchParams }: { searchParam
       <section className="admin-main">
         <header className="admin-topbar"><div><span className="admin-breadcrumb">BABTEK / WORKSPACE / COMMUNICATIONS</span><h1>Communication centre</h1></div><div className="admin-top-actions"><Link className="admin-signout" href="/admin">Overview</Link><SignOutButton /></div></header>
         <div className="admin-welcome admin-register-welcome"><div><p className="admin-kicker">RELATIONSHIP & PROJECT RECORD</p><h2>Keep every project conversation organised.</h2><p>Internal notes are attached to enquiry records and visible to authorised BABTEK staff.</p></div><span className="admin-welcome-mark">☷</span></div>
-        {params.sent === "1" && <p className="admin-notice">Internal note saved to the enquiry record.</p>}{params.replied === "1" && <p className="admin-notice">Client-facing project reply saved and is visible in the client portal.</p>}
+        {params.sent === "1" && <p className="admin-notice">Internal note saved to the enquiry record.</p>}{params.replied === "1" && <p className="admin-notice">Client-facing project reply saved and is visible in the client portal.</p>}{params.partner_replied==="1"&&<p className="admin-notice">Partner reply saved and is visible to linked partner accounts.</p>}
         {params.error && <p className="admin-alert">The message could not be saved. Check the text and your access, then try again.</p>}
         <div className="admin-comms-notice"><strong>Current release: internal staff notes</strong><p>This centre currently records internal team notes. It does not yet send email, WhatsApp, SMS or client-visible chat messages. Client and partner portals, live notifications and delivery integrations are the next stages; no external message is sent by the form below.</p></div>
         {enquiryError || messageError ? <p className="admin-alert">Communication records could not be loaded. Check database permissions.</p> : (
@@ -76,7 +76,7 @@ export default async function CommunicationsPage({ searchParams }: { searchParam
           <div className="admin-panel-heading"><div><h2>Client project conversations</h2><p>Messages marked as client replies are visible to the linked client contact in their secure portal.</p></div><span>{projectRows?.length||0} projects</span></div>
           {projectRows?.length ? projectRows.map((project:any)=>{const thread=messagesByProject.get(project.id)||[];return <article className="admin-comms-thread" key={project.id}><div className="admin-comms-thread-head"><div><span>{project.project_code}</span><h3>{project.name}</h3><p>Client-facing conversation · {thread.length} messages</p></div></div>{thread.length?<div className="admin-comms-history">{thread.slice(0,12).reverse().map((message:any)=><div className="admin-comms-message" key={message.id}><div><strong>{senderNames.get(message.sender_id)||"BABTEK team member"}</strong><time>{dateLabel(message.created_at)}</time></div><p>{message.body}</p><small>CLIENT VISIBLE</small></div>)}</div>:<p className="admin-empty-note">No client-visible messages yet.</p>}<form action={sendClientProjectReply} className="admin-comms-compose"><input type="hidden" name="project_id" value={project.id}/><label>Reply to client</label><textarea name="body" rows={3} maxLength={10000} required placeholder="Write a message that the linked client can see…"/><button type="submit">Send client reply</button></form></article>}) : <p className="admin-empty-note">No projects are registered yet.</p>}
         </section>
-        <footer className="admin-footer">BABTEK CORE NIGERIA LIMITED <span>Communication centre · authorised staff</span></footer>
+        <section className="admin-panel admin-register-panel"><div className="admin-panel-heading"><div><h2>Partner project conversations</h2><p>Private discussion between assigned independent professionals and authorised BABTEK staff.</p></div></div>{projectRows?.length?projectRows.map((project:any)=>{const thread=(messagesByProject.get(project.id)||[]).filter((m:any)=>m.message_type==="partner_update").slice(0,20).reverse();return <article className="admin-comms-thread" key={"partner-"+project.id}><div className="admin-comms-thread-head"><div><span>{project.project_code}</span><h3>{project.name}</h3><p>Partner messages · {thread.length} recent messages</p></div></div>{thread.length?thread.map((m:any)=><div className="admin-comms-message" key={m.id}><div><strong>{senderNames.get(m.sender_id)||"BABTEK / partner"}</strong><time>{dateLabel(m.created_at)}</time></div><p>{m.body}</p><small>PARTNER DISCUSSION</small></div>):<p className="admin-empty-note">No partner discussion yet.</p>}<form action={sendPartnerProjectReply} className="admin-comms-compose"><input type="hidden" name="project_id" value={project.id}/><label>Reply to assigned partner(s)</label><textarea name="body" rows={3} maxLength={10000} required placeholder="Clarify scope, respond to a question or give a project instruction…"/><button type="submit">Send partner reply</button></form></article>}):<p className="admin-empty-note">No projects registered.</p>}</section><footer className="admin-footer">BABTEK CORE NIGERIA LIMITED <span>Communication centre · authorised staff</span></footer>
       </section>
     </main>
   );
