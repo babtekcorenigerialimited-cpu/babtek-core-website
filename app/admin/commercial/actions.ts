@@ -41,10 +41,12 @@ export async function createQuotation(form:FormData){
  if(!Number.isFinite(discount)||discount<0||discount>subtotal||!Number.isFinite(tax)||tax<0||tax>1e12)fail("quote");
  const total=Math.round((subtotal-discount+tax)*100)/100;
  const {data:quote,error}=await sb.from("quotations").insert({quotation_number:ref("QT"),project_id:projectId||null,client_id:clientId,status:"draft",issue_date:null,valid_until:/^\d{4}-\d{2}-\d{2}$/.test(validUntil)?validUntil:null,currency_code:currency,subtotal,discount_amount:discount,tax_amount:tax,total_amount:total,terms:terms||null,created_by:user.id}).select("id").single();
- if(error||!quote)fail("quote");
- const {error:itemError}=await sb.from("quotation_items").insert(normalized.map(x=>({...x,quotation_id:quote.id})));
- if(itemError){await sb.from("quotations").delete().eq("id",quote.id);fail("quote_items");}
- await sb.from("audit_logs").insert({actor_id:user.id,action:"quotation.created",table_name:"quotations",record_id:quote.id,metadata:{total,currency_code:currency,item_count:normalized.length}});
+ if(error)fail("quote");
+ if(!quote)redirect("/admin/commercial?error=quote");
+ const quotationId=quote.id;
+ const {error:itemError}=await sb.from("quotation_items").insert(normalized.map(x=>({...x,quotation_id:quotationId})));
+ if(itemError){await sb.from("quotations").delete().eq("id",quotationId);fail("quote_items");}
+ await sb.from("audit_logs").insert({actor_id:user.id,action:"quotation.created",table_name:"quotations",record_id:quotationId,metadata:{total,currency_code:currency,item_count:normalized.length}});
  refresh();redirect("/admin/commercial?created=quotation");
 }
 export async function updateQuotationStatus(form:FormData){
