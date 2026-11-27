@@ -44,6 +44,15 @@ export default async function AdminProjectsPage({ searchParams }: { searchParams
   const { data: projectMilestones } = projectIds.length ? await supabase.from("project_milestones")
     .select("id,project_id,title,description,deliverable,start_date,due_date,status,progress_percent,delay_reason,acceptance_status,client_visible,display_order")
     .in("project_id", projectIds).order("display_order", { ascending: true }).order("due_date", { ascending: true }) : { data: [] as any[] };
+  const milestoneRows = projectMilestones || [];
+  const taskRows = projectTasks || [];
+  const projectStageCounts = statuses.map((status) => ({status,count:projects.filter((project)=>project.status===status).length}));
+  const activeProjectCount = projects.filter((project)=>["ongoing","proposed"].includes(project.status)).length;
+  const completedProjectCount = projects.filter((project)=>project.status==="completed").length;
+  const trackedProjectCount = projects.filter((project)=>milestoneRows.some((milestone)=>milestone.project_id===project.id)).length;
+  const averageProgress = milestoneRows.length ? Math.round(milestoneRows.reduce((sum,milestone)=>sum+Number(milestone.progress_percent||0),0)/milestoneRows.length) : null;
+  const openTaskCount = taskRows.filter((task)=>!["completed","cancelled"].includes(task.status)).length;
+  const overdueTaskCount = taskRows.filter((task)=>task.due_date && task.due_date < new Date().toISOString().slice(0,10) && !["completed","cancelled"].includes(task.status)).length;
 
   return (
     <main className="admin-shell">
@@ -63,6 +72,19 @@ export default async function AdminProjectsPage({ searchParams }: { searchParams
       <section className="admin-main">
         <header className="admin-topbar"><div><span className="admin-breadcrumb">BABTEK / WORKSPACE / PROJECTS</span><h1>Project register</h1></div><div className="admin-top-actions"><Link className="admin-signout" href="/admin">Overview</Link><SignOutButton /></div></header>
         <div className="admin-welcome admin-register-welcome"><div><p className="admin-kicker">PROJECT DELIVERY CONTROL</p><h2>One coordinated view of every project.</h2><p>Track project status, client relationships and delivery timelines.</p></div><span className="admin-welcome-mark">▤</span></div>
+        <section className="project-ops-overview">
+          <div className="project-ops-heading"><div><span>PORTFOLIO CONTROL / LIVE RECORDS</span><h2>Delivery command view</h2><p>A visual operating summary built from registered projects, milestones and tasks.</p></div><Link href="/admin/delivery">Portfolio intelligence ↗</Link></div>
+          <div className="project-ops-metrics">
+            <article><span>PROJECTS IN VIEW</span><strong>{projects.length}</strong><small>{activeProjectCount} proposed / ongoing</small></article>
+            <article><span>MILESTONE PROGRESS</span><strong>{averageProgress===null?"—":averageProgress+"%"}</strong><small>{milestoneRows.length} milestones · {trackedProjectCount} tracked projects</small></article>
+            <article><span>OPEN TASKS</span><strong>{openTaskCount}</strong><small>{overdueTaskCount} past due</small></article>
+            <article><span>COMPLETED PROJECTS</span><strong>{completedProjectCount}</strong><small>Based on project status</small></article>
+          </div>
+          <div className="project-ops-status"><div className="project-ops-status-label"><strong>Project status distribution</strong><span>{projects.length} project records</span></div>
+            <div className="project-ops-status-track">{projectStageCounts.filter((item)=>item.count>0).map((item)=><i key={item.status} title={item.status.replaceAll("_"," ")} style={{width:(projects.length?item.count/projects.length*100:0)+"%"}} data-status={item.status}/>)}</div>
+            <div className="project-ops-legend">{projectStageCounts.map((item)=><span key={item.status}><i data-status={item.status}/>{item.status.replaceAll("_"," ")} <b>{item.count}</b></span>)}</div>
+          </div>
+        </section>
         {params.updated === "1" && <p className="admin-notice">Project status updated successfully.</p>}{params.engaged === "1" && <p className="admin-notice">Independent partner engagement created.</p>}{params.scheduled === "1" && <p className="admin-notice">Partner payment schedule created.</p>}{params.task_created === "1" && <p className="admin-notice">Project task created.</p>}{params.document_uploaded === "1" && <p className="admin-notice">Project document uploaded securely.</p>}{params.milestone_created === "1" && <p className="admin-notice">Project milestone created.</p>}{params.milestone_updated === "1" && <p className="admin-notice">Milestone delivery record updated.</p>}
         {params.error && <p className="admin-alert">{params.error === "engagement" ? "Partner engagement could not be created. Check the project, partner and scope." : params.error === "schedule" ? "Payment schedule could not be created. Check the engagement and amount." : params.error === "task" ? "Task could not be created. Confirm the project and any selected partner engagement." : params.error === "document" ? "Document upload failed. Check the file type, size (maximum 50 MB) and project access." : params.error === "milestone" ? "Milestone could not be saved. Check dates, progress, status and any required delay reason." : "The project update could not be completed. Please check the record and try again."}</p>}
         {projectResult.error || clientResult.error || partnerResult.error ? <p className="admin-alert">The project register could not be loaded. Check database permissions and try again.</p> : (
@@ -73,6 +95,7 @@ export default async function AdminProjectsPage({ searchParams }: { searchParams
                 <h3>{item.name}</h3><p className="admin-enquiry-person">{item.client_id ? clientNames.get(item.client_id) || "Client record" : "Client not linked"}{item.location_label ? " · " + item.location_label : ""}</p>
                 {item.description && <p className="admin-enquiry-message">{item.description}</p>}
                 <div className="admin-project-facts"><span>Client fee: {money(Number(item.client_fee || 0), item.currency_code || "NGN")}</span>{item.start_date && <span>Start: {item.start_date}</span>}{item.target_end_date && <span>Target: {item.target_end_date}</span>}</div>
+                <div className="project-ops-mini-track"><div><strong>Delivery sequence</strong><span>{(projectMilestones||[]).filter((m)=>m.project_id===item.id).length} milestones</span></div><div className="project-ops-mini-trackline">{(projectMilestones||[]).filter((m)=>m.project_id===item.id).slice(0,8).map((m,index)=><i key={m.id} title={m.title+" · "+m.progress_percent+"%"} data-state={m.status} style={{"--stage-progress":Math.max(0,Math.min(100,Number(m.progress_percent||0)))+"%"} as React.CSSProperties}><b>{index+1}</b></i>)}</div></div>
               </div>
               <form action={updateProjectStatus} className="admin-status-form"><input type="hidden" name="project_id" value={item.id}/><label>Update status<select name="status" defaultValue={item.status}>{statuses.map((status) => <option key={status} value={status}>{status.replaceAll("_"," ")}</option>)}</select></label><button type="submit">Save status</button></form>
               <section className="project-delivery-manager">
