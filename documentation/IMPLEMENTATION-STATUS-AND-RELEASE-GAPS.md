@@ -83,9 +83,9 @@
 - Product development, testing, release management, licensing and integrations for the technology initiatives.
 
 ## Current deployment constraint
-The latest available Vercel build attempt failed. The logs identified a literal escaped-newline syntax error in the commercial actions file; that source was corrected. A later build then identified a missing relative import in the new specialist-payment page; that import was corrected. Additional changes have been made since those attempts, but they have not yet been verified by a fresh build.
+The latest Vercel build attempt for commit `788111a` successfully compiled the application bundle, then failed during TypeScript validation in `app/admin/commercial/actions.ts` because the quotation record was not narrowed before its ID was used. That null-handling issue has been corrected in commit `06f0bb9`; additional invoice, payment and agreement record checks were hardened in commit `ad75c8e`. The partner portal's unused exported action that allowed direct task-status mutation was also removed in commit `788111a`, preserving the intended progress-report-and-review workflow.
 
-Vercel has currently returned HTTP 402 for further deployment creation because the Hobby team exceeded its 100 deployment API requests in a 24-hour period. The tool reports a 24-hour retry window. The latest source cannot be certified as build-ready until Vercel permits another preview build or an equivalent local/CI build is run.
+A fresh build of the corrected `ad75c8e` commit is still unverified. Vercel has returned HTTP 402 for further deployment creation because the Hobby team exceeded its 100 deployment API requests in a 24-hour period. The API reports a 24-hour retry window. Do not treat the earlier successful bundle compilation as a successful build; rerun a full build and typecheck when deployment capacity returns or an equivalent CI build is available.
 
 ## Production safety
 - Work remains on `development/platform-foundation`.
