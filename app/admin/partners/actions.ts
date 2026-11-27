@@ -26,6 +26,7 @@ export async function createPartner(formData: FormData) {
   const { error } = await supabase.from("professional_partners").insert({
     legal_name, trading_name: trading_name || null, email: email || null,
     phone: phone || null, professional_category: professional_category || null,
+    partner_type, specialties, division_affiliations, website: website || null, notes: notes || null, relationship_status: "prospect",
     registration_details: registration_details || null, created_by: user.id,
   });
   if (error) redirect("/admin/partners?error=save");
