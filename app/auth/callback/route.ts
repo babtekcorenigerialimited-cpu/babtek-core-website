@@ -16,9 +16,11 @@ function failurePath(next:string,origin:string){
 export async function GET(request:NextRequest){
  const url=new URL(request.url);
  const code=url.searchParams.get("code");
+ const oauthError=url.searchParams.get("error");
  const rawNext=url.searchParams.get("next")||"/";
  const next=rawNext.startsWith("/")&&!rawNext.startsWith("//")?rawNext:"/";
  const fail=(codeName:string)=>NextResponse.redirect(new URL(failurePath(next,url.origin).replace(/([?&])error=[^&]+/,"$1error="+codeName),url.origin));
+ if(oauthError)return fail(next.startsWith("/auth/reset-password")?"confirmation":"google_callback");
  if(!code)return fail("confirmation");
  const sb=await createSupabaseServerClient();
  const {error}=await sb.auth.exchangeCodeForSession(code);
