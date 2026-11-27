@@ -1,13 +1,6 @@
-import Link from "next/link";
-import {PageHero} from "@/components/page-hero";
-import {FivePlatformArchitecture} from "@/components/admin/five-platform-architecture";
+import {redirect} from "next/navigation";
+
+// The five-platform visual management experience is private to the authenticated BABTEK founder portal.
 export default function PlatformPage(){
- return <main><PageHero eyebrow="BABTEK INTEGRATED ENTERPRISE" title="One connected" accent="enterprise platform." description="Five integrated components designed to connect the BABTEK public presence, client relationships, project operations, founder administration and technology ecosystem under one corporate structure."/>
- <section className="section-space"><div className="container"><FivePlatformArchitecture/><div className="portfolio-intro"><p className="large-copy">The five components are not five separate websites or separate companies. They are coordinated parts of one BABTEK operating environment.</p><p>Shared identity, permissions, project records, documents, communications and financial information form the connective layer. Each module is being developed in stages and is labelled according to its actual implementation status.</p></div><div className="product-directory">
- <article><div><span>01 · PUBLIC EXPERIENCE</span><h2>Corporate website</h2><p>Company information, divisions, services, verified projects, enquiries, news and public brand content.</p></div><small>Foundation implemented · content expansion ongoing</small></article>
- <article><div><span>02 · CLIENT RELATIONSHIPS</span><h2>Client management system</h2><p>Client accounts, enquiries, quotations, agreements, invoices, project information and secure conversations.</p></div><small>Initial portals and commercial workflows implemented · integrations outstanding</small></article>
- <article><div><span>03 · PROJECT DELIVERY</span><h2>Project operations platform</h2><p>Project records, milestones, tasks, independent professional engagements, document sharing and delivery tracking.</p></div><small>Core project and partner workflows implemented · deeper automation planned</small></article>
- <article><div><span>04 · GOVERNANCE</span><h2>BABTEK administration dashboard</h2><p>Founder oversight, access control, brand and content management, finance, reporting and operational governance.</p></div><small>Founder control room implemented · granular permission and account lifecycle tools remain</small></article>
- <article><div><span>05 · INNOVATION</span><h2>Technology ecosystem</h2><p>BABTEK AEC Workspace, BABTEK Commercial, CADWAL-X, WAL-X Portfolio, BABTEK AI, BABTEK Studio and BABTEK-OS.</p></div><small>Product register and roadmap · products remain planned or in development</small></article>
- </div><div className="detail-cta"><div><p className="eyebrow eyebrow-light">CLIENT & PARTNER ACCESS</p><h2>Work with BABTEK.</h2><p>Clients and independent professionals have separate secure workspaces. Access is limited to records BABTEK has explicitly linked to their accounts.</p></div><div className="hero-actions"><Link className="button" href="/client/login">Client portal ↗</Link><Link className="button" href="/partner/login">Partner portal ↗</Link></div></div></div></section></main>;
+  redirect("/admin/platforms");
 }
