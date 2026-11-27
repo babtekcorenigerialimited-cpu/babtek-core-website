@@ -472,3 +472,23 @@ a{color:inherit;text-decoration:none}
 .client-milestone-bar{height:5px;max-width:220px;margin:7px 0 0}
 @media(max-width:900px){.project-milestone-update{grid-template-columns:1fr 1fr}}
 @media(max-width:560px){.project-milestone-update{grid-template-columns:1fr}.project-milestone-facts{display:grid}.project-milestone-heading{align-items:flex-start}}
+
+/* Founder delivery performance dashboard */
+.delivery-exception-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.delivery-exception-grid article{padding:16px;background:#f5f8fb;border:1px solid var(--line)}
+.delivery-exception-grid article>strong{font-size:25px;color:var(--blue)}
+.delivery-exception-grid h3{font-size:12px;color:var(--blue);margin:8px 0}
+.delivery-exception-grid p{font-size:10px;line-height:1.6;color:var(--muted)}
+.delivery-project-list{display:grid;gap:14px}
+.delivery-project-card{border:1px solid var(--line);padding:17px;background:#fff}
+.delivery-project-title{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.delivery-project-title h3{font-size:15px;color:var(--blue);margin:8px 0 4px}
+.delivery-project-title small{font-size:10px;color:var(--muted)}
+.delivery-project-title>strong{font-size:19px;color:var(--blue);white-space:nowrap}
+.delivery-project-facts{display:flex;gap:8px 18px;flex-wrap:wrap;font-size:10px;color:var(--muted);margin:12px 0}
+.delivery-milestone-mini{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}
+.delivery-milestone-mini>div{background:#f7f9fb;padding:10px;display:grid;gap:5px}
+.delivery-milestone-mini span{font-size:11px;font-weight:800;color:var(--blue)}
+.delivery-milestone-mini small{font-size:10px;color:var(--muted)}
+@media(max-width:900px){.delivery-exception-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.delivery-exception-grid,.delivery-milestone-mini{grid-template-columns:1fr}.delivery-project-title{align-items:flex-start}}
