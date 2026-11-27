@@ -14,7 +14,7 @@ export async function POST(request:Request){
  const experience_summary=clean(body.experience_summary,5000),collaboration_interest=clean(body.collaboration_interest,3000);
  const website=clean(body.website,255),specialties=clean(body.specialties,1000).split(",").map(x=>x.trim().slice(0,80)).filter(Boolean).slice(0,20);
  const division_affiliations=Array.isArray(body.division_affiliations)?body.division_affiliations.map(x=>clean(x,80)).filter(x=>validDivisions.includes(x)).slice(0,8):[];
- if(applicant_name.length<2||!/^\S+@\S+\.\S+$/.test(email)||!validTypes.includes(partner_type)||primary_category.length<2||experience_summary.length<20||collaboration_interest.length<20)
+ if(body.privacy_acknowledged!==true||applicant_name.length<2||!/^\S+@\S+\.\S+$/.test(email)||!validTypes.includes(partner_type)||primary_category.length<2||experience_summary.length<20||collaboration_interest.length<20)
   return NextResponse.json({error:"Please complete the required fields with a valid email and enough detail."},{status:400});
  if(website){try{const u=new URL(website);if(!["http:","https:"].includes(u.protocol))throw new Error();}catch{return NextResponse.json({error:"Enter a valid portfolio or website URL."},{status:400});}}
  const url=process.env.NEXT_PUBLIC_SUPABASE_URL,key=process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -23,7 +23,8 @@ export async function POST(request:Request){
  const sb=createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
  const {error}=await sb.from("partner_network_applications").insert({
   reference_code:reference,applicant_name,organisation:organisation||null,email,phone:phone||null,partner_type,primary_category,
-  specialties,division_affiliations,website:website||null,experience_summary,collaboration_interest
+  specialties,division_affiliations,website:website||null,experience_summary,collaboration_interest,
+  privacy_acknowledged:true,privacy_acknowledged_at:new Date().toISOString(),privacy_notice_version:"2026-11-27"
  });
  if(error){console.error("Partner network application intake failed",error.code||"unknown");return NextResponse.json({error:"We could not save your application. Please try again or contact BABTEK."},{status:503});}
  return NextResponse.json({ok:true,reference},{status:201});
