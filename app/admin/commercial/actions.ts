@@ -65,10 +65,12 @@ export async function createInvoiceFromQuotation(form:FormData){
  const {data:items}=await sb.from("quotation_items").select("description,quantity,unit,unit_price,line_total,display_order").eq("quotation_id",id).order("display_order");
  if(!items?.length)fail("invoice");
  const {data:invoice,error}=await sb.from("invoices").insert({invoice_number:ref("INV"),project_id:q.project_id,client_id:q.client_id,quotation_id:q.id,status:"draft",currency_code:q.currency_code,subtotal:q.subtotal,discount_amount:q.discount_amount,tax_amount:q.tax_amount,total_amount:q.total_amount,notes:q.terms,created_by:user.id}).select("id").single();
- if(error||!invoice)fail("invoice");
- const {error:itemError}=await sb.from("invoice_items").insert(items.map(x=>({...x,invoice_id:invoice.id})));
- if(itemError){await sb.from("invoices").delete().eq("id",invoice.id);fail("invoice");}
- await sb.from("audit_logs").insert({actor_id:user.id,action:"invoice.created_from_quotation",table_name:"invoices",record_id:invoice.id,metadata:{quotation_id:q.id,total:q.total_amount}});
+ if(error)fail("invoice");
+ if(!invoice)redirect("/admin/commercial?error=invoice");
+ const invoiceId=invoice.id;
+ const {error:itemError}=await sb.from("invoice_items").insert(items.map(x=>({...x,invoice_id:invoiceId})));
+ if(itemError){await sb.from("invoices").delete().eq("id",invoiceId);fail("invoice");}
+ await sb.from("audit_logs").insert({actor_id:user.id,action:"invoice.created_from_quotation",table_name:"invoices",record_id:invoiceId,metadata:{quotation_id:q.id,total:q.total_amount}});
  refresh();redirect("/admin/commercial?created=invoice");
 }
 export async function issueInvoice(form:FormData){
@@ -87,10 +89,12 @@ export async function recordClientPayment(form:FormData){
  const already=(existing||[]).filter((x:any)=>["confirmed","paid","completed"].includes(String(x.status).toLowerCase())).reduce((s:number,x:any)=>s+Number(x.amount),0);
  if(amount>Number(inv.total_amount)-already+0.005)fail("payment_exceeds");
  const {data:payment,error}=await sb.from("client_payments").insert({invoice_id:invoiceId,amount,currency_code:inv.currency_code,payment_date:date,method,transaction_reference:reference,status:"confirmed",recorded_by:user.id}).select("id").single();
- if(error||!payment)fail("payment");
+ if(error)fail("payment");
+ if(!payment)redirect("/admin/commercial?error=payment");
+ const paymentId=payment.id;
  const newTotal=already+amount;const newStatus=newTotal+0.005>=Number(inv.total_amount)?"paid":"partially_paid";
  const {error:updateError}=await sb.from("invoices").update({status:newStatus}).eq("id",invoiceId);if(updateError)fail("payment");
- await sb.from("audit_logs").insert({actor_id:user.id,action:"client_payment.recorded",table_name:"client_payments",record_id:payment.id,metadata:{invoice_id:invoiceId,amount,currency_code:inv.currency_code,reference}});
+ await sb.from("audit_logs").insert({actor_id:user.id,action:"client_payment.recorded",table_name:"client_payments",record_id:paymentId,metadata:{invoice_id:invoiceId,amount,currency_code:inv.currency_code,reference}});
  refresh();redirect("/admin/commercial?created=payment");
 }
 export async function createAgreement(form:FormData){
@@ -99,8 +103,10 @@ export async function createAgreement(form:FormData){
  const {data:c}=await sb.from("clients").select("id").eq("id",clientId).maybeSingle();if(!c)fail("agreement");
  if(projectId){if(!idPattern.test(projectId))fail("agreement");const {data:p}=await sb.from("projects").select("id,client_id").eq("id",projectId).maybeSingle();if(!p||p.client_id!==clientId)fail("agreement");}
  const {data:agreement,error}=await sb.from("agreements").insert({agreement_number:ref("AGR"),project_id:projectId||null,client_id:clientId,agreement_type:type,status:"draft",effective_date:/^\d{4}-\d{2}-\d{2}$/.test(effective)?effective:null,expiry_date:/^\d{4}-\d{2}-\d{2}$/.test(expiry)?expiry:null,terms_summary:terms,created_by:user.id}).select("id").single();
- if(error||!agreement)fail("agreement");
- await sb.from("audit_logs").insert({actor_id:user.id,action:"agreement.draft_created",table_name:"agreements",record_id:agreement.id,metadata:{agreement_type:type}});
+ if(error)fail("agreement");
+ if(!agreement)redirect("/admin/commercial?error=agreement");
+ const agreementId=agreement.id;
+ await sb.from("audit_logs").insert({actor_id:user.id,action:"agreement.draft_created",table_name:"agreements",record_id:agreementId,metadata:{agreement_type:type}});
  refresh();redirect("/admin/commercial?created=agreement");
 }
 export async function updateAgreementStatus(form:FormData){
