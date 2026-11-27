@@ -1,0 +1,13 @@
+import {redirect} from "next/navigation";
+import Link from "next/link";
+import {createSupabaseServerClient} from "@/lib/supabase/server";
+import {SignOutButton} from "@/components/admin/signout-button";
+import {BrandManager} from "@/components/admin/brand-manager";
+export const dynamic="force-dynamic";
+export default async function AdminBrandPage(){
+ const sb=await createSupabaseServerClient();const {data:{user}}=await sb.auth.getUser();if(!user)redirect("/admin/login");
+ const {data:roles}=await sb.from("user_roles").select("role").eq("user_id",user.id);
+ if(!roles?.some(r=>r.role==="owner"))return <main className="admin-empty"><h1>Access not authorised</h1><p>Only the BABTEK owner can manage the corporate brand identity.</p><SignOutButton/></main>;
+ const {data}=await sb.from("brand_settings").select("*").eq("id",true).maybeSingle();
+ return <main className="admin-shell"><aside className="admin-sidebar"><Link href="/admin" className="admin-sidebar-brand"><span className="admin-brand-mark">B</span><span><strong>BABTEK CORE</strong><small>ENTERPRISE PLATFORM</small></span></Link><p className="admin-nav-label">WORKSPACE</p><Link className="admin-nav-item" href="/admin">Overview</Link><Link className="admin-nav-item" href="/admin/enquiries">Enquiries</Link><Link className="admin-nav-item" href="/admin/projects">Projects</Link><Link className="admin-nav-item" href="/admin/clients">Clients</Link><Link className="admin-nav-item" href="/admin/partners">Professional partners</Link><p className="admin-nav-label">BUSINESS CONTROL</p><Link className="admin-nav-item active" href="/admin/brand">Brand management</Link><div className="admin-sidebar-bottom"><span className="admin-avatar">MD</span><span><strong>Founder / Managing Director</strong><small>OWNER ACCESS</small></span></div></aside><section className="admin-main"><header className="admin-topbar"><div><span className="admin-breadcrumb">BABTEK / BUSINESS CONTROL</span><h1>Brand management centre</h1></div><div className="admin-top-actions"><span className="admin-secure-label">● Founder-only control</span><SignOutButton/></div></header><div className="admin-welcome"><div><p className="admin-kicker">CORPORATE IDENTITY CONTROL</p><h2>One brand. One standard.</h2><p>Manage BABTEK’s official logo, colours and corporate messaging.</p></div><span className="admin-welcome-mark">B</span></div><BrandManager saved={data}/><footer className="admin-footer">BABTEK CORE NIGERIA LIMITED · BRAND AUTHORITY RESERVED TO THE FOUNDER</footer></section></main>;
+}
