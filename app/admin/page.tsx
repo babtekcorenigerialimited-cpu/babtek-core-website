@@ -57,6 +57,7 @@ export default async function AdminDashboardPage() {
         <p className="admin-nav-label">BUSINESS CONTROL</p>
         <a className="admin-nav-item" href="/admin#finance"><span>₦</span> Finance overview</a>
         <a className="admin-nav-item" href="/admin#divisions"><span>▥</span> Divisions</a>
+        <a className="admin-nav-item" href="/admin/brand"><span>✦</span> Brand management</a>
         <div className="admin-sidebar-bottom"><span className="admin-avatar">MD</span><span><strong>{profileResult.data?.full_name || "Managing Director"}</strong><small>OWNER ACCESS</small></span></div>
       </aside>
       <section className="admin-main">
