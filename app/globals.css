@@ -882,3 +882,16 @@ a{color:inherit;text-decoration:none}
 .tech-bars i:nth-child(2){height:65%}.tech-bars i:nth-child(3){height:48%}.tech-bars i:nth-child(4){height:90%}.tech-bars i:nth-child(5){height:72%}
 @media(max-width:760px){.crm-full,.erp-layout{grid-template-columns:88px minmax(0,1fr)}.crm-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.erp-main .finance-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.tech-flow{grid-template-columns:55px 1fr 1.3fr}}
 @media(max-width:480px){.crm-sidebar>span{font-size:6px;padding:6px 3px}.crm-toolbar>span{display:none}.ops-lower{grid-template-columns:1fr}.erp-layout>aside>span{font-size:5px;padding:5px 2px}.web-lower{grid-template-columns:1fr}.web-lower-image{min-height:55px}}
+
+
+/* Functional founder platform launcher — links to working workspaces, not static previews */
+.platform-launchpad{margin-top:24px}
+.platform-launch-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.platform-launch-card{display:grid;grid-template-columns:44px minmax(0,1fr);gap:13px;padding:18px;border:1px solid var(--admin-border,#e4eaf0);border-radius:12px;background:var(--admin-card,#fff)}
+.platform-launch-card:last-child{grid-column:1/-1}
+.platform-launch-number{display:grid;place-items:center;width:40px;height:40px;border-radius:10px;background:#eaf2fa;color:#14588b;font-size:15px;font-weight:850}
+.platform-launch-card h3{margin:0 0 7px;color:#173b5c;font-size:15px}
+.platform-launch-card p{margin:0 0 12px;color:#65788b;font-size:12px;line-height:1.65}
+.platform-launch-card .admin-platform-actions{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:11px}
+.platform-launch-card .admin-inline-link{font-size:11px}
+@media(max-width:720px){.platform-launch-grid{grid-template-columns:1fr}.platform-launch-card:last-child{grid-column:auto}}
