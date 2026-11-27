@@ -36,7 +36,9 @@ export function SiteHeader() {
         </Link>
         <nav className="desktop-nav" aria-label="Main navigation">
           {links.map((link) => <Link key={link.label} href={link.href}>{link.label}</Link>)}
-          <Link href="/client/login">Client portal</Link>\n          <Link className="button button-small" href="/contact">Start a project <span aria-hidden="true">↗</span></Link>
+          <Link href="/client/login">Client portal</Link>
+          <Link href="/partner/login">Partner portal</Link>
+          <Link className="button button-small" href="/contact">Start a project <span aria-hidden="true">↗</span></Link>
         </nav>
         <Link className="mobile-contact" href="/divisions">Explore BABTEK ↗</Link>
       </div>
