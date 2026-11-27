@@ -390,3 +390,19 @@ a{color:inherit;text-decoration:none}
 .partner-link-form{width:min(100%,340px);padding:12px;background:#f5f8fb;border:1px solid var(--line)}
 .partner-link-form form{display:grid;gap:8px}
 @media(max-width:650px){.partner-task{grid-template-columns:1fr}.partner-admin-record{display:grid!important}.partner-link-form{width:100%}}
+
+
+/* Independent professional partner portal */
+.partner-progress-form{margin-top:22px;padding:18px;background:#f5f8fb;border:1px solid var(--line);display:grid;gap:13px}
+.partner-progress-form label,.partner-link-form label,.partner-review-form label{display:grid;gap:6px;font-size:11px;font-weight:800;color:var(--blue)}
+.partner-progress-form textarea,.partner-progress-form input,.partner-progress-form select,.partner-link-form input,.partner-review-form input{width:100%;border:1px solid #ccd7e2;background:#fff;border-radius:2px;padding:11px 12px;font:inherit;font-size:13px;color:var(--ink)}
+.partner-progress-controls{display:grid;grid-template-columns:1fr 180px auto;gap:12px;align-items:end}
+.partner-progress-form button,.partner-review-actions button,.partner-link-form button{border:0;background:var(--blue);color:#fff;padding:12px 15px;font-size:11px;font-weight:800;cursor:pointer;min-height:42px}
+.partner-progress-form button:hover,.partner-review-actions button:hover,.partner-link-form button:hover{background:var(--mid)}
+.partner-admin-record{align-items:start!important;gap:18px!important}
+.partner-link-form,.partner-review-form{width:min(390px,100%);display:grid;gap:10px}
+.partner-link-form form,.partner-review-form form{display:grid;gap:9px}
+.partner-review-actions{display:flex;flex-wrap:wrap;gap:8px}
+.partner-review-actions button:last-child{background:#7b3b32}
+.partner-review-form .admin-status{justify-self:start}
+@media(max-width:760px){.partner-progress-controls{grid-template-columns:1fr}.partner-link-form,.partner-review-form{width:100%}.partner-admin-record{display:grid!important}.partner-progress-form{padding:13px}}
