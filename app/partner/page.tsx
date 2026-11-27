@@ -8,9 +8,9 @@ const money=(v:number,c="NGN")=>new Intl.NumberFormat("en-NG",{style:"currency",
 const dt=(v:string|null)=>v?new Date(v+"T00:00:00").toLocaleDateString("en-NG",{day:"numeric",month:"short",year:"numeric"}):"—";
 export default async function PartnerPortal({searchParams}:{searchParams:Promise<{updated?:string;error?:string}>}){
  const params=await searchParams;const sb=await createSupabaseServerClient();const {data:{user}}=await sb.auth.getUser();if(!user)redirect("/partner/login");
- const {data:roles}=await sb.from("user_roles").select("role").eq("user_id",user.id);if(!roles?.some((r:any)=>r.role==="partner"))redirect("/partner/login");
  const {data:links}=await sb.from("partner_user_links").select("partner_id").eq("user_id",user.id);
  if(!links?.length)return <main className="admin-shell"><section className="admin-main"><header className="admin-topbar"><div><span className="admin-breadcrumb">BABTEK / PARTNER PORTAL</span><h1>Account awaiting activation</h1></div><SignOutButton redirectTo="/partner/login"/></header><div className="admin-welcome admin-register-welcome"><div><p className="admin-kicker">SECURE PROFESSIONAL ACCESS</p><h2>Your login is ready. Partner access is pending.</h2><p>BABTEK must verify and link this account to an existing professional partner record before any engagement, task or payment information can be shown. Share your registered email and this account ID with BABTEK: <strong>{user.id}</strong>.</p></div><span className="admin-welcome-mark">B</span></div><p><a className="admin-inline-link" href="mailto:babtekcorenigerialimited@gmail.com">Contact BABTEK support →</a></p></section></main>;
+ const {data:roles}=await sb.from("user_roles").select("role").eq("user_id",user.id);if(!roles?.some((r:any)=>r.role==="partner"))redirect("/partner/login");
  const partnerIds=links.map((x:any)=>x.partner_id);
  const [partnerRes,engagementRes]=await Promise.all([
   sb.from("professional_partners").select("id,legal_name,trading_name,professional_category").in("id",partnerIds),
