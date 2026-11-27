@@ -10,7 +10,7 @@ import { reviewPartnerProgress } from "./progress-actions";
 export const metadata: Metadata = { title: "Professional Partners | BABTEK Owner Workspace" };
 export const dynamic = "force-dynamic";
 
-export default async function AdminPartnersPage({ searchParams }: { searchParams: Promise<{ created?: string; linked?: string; error?: string }> }) {
+export default async function AdminPartnersPage({ searchParams }: { searchParams: Promise<{ created?: string; linked?: string; reviewed?: string; error?: string }> }) {
   const params = await searchParams;
   const supabase = await createSupabaseServerClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -61,7 +61,7 @@ export default async function AdminPartnersPage({ searchParams }: { searchParams
       <header className="admin-topbar"><div><span className="admin-breadcrumb">BABTEK / RELATIONSHIPS / PARTNERS</span><h1>Professional partner register</h1></div><div className="admin-top-actions"><Link className="admin-signout" href="/admin">Overview</Link><SignOutButton /></div></header>
       <div className="admin-welcome admin-register-welcome"><div><p className="admin-kicker">INDEPENDENT PROFESSIONAL NETWORK</p><h2>Coordinate specialist expertise with clarity.</h2><p>Record independent professionals and firms engaged on a project-by-project basis.</p></div><span className="admin-welcome-mark">◇</span></div>
       {params.created === "1" && <p className="admin-notice">Professional partner record created.</p>}{params.linked === "1" && <p className="admin-notice">Partner login linked and partner access granted.</p>}{params.reviewed === "1" && <p className="admin-notice">Partner progress review saved.</p>}
-      {params.error && <p className="admin-alert">{params.error === "required" ? "A legal or registered name is required." : params.error === "account" ? "That user account or profile was not found. Ask the partner to register and confirm their email first." : params.error === "link" ? "The partner account could not be linked. Check the UUID and permissions." : "The partner record could not be saved. Check permissions and try again."}</p>}
+      {params.error && <p className="admin-alert">{params.error === "required" ? "A legal or registered name is required." : params.error === "account" ? "That user account or profile was not found. Ask the partner to register and confirm their email first." : params.error === "link" ? "The partner account could not be linked. Check the UUID and permissions." : params.error === "review" ? "The progress review could not be saved." : "The partner record could not be saved. Check permissions and try again."}</p>}
       <section className="admin-panel admin-register-panel">
         <div className="admin-panel-heading"><div><h2>Add a professional partner</h2><p>Record an independent specialist or professional firm. This does not create a staff position or login.</p></div></div>
         <form action={createPartner} className="admin-create-form">
