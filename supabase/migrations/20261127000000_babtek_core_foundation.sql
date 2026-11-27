@@ -444,4 +444,17 @@ create policy "admin audit read" on public.audit_logs for select to authenticate
 create policy "internal audit insert" on public.audit_logs for insert to authenticated
  with check(actor_id=auth.uid() and public.has_role(array['owner','administrator','operations','finance']::public.app_role[]));
 
+-- BABTEK's eight approved business divisions. These are structural company records,
+-- not claims that each division currently has a staffed or standalone operation.
+insert into public.divisions (slug,name,pillar,summary,lifecycle,display_order,is_public) values
+ ('design-construction','Babtek Design & Construction','Built Environment','Architectural design, technical documentation and coordinated construction services.','developing',1,true),
+ ('interiors','Babtek Interiors','Built Environment','Interior architecture, space planning, finishes and fit-out services.','developing',2,true),
+ ('real-estate','Babtek Real Estate','Built Environment','Property, land and real-estate advisory and transaction coordination.','developing',3,true),
+ ('smart-solutions','Babtek Smart Solutions','Technology & Innovation','Software, automation and digital systems for business and the built environment.','developing',4,true),
+ ('academy','Babtek Academy','Technology & Innovation','Technical learning and professional development initiatives.','developing',5,true),
+ ('ventures','Babtek Ventures','Business & Enterprise Development','Strategic ventures, partnerships, incubation and business development.','developing',6,true),
+ ('products-supply','Babtek Products & Supply','Built Environment','Sourcing and supply coordination for building products, materials and equipment.','developing',7,true),
+ ('research-innovation','Babtek Research & Innovation','Technology & Innovation','Research into sustainable systems, smart buildings and applied innovation.','developing',8,true)
+on conflict (slug) do nothing;
+
 -- Grant the first owner role only after verifying the founder's Auth UUID in a trusted SQL session.
