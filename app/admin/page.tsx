@@ -1,95 +1,75 @@
-import { redirect } from "next/navigation";
+import {redirect} from "next/navigation";
 import Link from "next/link";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { SignOutButton } from "@/components/admin/signout-button";
+import {createSupabaseServerClient} from "@/lib/supabase/server";
+import {SignOutButton} from "@/components/admin/signout-button";
 
-export const dynamic = "force-dynamic";
-
-const money = (value: number) =>
-  new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN", maximumFractionDigits: 0 }).format(value);
-
-export default async function AdminDashboardPage() {
-  let supabase;
-  try {
-    supabase = await createSupabaseServerClient();
-  } catch {
-    return <main className="admin-empty"><h1>Platform configuration required</h1><p>Supabase connection settings are not configured for this deployment yet.</p></main>;
-  }
-
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
-  if (userError || !user) redirect("/admin/login");
-
-  const { data: roles, error: roleError } = await supabase
-    .from("user_roles").select("role").eq("user_id", user.id);
-  const isOwner = roles?.some((item) => item.role === "owner");
-  if (roleError || !isOwner) {
-    return <main className="admin-empty"><h1>Access not authorised</h1><p>This account does not have the BABTEK owner role. Contact the platform owner if you believe this is an error.</p><SignOutButton /></main>;
-  }
-
-  const [profileResult, enquiryCount, projectCount, clientCount, partnerCount, invoiceResult, recentEnquiries, recentProjects, divisionCount] = await Promise.all([
-    supabase.from("profiles").select("full_name").eq("id", user.id).maybeSingle(),
-    supabase.from("enquiries").select("id", { count: "exact", head: true }),
-    supabase.from("projects").select("id", { count: "exact", head: true }),
-    supabase.from("clients").select("id", { count: "exact", head: true }),
-    supabase.from("professional_partners").select("id", { count: "exact", head: true }),
-    supabase.from("invoices").select("total_amount,status,currency_code").limit(500),
-    supabase.from("enquiries").select("id,reference_code,full_name,subject,status,created_at").order("created_at", { ascending: false }).limit(5),
-    supabase.from("projects").select("id,project_code,name,status,target_end_date").order("created_at", { ascending: false }).limit(5),
-    supabase.from("divisions").select("id", { count: "exact", head: true }),
-  ]);
-
-  const invoices = invoiceResult.data ?? [];
-  const outstanding = invoices
-    .filter((invoice) => ["issued", "partially_paid", "overdue"].includes(invoice.status))
-    .reduce((sum, invoice) => sum + Number(invoice.total_amount || 0), 0);
-  const firstName = (profileResult.data?.full_name || "Founder").split(" ")[0];
-
-  return (
-    <main className="admin-shell">
-      <aside className="admin-sidebar">
-        <a href="/admin" className="admin-sidebar-brand"><span className="admin-brand-mark">B</span><span><strong>BABTEK CORE</strong><small>ENTERPRISE PLATFORM</small></span></a>
-        <p className="admin-nav-label">WORKSPACE</p>
-        <a className="admin-nav-item active" href="/admin"><span>▦</span> Overview</a>
-        <a className="admin-nav-item" href="/admin/enquiries"><span>✉</span> Enquiries</a>
-        <a className="admin-nav-item" href="/admin/projects"><span>▤</span> Projects</a>
-        <a className="admin-nav-item" href="/admin/clients"><span>◉</span> Clients</a>
-        <a className="admin-nav-item" href="/admin/partners"><span>◇</span> Professional partners</a>
-        <p className="admin-nav-label">BUSINESS CONTROL</p>
-        <a className="admin-nav-item" href="/admin#finance"><span>₦</span> Finance overview</a>
-        <a className="admin-nav-item" href="/admin#divisions"><span>▥</span> Divisions</a>
-        <a className="admin-nav-item" href="/admin/brand"><span>✦</span> Brand management</a>
-        <div className="admin-sidebar-bottom"><span className="admin-avatar">MD</span><span><strong>{profileResult.data?.full_name || "Managing Director"}</strong><small>OWNER ACCESS</small></span></div>
-      </aside>
-      <section className="admin-main">
-        <header className="admin-topbar">
-          <div><span className="admin-breadcrumb">BABTEK / MANAGEMENT</span><h1>Enterprise overview</h1></div>
-          <div className="admin-top-actions"><span className="admin-secure-label">● Secure owner session</span><SignOutButton /></div>
-        </header>
-        <div className="admin-welcome"><div><p className="admin-kicker">FOUNDER'S CONTROL ROOM</p><h2>Good to have you here, {firstName}.</h2><p>Your central view of BABTEK Core Nigeria Limited.</p></div><span className="admin-welcome-mark">B</span></div>
-
-        <div className="admin-section-heading"><div><h2>Company snapshot</h2><p>Live records from the BABTEK platform database.</p></div><span className="admin-live-label">DATABASE CONNECTED</span></div>
-        <div className="admin-metric-grid">
-          <article className="admin-metric"><span>OPEN ENQUIRY RECORDS</span><strong>{enquiryCount.count ?? "—"}</strong><small>All recorded enquiries</small></article>
-          <article className="admin-metric"><span>PROJECT RECORDS</span><strong>{projectCount.count ?? "—"}</strong><small>Projects registered</small></article>
-          <Link className="admin-metric" id="clients" href="/admin/clients"><span>CLIENT RECORDS</span><strong>{clientCount.count ?? "—"}</strong><small>Open client register →</small></Link>
-          <Link className="admin-metric" id="partners" href="/admin/partners"><span>PROFESSIONAL PARTNERS</span><strong>{partnerCount.count ?? "—"}</strong><small>Open partner register →</small></Link>
-        </div>
-
-        <div className="admin-content-grid">
-          <section className="admin-panel" id="enquiries"><div className="admin-panel-heading"><div><h2>Recent enquiries</h2><p>Latest messages received by BABTEK.</p><Link className="admin-inline-link" href="/admin/enquiries">Open register →</Link></div><span>{enquiryCount.count ?? 0} total</span></div>
-            {recentEnquiries.data?.length ? <div className="admin-record-list">{recentEnquiries.data.map((item) => <article key={item.id}><div><strong>{item.full_name}</strong><p>{item.subject || "General enquiry"} · {item.reference_code || "Unreferenced"}</p></div><span className="admin-status">{item.status}</span></article>)}</div> : <p className="admin-empty-note">No enquiry records are available yet. New website enquiries will appear here once the form is connected to the configured deployment.</p>}
-          </section>
-          <section className="admin-panel" id="projects"><div className="admin-panel-heading"><div><h2>Recent projects</h2><p>Project delivery register.</p><Link className="admin-inline-link" href="/admin/projects">Open register →</Link></div><span>{projectCount.count ?? 0} total</span></div>
-            {recentProjects.data?.length ? <div className="admin-record-list">{recentProjects.data.map((item) => <article key={item.id}><div><strong>{item.name}</strong><p>{item.project_code || "Project"}{item.target_end_date ? " · Due " + item.target_end_date : ""}</p></div><span className="admin-status">{item.status}</span></article>)}</div> : <p className="admin-empty-note">No projects have been registered in the platform yet.</p>}
-          </section>
-        </div>
-
-        <div className="admin-content-grid admin-lower-grid">
-          <section className="admin-panel" id="finance"><div className="admin-panel-heading"><div><h2>Finance overview</h2><p>Outstanding invoice value, based on recorded invoice totals.</p></div><span>NGN</span></div><strong className="admin-finance-total">{money(outstanding)}</strong><p className="admin-footnote">This is not cash received, profit, or a reconciled accounts balance. Payments and overheads are not netted here.</p></section>
-          <section className="admin-panel" id="divisions"><div className="admin-panel-heading"><div><h2>Enterprise structure</h2><p>Integrated business divisions.</p></div><span>{divisionCount.count ?? "—"} divisions</span></div><div className="admin-division-chips"><span>Design & Construction</span><span>Interiors</span><span>Real Estate</span><span>Smart Solutions</span><span>Academy</span><span>Ventures</span><span>Products & Supply</span><span>Research & Innovation</span></div></section>
-        </div>
-        <footer className="admin-footer">BABTEK CORE NIGERIA LIMITED · BUILDING A BETTER FUTURE <span>Early platform release · Data shown reflects records currently entered.</span></footer>
-      </section>
-    </main>
-  );
+export const dynamic="force-dynamic";
+const money=(v:number)=>new Intl.NumberFormat("en-NG",{style:"currency",currency:"NGN",maximumFractionDigits:0}).format(v);
+async function countRows(sb:any,table:string){const {count,error}=await sb.from(table).select("id",{count:"exact",head:true});return error?null:(count??0);}
+function Stat({label,value,detail,href}:{label:string;value:string|number;detail:string;href?:string}){
+ const C=href?Link:"div";return <C className="admin-metric" {...(href?{href}:{})}><span>{label}</span><strong>{value}</strong><small>{detail}</small></C>;
+}
+function Module({number,title,description,status,href,items}:{number:string;title:string;description:string;status:string;href?:string;items:string[]}){
+ const inner=<><div className="admin-module-top"><span>{number}</span><em>{status}</em></div><h3>{title}</h3><p>{description}</p><ul>{items.map(x=><li key={x}>{x}</li>)}</ul>{href?<strong className="admin-module-link">Open workspace →</strong>:<strong className="admin-module-link muted">Control centre module · staged rollout</strong>}</>;
+ return href?<Link className="admin-module-card" href={href}>{inner}</Link>:<article className="admin-module-card">{inner}</article>;
+}
+export default async function AdminDashboardPage(){
+ let sb:any;try{sb=await createSupabaseServerClient();}catch{return <main className="admin-empty"><h1>Platform configuration required</h1><p>Supabase connection settings are not configured for this deployment.</p></main>;}
+ const {data:{user},error:userError}=await sb.auth.getUser();if(userError||!user)redirect("/admin/login");
+ const {data:roles,error:roleError}=await sb.from("user_roles").select("role").eq("user_id",user.id);
+ if(roleError||!roles?.some((x:any)=>x.role==="owner"))return <main className="admin-empty"><h1>Access not authorised</h1><p>This control room is reserved for the BABTEK founder account.</p><SignOutButton/></main>;
+ const tables=["enquiries","projects","clients","professional_partners","divisions","services","site_pages","media_assets","projects_public","insights","careers","partnership_opportunities","product_initiatives","quotations","agreements","invoices","client_payments","expenses","partner_payment_schedules","project_tasks","project_milestones","audit_logs","user_roles"];
+ const counts=await Promise.all(tables.map(t=>countRows(sb,t)));const n=Object.fromEntries(tables.map((t,i)=>[t,counts[i]]));
+ const [profile,invRes,payRes,expenseRes,partnerPayRes,recentEnq,recentProjects,activity,brand]=await Promise.all([
+  sb.from("profiles").select("full_name").eq("id",user.id).maybeSingle(),
+  sb.from("invoices").select("total_amount,status,currency_code").limit(1000),
+  sb.from("client_payments").select("amount,status,currency_code").limit(1000),
+  sb.from("expenses").select("amount,currency_code").limit(1000),
+  sb.from("partner_payment_schedules").select("amount,paid_amount,status").limit(1000),
+  sb.from("enquiries").select("id,reference_code,full_name,subject,status,created_at").order("created_at",{ascending:false}).limit(6),
+  sb.from("projects").select("id,project_code,name,status,target_end_date").order("created_at",{ascending:false}).limit(6),
+  sb.from("audit_logs").select("id,action,table_name,record_id,created_at").order("created_at",{ascending:false}).limit(8),
+  sb.from("brand_settings").select("is_published").eq("id",true).maybeSingle()
+ ]);
+ const invoices=invRes.data??[],payments=payRes.data??[],expenses=expenseRes.data??[],partnerPays=partnerPayRes.data??[];
+ const outstanding=invoices.filter((x:any)=>["issued","partially_paid","overdue"].includes(x.status)).reduce((s:number,x:any)=>s+Number(x.total_amount||0),0);
+ const received=payments.filter((x:any)=>["confirmed","paid","completed"].includes(String(x.status).toLowerCase())).reduce((s:number,x:any)=>s+Number(x.amount||0),0);
+ const expenseTotal=expenses.reduce((s:number,x:any)=>s+Number(x.amount||0),0);
+ const partnerDue=partnerPays.filter((x:any)=>["due","partially_paid"].includes(x.status)).reduce((s:number,x:any)=>s+Math.max(0,Number(x.amount||0)-Number(x.paid_amount||0)),0);
+ const first=(profile.data?.full_name||"Founder").split(" ")[0];
+ const modules=[
+  {number:"01",title:"Corporate website",description:"Control the public BABTEK experience and what visitors see.",status:"FOUNDATION LIVE",href:"/admin/brand",items:["Brand identity and logo","Pages, services and divisions","Portfolio, insights and media","Careers and partnership publishing"]},
+  {number:"02",title:"Client management system",description:"Manage the full client relationship from first enquiry to close-out.",status:"REGISTERS STARTED",href:"/admin/clients",items:["Enquiries and client records","Client accounts and communication","Quotations, agreements and invoices","Payments and client project visibility"]},
+  {number:"03",title:"Project operations platform",description:"Coordinate project delivery across divisions and independent specialists.",status:"PROJECT REGISTER LIVE",href:"/admin/projects",items:["Project records and milestones","Tasks, documents and delivery","Division and partner assignments","Project cost, margin and close-out"]},
+  {number:"04",title:"BABTEK administration dashboard",description:"Founder-level view of business activity, people, finance and governance.",status:"CENTRAL CONTROL ROOM",href:"/admin",items:["Enterprise performance and reports","Finance, expenses and partner payments","User roles, permissions and audit trail","Platform configuration and oversight"]},
+  {number:"05",title:"Technology ecosystem",description:"Manage BABTEK software initiatives and the roadmap for connected products.",status:"PRODUCTS IN DEVELOPMENT",href:"/technology",items:["BABTEK AEC Workspace and Commercial","CADWAL-X and WAL-X Portfolio","BABTEK AI and BABTEK Studio","BABTEK-OS and future integrations"]}
+ ];
+ return <main className="admin-shell">
+ <aside className="admin-sidebar"><Link href="/admin" className="admin-sidebar-brand"><span className="admin-brand-mark">B</span><span><strong>BABTEK CORE</strong><small>ENTERPRISE CONTROL</small></span></Link>
+ <p className="admin-nav-label">COMMAND CENTRE</p><Link className="admin-nav-item active" href="/admin"><span>▦</span> Enterprise overview</Link>
+ <p className="admin-nav-label">FIVE INTEGRATED PLATFORMS</p><Link className="admin-nav-item" href="/"><span>01</span> Corporate website</Link><Link className="admin-nav-item" href="/admin/enquiries"><span>02</span> Client management</Link><Link className="admin-nav-item" href="/admin/projects"><span>03</span> Project operations</Link><Link className="admin-nav-item" href="/admin#administration"><span>04</span> Administration</Link><Link className="admin-nav-item" href="/technology"><span>05</span> Technology ecosystem</Link>
+ <p className="admin-nav-label">ENTERPRISE RECORDS</p><Link className="admin-nav-item" href="/admin/enquiries">Enquiries</Link><Link className="admin-nav-item" href="/admin/projects">Projects</Link><Link className="admin-nav-item" href="/admin/clients">Clients</Link><Link className="admin-nav-item" href="/admin/partners">Professional partners</Link><Link className="admin-nav-item" href="/admin/brand">Brand management</Link>
+ <div className="admin-sidebar-bottom"><span className="admin-avatar">MD</span><span><strong>{profile.data?.full_name||"Founder"}</strong><small>FOUNDER · OWNER AUTHORITY</small></span></div></aside>
+ <section className="admin-main"><header className="admin-topbar"><div><span className="admin-breadcrumb">BABTEK / FOUNDER COMMAND CENTRE</span><h1>Enterprise control room</h1></div><div className="admin-top-actions"><span className="admin-secure-label">● Founder-only session</span><SignOutButton/></div></header>
+ <div className="admin-welcome"><div><p className="admin-kicker">ONE ENTERPRISE · FIVE CONNECTED PLATFORMS</p><h2>Welcome back, {first}.</h2><p>Company-wide oversight of BABTEK Core Nigeria Limited, its public presence, operations, commercial activity and technology initiatives.</p></div><span className="admin-welcome-mark">B</span></div>
+ <div className="admin-section-heading"><div><h2>Enterprise at a glance</h2><p>Live record counts from the connected platform database. Empty records are not treated as completed operations.</p></div><span className="admin-live-label">LIVE DATABASE VIEW</span></div>
+ <div className="admin-metric-grid">
+ <Stat label="ENQUIRIES" value={n.enquiries??"—"} detail="Lead and enquiry records" href="/admin/enquiries"/><Stat label="PROJECTS" value={n.projects??"—"} detail="Project delivery records" href="/admin/projects"/><Stat label="CLIENTS" value={n.clients??"—"} detail="Client register" href="/admin/clients"/><Stat label="PROFESSIONAL PARTNERS" value={n.professional_partners??"—"} detail="Independent partner register" href="/admin/partners"/>
+ <Stat label="DIVISIONS" value={n.divisions??"—"} detail="Integrated business divisions"/><Stat label="SERVICES" value={n.services??"—"} detail="Service catalogue records"/><Stat label="QUOTATIONS" value={n.quotations??"—"} detail="Commercial proposals"/><Stat label="INVOICES" value={n.invoices??"—"} detail="Invoice records"/>
+ </div>
+ <div className="admin-section-heading"><div><h2>The five integrated BABTEK concepts</h2><p>All five are one connected enterprise platform—not five disconnected websites.</p></div></div>
+ <div className="admin-five-grid">{modules.map(m=><Module key={m.number} {...m}/>)}</div>
+ <div className="admin-section-heading" id="administration"><div><h2>Founder’s enterprise oversight</h2><p>Operational, commercial, content and governance snapshots.</p></div></div>
+ <div className="admin-content-grid">
+ <section className="admin-panel"><div className="admin-panel-heading"><div><h2>Finance snapshot</h2><p>Amounts derived from currently recorded transactions.</p></div><span>NGN</span></div><div className="admin-finance-rows"><div><span>Outstanding invoice value</span><strong>{money(outstanding)}</strong></div><div><span>Recorded completed receipts</span><strong>{money(received)}</strong></div><div><span>Recorded expenses</span><strong>{money(expenseTotal)}</strong></div><div><span>Unpaid partner schedules</span><strong>{money(partnerDue)}</strong></div></div><p className="admin-footnote">These are separate operational snapshots, not a reconciled cashbook, net profit, tax statement or audited accounts. Totals use up to 1,000 latest rows per table.</p></section>
+ <section className="admin-panel"><div className="admin-panel-heading"><div><h2>Website and publishing</h2><p>Content inventory and brand approval status.</p></div><span>{brand.data?.is_published?"BRAND PUBLISHED":"BRAND DRAFT"}</span></div><div className="admin-inventory-grid"><div><strong>{n.site_pages??"—"}</strong><span>Website pages</span></div><div><strong>{n.services??"—"}</strong><span>Services</span></div><div><strong>{n.projects_public??"—"}</strong><span>Public portfolio</span></div><div><strong>{n.insights??"—"}</strong><span>Insights</span></div><div><strong>{n.media_assets??"—"}</strong><span>Media assets</span></div><div><strong>{n.careers??"—"}</strong><span>Career listings</span></div><div><strong>{n.partnership_opportunities??"—"}</strong><span>Partnership notices</span></div><div><strong>{n.product_initiatives??"—"}</strong><span>Product initiatives</span></div></div><Link className="admin-inline-link" href="/admin/brand">Manage corporate brand →</Link></section>
+ </div>
+ <div className="admin-content-grid admin-lower-grid">
+ <section className="admin-panel"><div className="admin-panel-heading"><div><h2>Latest enquiries</h2><p>New business and service requests.</p><Link className="admin-inline-link" href="/admin/enquiries">Open enquiry register →</Link></div><span>{n.enquiries??0} total</span></div>{recentEnq.data?.length?<div className="admin-record-list">{recentEnq.data.map((x:any)=><article key={x.id}><div><strong>{x.full_name}</strong><p>{x.subject||"General enquiry"} · {x.reference_code||"No reference"}</p></div><span className="admin-status">{x.status}</span></article>)}</div>:<p className="admin-empty-note">No enquiries recorded yet.</p>}</section>
+ <section className="admin-panel"><div className="admin-panel-heading"><div><h2>Project delivery watch</h2><p>Latest projects in the delivery register.</p><Link className="admin-inline-link" href="/admin/projects">Open project register →</Link></div><span>{n.projects??0} total</span></div>{recentProjects.data?.length?<div className="admin-record-list">{recentProjects.data.map((x:any)=><article key={x.id}><div><strong>{x.name}</strong><p>{x.project_code||"Project"}{x.target_end_date?" · Due "+x.target_end_date:""}</p></div><span className="admin-status">{x.status}</span></article>)}</div>:<p className="admin-empty-note">No projects registered yet.</p>}</section>
+ </div>
+ <section className="admin-panel admin-audit-panel"><div className="admin-panel-heading"><div><h2>Platform activity and audit trail</h2><p>Recent recorded system events. Full audit management and filters are part of the governance module rollout.</p></div><span>{n.audit_logs??0} events</span></div>{activity.data?.length?<div className="admin-record-list">{activity.data.map((x:any)=><article key={x.id}><div><strong>{x.action}</strong><p>{x.table_name} · {x.record_id||"Record"}</p></div><span className="admin-status">{new Date(x.created_at).toLocaleString("en-NG")}</span></article>)}</div>:<p className="admin-empty-note">No audit events are currently available to display.</p>}</section>
+ <section className="admin-panel admin-governance"><div className="admin-panel-heading"><div><h2>Access and governance</h2><p>Founder retains ultimate authority. Administrative access must be explicitly assigned and scoped.</p></div><span>OWNER CONTROL</span></div><div className="admin-governance-grid"><div><strong>{n.user_roles??"—"}</strong><span>Assigned role records</span></div><p>Planned controlled access: owner, administrator, operations, finance, content manager, client and professional partner. Client and partner accounts must only access their own permitted information. Role assignment, permission editor, user invitations and account lifecycle tools are not yet exposed in this dashboard.</p></div></section>
+ <footer className="admin-footer">BABTEK CORE NIGERIA LIMITED · BUILDING A BETTER FUTURE <span>Founder control centre · Development platform · Not yet a production ERP.</span></footer>
+ </section></main>;
 }
