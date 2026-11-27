@@ -37,12 +37,6 @@ export default async function CommunicationsPage({ searchParams }: { searchParam
     if (message.project_id && message.message_type==="client_reply") { const current=messagesByProject.get(message.project_id)||[]; current.push(message); messagesByProject.set(message.project_id,current); }
     if (message.partner_engagement_id && message.message_type==="partner_update") { const current=messagesByEngagement.get(message.partner_engagement_id)||[]; current.push(message); messagesByEngagement.set(message.partner_engagement_id,current); }
   }
-  const clientThreadCount = messagesByProject.size;
-  const partnerThreadCount = messagesByEngagement.size;
-  const enquiryThreadCount = messagesByEnquiry.size;
-  const latestMessageAt = messages?.[0]?.created_at ?? null;
-  const clientMessageCount = (messages || []).filter((item) => item.message_type === "client_reply").length;
-  const partnerMessageCount = (messages || []).filter((item) => item.message_type === "partner_update").length;
   const messagesByEnquiry = new Map<string, typeof messages>();
   for (const message of messages || []) {
     if (!message.enquiry_id) continue;
@@ -50,6 +44,12 @@ export default async function CommunicationsPage({ searchParams }: { searchParam
     current.push(message);
     messagesByEnquiry.set(message.enquiry_id, current);
   }
+  const clientThreadCount = messagesByProject.size;
+  const partnerThreadCount = messagesByEngagement.size;
+  const enquiryThreadCount = messagesByEnquiry.size;
+  const latestMessageAt = messages?.[0]?.created_at ?? null;
+  const clientMessageCount = (messages || []).filter((item) => item.message_type === "client_reply").length;
+  const partnerMessageCount = (messages || []).filter((item) => item.message_type === "partner_update").length;
 
   return (
     <main className="admin-shell">
