@@ -8,10 +8,10 @@ export async function linkPartnerAccount(formData:FormData){
  const sb=await createSupabaseServerClient();const {data:{user}}=await sb.auth.getUser();if(!user)redirect("/admin/login");
  const {data:roles}=await sb.from("user_roles").select("role").eq("user_id",user.id);if(!roles?.some((r:any)=>r.role==="owner"))redirect("/admin");
  const [{data:partner},{data:profile}]=await Promise.all([
-  sb.from("professional_partners").select("id").eq("id",partnerId).maybeSingle(),
+  sb.from("professional_partners").select("id,relationship_status").eq("id",partnerId).maybeSingle(),
   sb.from("profiles").select("id").eq("id",userId).maybeSingle()
  ]);
- if(!partner||!profile)redirect("/admin/partners?error=account");
+ if(!partner||partner.relationship_status!=="active"||!profile)redirect("/admin/partners?error=account");
  const {error:roleError}=await sb.from("user_roles").upsert({user_id:userId,role:"partner",granted_by:user.id},{onConflict:"user_id,role"});
  if(roleError){console.error("Partner role assignment failed",roleError.message);redirect("/admin/partners?error=link");}
  const {error:linkError}=await sb.from("partner_user_links").upsert({partner_id:partnerId,user_id:userId},{onConflict:"partner_id,user_id"});
