@@ -62,7 +62,7 @@ export default async function CommunicationsPage({ searchParams }: { searchParam
         <div className="admin-sidebar-bottom"><span className="admin-avatar">MD</span><span><strong>BABTEK workspace</strong><small>STAFF ACCESS</small></span></div>
       </aside>
       <section className="admin-main">
-        <header className="admin-topbar"><div><span className="admin-breadcrumb">BABTEK / WORKSPACE / COMMUNICATIONS</span><h1>Communication centre</h1></div><div className="admin-top-actions"><Link className="admin-signout" href="/admin">Overview</Link><SignOutButton /></div></header>
+        <header className="admin-topbar"><div><span className="admin-breadcrumb">BABTEK / WORKSPACE / COMMUNICATIONS</span><h1>Communication centre</h1></div><div className="admin-top-actions"><LiveWorkspaceRefresh/><Link className="admin-signout" href="/admin">Overview</Link><SignOutButton /></div></header>
         <div className="admin-welcome admin-register-welcome"><div><p className="admin-kicker">RELATIONSHIP & PROJECT RECORD</p><h2>Keep every project conversation organised.</h2><p>Internal notes are attached to enquiry records and visible to authorised BABTEK staff.</p></div><span className="admin-welcome-mark">☷</span></div>
         {params.sent === "1" && <p className="admin-notice">Internal note saved to the enquiry record.</p>}{params.replied === "1" && <p className="admin-notice">Client-facing project reply saved and is visible in the client portal.</p>}{params.partner_replied==="1"&&<p className="admin-notice">Partner reply saved and is visible to linked partner accounts.</p>}
         {params.error && <p className="admin-alert">The message could not be saved. Check the text and your access, then try again.</p>}
