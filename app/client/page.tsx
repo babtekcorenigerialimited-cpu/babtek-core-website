@@ -20,7 +20,7 @@ export default async function ClientPortal({searchParams}:{searchParams:Promise<
   sb.from("invoices").select("id,invoice_number,status,total_amount,currency_code,issue_date,due_date").in("client_id",clientIds).in("status",["issued","partially_paid","paid","overdue"]).order("created_at",{ascending:false}),
   sb.from("agreements").select("id,agreement_number,agreement_type,status,effective_date,expiry_date,terms_summary").in("client_id",clientIds).in("status",["issued","signed"]).order("created_at",{ascending:false})
  ]);
- const projects=projectRes.data||[];const projectIds=projects.map((p:any)=>p.id);
+ const projects=projectRes.data||[];const projectIds=projects.map((p:any)=>p.id);\n const {data:mySubmissions}=await sb.from("project_file_submissions").select("id,project_id,title,original_filename,review_status,review_note,created_at").eq("uploader_id",user.id).order("created_at",{ascending:false}).limit(100);
  const [milestoneRes,messageRes,paymentRes,documentRes]=projectIds.length?await Promise.all([
   sb.from("project_milestones").select("id,project_id,title,description,deliverable,due_date,status,progress_percent,display_order").in("project_id",projectIds).eq("client_visible",true).order("display_order"),
   sb.from("communication_messages").select("id,project_id,sender_id,body,message_type,created_at").in("project_id",projectIds).eq("message_type","client_reply").order("created_at",{ascending:false}).limit(200),
