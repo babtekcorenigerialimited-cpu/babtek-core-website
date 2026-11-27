@@ -1,11 +1,10 @@
 import Link from "next/link";
-import { PageHero } from "@/components/page-hero";
-import { divisions } from "@/components/division-data";
-
-export default function ServicesPage() {
-  return <main><PageHero eyebrow="WHAT WE DO" title="Services shaped around" accent="your requirements." description="Explore the service areas connected to BABTEK's multidisciplinary structure. Each engagement is scoped according to the project, available capability and appropriate professional input." />
-    <section className="section-space"><div className="container"><div className="directory-grid">
-      {divisions.map((d)=><article className="directory-card" key={d.slug}><span>{d.pillar.toUpperCase()}</span><h2>{d.name}</h2><p>{d.summary}</p><Link className="text-link" href={`/divisions/${d.slug}`}>View service areas <span aria-hidden="true">→</span></Link></article>)}
-    </div><div className="note-panel"><strong>Project-specific scope</strong><p>Not every service is delivered by an in-house team. BABTEK may coordinate suitably qualified independent professionals and delivery partners. Scope, availability, professional responsibility and fees are confirmed before engagement.</p></div></div></section>
-  </main>;
+import {PageHero} from "@/components/page-hero";
+import {divisions as fallbackDivisions} from "@/components/division-data";
+import {getPublicDivisions,getPublicContent} from "@/lib/public-content";
+export const dynamic="force-dynamic";
+export default async function ServicesPage(){
+ const [liveDivisions,services]=await Promise.all([getPublicDivisions(),getPublicContent<any>("services","id,name,slug,summary,description,delivery_model,lifecycle,display_order","display_order")]);
+ const divisionCards=liveDivisions.length?liveDivisions:fallbackDivisions;
+ return <main><PageHero eyebrow="WHAT WE DO" title="Services shaped around" accent="your requirements." description="Explore the service areas connected to BABTEK's multidisciplinary structure. Each engagement is scoped according to the project, available capability and appropriate professional input."/><section className="section-space"><div className="container">{services.length>0&&<><p className="eyebrow">PUBLISHED SERVICE CATALOGUE</p><div className="directory-grid">{services.map((s:any)=><article className="directory-card" key={s.id}><span>{(s.lifecycle||"developing").toUpperCase()} / {s.delivery_model?.replaceAll("_"," ").toUpperCase()}</span><h2>{s.name}</h2><p>{s.summary||s.description}</p></article>)}</div></>}<div className="directory-grid">{divisionCards.map((d:any)=><article className="directory-card" key={d.slug}><span>{(d.pillar||"BABTEK DIVISION").toUpperCase()}</span><h2>{d.name}</h2><p>{d.summary}</p><Link className="text-link" href={`/divisions/${d.slug}`}>View service areas <span aria-hidden="true">→</span></Link></article>)}</div><div className="note-panel"><strong>Project-specific scope</strong><p>Not every service is delivered by an in-house team. BABTEK may coordinate suitably qualified independent professionals and delivery partners. Scope, availability, professional responsibility and fees are confirmed before engagement.</p></div></div></section></main>;
 }
