@@ -133,3 +133,23 @@ A fresh build of the corrected `ad75c8e` commit is still unverified. Vercel has 
 - Vercel preview deployment `dpl_DUUZMrVAjYPqJE5SPqboeLtFFWD8` for commit `57755651069cd7ffb850f4c439e4a3c4cd55145d` compiled successfully, then failed TypeScript validation in `app/admin/commercial/actions.ts` because a nullable quotation record was not narrowed. An explicit redirect guard has since been added in a later development commit.
 - Later development commits have not received a fresh preview build. GitHub status continues to report Vercel `build-rate-limit`; do not claim the latest source passes a production build.
 - Database migrations `20261127174044`, `20261127174055` and `20261127174158` are applied and their matching SQL files are committed in the development branch.
+
+
+## Open partner network intake (27 November 2026)
+- Added a public **/partner-network** page and website navigation entry. The application is open to professionals, technology collaborators, suppliers, ventures, strategic partners, researchers, educators and other suitable organisations or individuals. No personal invitation is required.
+- Public application intake stores contact information, partner category, specialties, relevant divisions, website/portfolio URL, experience and collaboration interests. The public can submit but cannot read or retrieve applications.
+- Added founder-only review at **/admin/partner-applications** with pending, under-review, more-information-required, approved and declined outcomes.
+- Approval creates the BABTEK partner relationship record, preserves the applicant's capability and collaboration details, and automatically links an existing email-verified account matching the application email. A person who registers later with the same verified email is also linked automatically after confirmation.
+- Partner portal access remains limited to projects and engagements explicitly assigned by BABTEK. Approval to join the network is not employment, a guarantee of work, or access to confidential projects.
+- The public application currently accepts portfolio URLs and written capability statements, not uploaded CVs/certificates. Secure supporting-document upload can be added as a separate review stage.
+- Email/SMS notifications are not yet configured. Applicants receive an application reference on screen; BABTEK must contact them through the supplied details until an outbound notification provider is connected.
+- The public intake has basic server validation and a honeypot, but no provider-backed rate limiting or CAPTCHA yet. Add abuse protection before promoting the application form widely.
+- Existing partner records and legacy accounts can still be linked manually by the founder; the automatic verified-email matching applies to the open-application approval flow.
+
+## Submission security follow-up
+- Client and partner file-submission server actions now validate the authenticated uploader, project/engagement-specific storage path, allowed MIME type, filename length and 50 MB size before inserting submission metadata.
+- Database insert policies now independently enforce the expected user/project/engagement storage-path segments and MIME allowlist. This supplements private-bucket storage policies; it does not replace end-to-end tests with separate client and partner accounts.
+
+## Alternative deployment and independent CI
+- Vercel's current Hobby team API has been rate-limited for deployment creation. The source repository remains on GitHub and GitHub Actions is configured to run typecheck and build on pushes/PRs, with a manual workflow trigger and Node.js 22.
+- Render has been identified as a possible secondary hosting/deployment option. It is not connected and no migration or deployment has been made. Keep Supabase as the shared backend if a secondary host is adopted; do not duplicate the database or auth system.
