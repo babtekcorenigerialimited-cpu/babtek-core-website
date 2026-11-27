@@ -18,3 +18,11 @@ create index if not exists project_milestones_project_order_idx
   on public.project_milestones(project_id, display_order, due_date);
 create index if not exists project_milestones_project_status_idx
   on public.project_milestones(project_id, status);
+
+-- Client and partner accounts may read only milestones explicitly approved for sharing.
+drop policy if exists "milestones scoped read" on public.project_milestones;
+create policy "milestones scoped read" on public.project_milestones for select to authenticated
+using (
+  public.has_role(array['owner','administrator','operations','finance','content_manager']::public.app_role[])
+  or (client_visible and public.can_access_project(project_id))
+);
