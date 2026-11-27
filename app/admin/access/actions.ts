@@ -1,0 +1,8 @@
+"use server";
+import {redirect} from "next/navigation";
+import {createSupabaseServerClient} from "@/lib/supabase/server";
+const roles=["administrator","operations","finance","content_manager","client","partner"] as const;
+type Role=typeof roles[number];
+async function ownerClient(){const sb=await createSupabaseServerClient();const {data:{user}}=await sb.auth.getUser();if(!user)redirect("/admin/login");const {data}=await sb.from("user_roles").select("role").eq("user_id",user.id);if(!data?.some((r:any)=>r.role==="owner"))redirect("/admin");return {sb,user};}
+export async function grantRole(form:FormData){const {sb,user}=await ownerClient();const userId=String(form.get("user_id")||"");const role=String(form.get("role")||"") as Role;if(!/^[0-9a-f-]{36}$/i.test(userId)||!roles.includes(role))redirect("/admin/access?error=invalid");if(userId===user.id)redirect("/admin/access?error=self");const {error}=await sb.from("user_roles").upsert({user_id:userId,role,granted_by:user.id},{onConflict:"user_id,role"});if(error){console.error("Role grant failed",error.message);redirect("/admin/access?error=save");}redirect("/admin/access?saved=grant");}
+export async function revokeRole(form:FormData){const {sb,user}=await ownerClient();const userId=String(form.get("user_id")||"");const role=String(form.get("role")||"") as Role;if(!/^[0-9a-f-]{36}$/i.test(userId)||!roles.includes(role))redirect("/admin/access?error=invalid");if(userId===user.id)redirect("/admin/access?error=self");const {error}=await sb.from("user_roles").delete().eq("user_id",userId).eq("role",role);if(error){console.error("Role revoke failed",error.message);redirect("/admin/access?error=save");}redirect("/admin/access?saved=revoke");}
