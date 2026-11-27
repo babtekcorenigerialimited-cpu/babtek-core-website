@@ -5,7 +5,8 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { SignOutButton } from "@/components/admin/signout-button";
 import { updateProjectStatus } from "./actions";
 import { createPartnerEngagement, createPartnerPaymentSchedule } from "./partner-actions";
-import { createProjectTask, uploadProjectDocument } from "./delivery-actions";
+import { createProjectTask } from "./delivery-actions";
+import { ProjectDocumentUploader } from "@/components/admin/project-document-uploader";
 
 export const metadata: Metadata = { title: "Projects | BABTEK Owner Workspace" };
 export const dynamic = "force-dynamic";
@@ -84,13 +85,7 @@ export default async function AdminProjectsPage({ searchParams }: { searchParams
               <section className="project-delivery-manager">
                 <div className="admin-panel-heading"><div><h4>Project document library</h4><p>Store project files privately and explicitly choose who may see each file.</p></div><span>{(projectDocuments || []).filter((doc) => doc.project_id === item.id).length} files</span></div>
                 <div className="project-document-list">{(projectDocuments || []).filter((doc) => doc.project_id === item.id).map((doc) => <article key={doc.id}><div><strong>{doc.title}</strong><p>{doc.document_type || "Project document"} · {doc.version_label || "No version label"}</p></div><span className={doc.client_visible ? "admin-status" : "admin-status muted"}>Client: {doc.client_visible ? "Visible" : "Private"}</span><span className={doc.partner_visible ? "admin-status" : "admin-status muted"}>Partner: {doc.partner_visible ? "Visible" : "Private"}</span></article>)}{!(projectDocuments || []).some((doc) => doc.project_id === item.id) && <p className="admin-empty-note">No documents have been uploaded.</p>}</div>
-                <form action={uploadProjectDocument} className="project-engagement-form" encType="multipart/form-data">
-                  <input type="hidden" name="project_id" value={item.id}/>
-                  <div className="project-engagement-fields"><label>Document title<input name="title" required maxLength={180} placeholder="e.g. Approved architectural drawings"/></label><label>Document category<input name="document_type" maxLength={80} placeholder="Drawing, report, contract..."/></label><label>Version<input name="version_label" maxLength={50} placeholder="Rev 01"/></label><label>File (max 50 MB)<input name="file" type="file" required accept=".pdf,.jpg,.jpeg,.png,.webp,.doc,.docx,.xls,.xlsx,.pptx,.txt,.zip"/></label></div>
-                  <div className="project-document-permissions"><label><input type="checkbox" name="client_visible"/> Share with linked client</label><label><input type="checkbox" name="partner_visible"/> Share with assigned partner(s)</label></div>
-                  <small>Files remain private unless you explicitly enable a visibility option. Partner visibility is still limited to the partner assigned to the relevant project.</small>
-                  <button type="submit">Upload to private project library</button>
-                </form>
+                <ProjectDocumentUploader projectId={item.id}/>         </form>
               </section>
               <section className="project-partner-manager">
                 <div className="admin-panel-heading"><div><h4>Independent specialist engagements</h4><p>Assign a verified professional partner to a defined project scope.</p></div><span>{(engagements || []).filter((e) => e.project_id === item.id).length} assigned</span></div>
