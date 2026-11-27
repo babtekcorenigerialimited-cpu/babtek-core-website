@@ -50,6 +50,11 @@ export default async function CommunicationsPage({ searchParams }: { searchParam
   const latestMessageAt = messages?.[0]?.created_at ?? null;
   const clientMessageCount = (messages || []).filter((item) => item.message_type === "client_reply").length;
   const partnerMessageCount = (messages || []).filter((item) => item.message_type === "partner_update").length;
+  const incomingMessages=(messages||[]).filter((item)=>item.sender_id!==user.id);
+  const {data:readReceipts,error:readReceiptsError}=incomingMessages.length?await supabase.from("communication_message_reads").select("message_id").eq("reader_id",user.id).in("message_id",incomingMessages.map((item)=>item.id)):{data:[],error:null};
+  const readMessageIds=new Set((readReceipts||[]).map((item)=>item.message_id));
+  const unreadMessageCount=readReceiptsError?null:incomingMessages.filter((item)=>!readMessageIds.has(item.id)).length;
+  if(incomingMessages.length){const {error:markReadError}=await supabase.from("communication_message_reads").upsert(incomingMessages.map((item)=>({message_id:item.id,reader_id:user.id})),{onConflict:"message_id,reader_id",ignoreDuplicates:true});if(markReadError)console.error("Staff message read tracking failed",markReadError.message);}
 
   return (
     <main className="admin-shell">
@@ -73,6 +78,7 @@ export default async function CommunicationsPage({ searchParams }: { searchParam
         <div className="admin-welcome admin-register-welcome"><div><p className="admin-kicker">RELATIONSHIP & PROJECT RECORD</p><h2>Keep every project conversation organised.</h2><p>Internal notes are attached to enquiry records and visible to authorised BABTEK staff.</p></div><span className="admin-welcome-mark">☷</span></div>
         {params.sent === "1" && <p className="admin-notice">Internal note saved to the enquiry record.</p>}{params.replied === "1" && <p className="admin-notice">Client-facing project reply saved and is visible in the client portal.</p>}{params.partner_replied==="1"&&<p className="admin-notice">Partner reply saved and is visible to linked partner accounts.</p>}
         {params.error && <p className="admin-alert">The message could not be saved. Check the text and your access, then try again.</p>}
+        {unreadMessageCount!==null&&unreadMessageCount>0&&<p className="admin-notice">{unreadMessageCount} unread message{unreadMessageCount===1?"":"s"} across the workspace. Opening this centre marks the messages as read for your staff account.</p>}
         <section className="comms-command-grid" aria-label="Communication activity summary">
           <article className="comms-command-card"><span>ENQUIRY THREADS</span><strong>{enquiryThreadCount}</strong><small>{enquiries?.length ?? 0} enquiries in current register view</small></article>
           <article className="comms-command-card"><span>CLIENT PROJECT THREADS</span><strong>{clientThreadCount}</strong><small>{clientMessageCount} client-visible messages recorded</small></article>
