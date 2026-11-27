@@ -4,11 +4,12 @@ import Link from "next/link";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { SignOutButton } from "@/components/admin/signout-button";
 import { createPartner } from "./actions";
+import { linkPartnerAccount } from "./link-actions";
 
 export const metadata: Metadata = { title: "Professional Partners | BABTEK Owner Workspace" };
 export const dynamic = "force-dynamic";
 
-export default async function AdminPartnersPage({ searchParams }: { searchParams: Promise<{ created?: string; error?: string }> }) {
+export default async function AdminPartnersPage({ searchParams }: { searchParams: Promise<{ created?: string; linked?: string; error?: string }> }) {
   const params = await searchParams;
   const supabase = await createSupabaseServerClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -19,6 +20,15 @@ export default async function AdminPartnersPage({ searchParams }: { searchParams
   const { data: partners, error } = await supabase.from("professional_partners")
     .select("id,legal_name,trading_name,email,phone,professional_category,registration_details,created_at")
     .order("created_at", { ascending: false }).limit(250);
+  const partnerIds = (partners || []).map((partner) => partner.id);
+  const { data: links } = partnerIds.length
+    ? await supabase.from("partner_user_links").select("partner_id,user_id").in("partner_id", partnerIds)
+    : { data: [] as { partner_id: string; user_id: string }[] };
+  const linkedUserIds = [...new Set((links || []).map((link) => link.user_id))];
+  const { data: linkedProfiles } = linkedUserIds.length
+    ? await supabase.from("profiles").select("id,full_name").in("id", linkedUserIds)
+    : { data: [] as { id: string; full_name: string | null }[] };
+  const profileNames = new Map((linkedProfiles || []).map((profile) => [profile.id, profile.full_name || profile.id]));
 
   return <main className="admin-shell">
     <aside className="admin-sidebar">
@@ -36,8 +46,8 @@ export default async function AdminPartnersPage({ searchParams }: { searchParams
     <section className="admin-main">
       <header className="admin-topbar"><div><span className="admin-breadcrumb">BABTEK / RELATIONSHIPS / PARTNERS</span><h1>Professional partner register</h1></div><div className="admin-top-actions"><Link className="admin-signout" href="/admin">Overview</Link><SignOutButton /></div></header>
       <div className="admin-welcome admin-register-welcome"><div><p className="admin-kicker">INDEPENDENT PROFESSIONAL NETWORK</p><h2>Coordinate specialist expertise with clarity.</h2><p>Record independent professionals and firms engaged on a project-by-project basis.</p></div><span className="admin-welcome-mark">◇</span></div>
-      {params.created === "1" && <p className="admin-notice">Professional partner record created.</p>}
-      {params.error && <p className="admin-alert">{params.error === "required" ? "A legal or registered name is required." : "The partner record could not be saved. Check permissions and try again."}</p>}
+      {params.created === "1" && <p className="admin-notice">Professional partner record created.</p>}{params.linked === "1" && <p className="admin-notice">Partner login linked and partner access granted.</p>}
+      {params.error && <p className="admin-alert">{params.error === "required" ? "A legal or registered name is required." : params.error === "account" ? "That user account or profile was not found. Ask the partner to register and confirm their email first." : params.error === "link" ? "The partner account could not be linked. Check the UUID and permissions." : "The partner record could not be saved. Check permissions and try again."}</p>}
       <section className="admin-panel admin-register-panel">
         <div className="admin-panel-heading"><div><h2>Add a professional partner</h2><p>Record an independent specialist or professional firm. This does not create a staff position or login.</p></div></div>
         <form action={createPartner} className="admin-create-form">
@@ -52,7 +62,10 @@ export default async function AdminPartnersPage({ searchParams }: { searchParams
       </section>
       <section className="admin-panel admin-register-panel" style={{marginTop:16}}>
         <div className="admin-panel-heading"><div><h2>Professional partner network</h2><p>Latest 250 records, newest first.</p></div><span>{partners?.length ?? 0} shown</span></div>
-        {error ? <p className="admin-alert">Partner records could not be loaded.</p> : partners?.length ? <div className="admin-record-list">{partners.map((partner) => <article key={partner.id}><div><strong>{partner.trading_name || partner.legal_name}</strong><p>{[partner.professional_category, partner.email, partner.phone, partner.registration_details].filter(Boolean).join(" · ")}</p></div><span className="admin-status">INDEPENDENT</span></article>)}</div> : <p className="admin-empty-note">No partner records yet. Add verified specialists as BABTEK establishes engagements.</p>}
+        {error ? <p className="admin-alert">Partner records could not be loaded.</p> : partners?.length ? <div className="admin-record-list">{partners.map((partner) => {
+          const partnerLinks = (links || []).filter((link) => link.partner_id === partner.id);
+          return <article key={partner.id} className="partner-admin-record"><div><strong>{partner.trading_name || partner.legal_name}</strong><p>{[partner.professional_category, partner.email, partner.phone, partner.registration_details].filter(Boolean).join(" · ")}</p><p>{partnerLinks.length ? "Linked portal user(s): " + partnerLinks.map((link) => profileNames.get(link.user_id) || link.user_id).join(", ") : "No portal account linked yet."}</p></div><div className="partner-link-form"><form action={linkPartnerAccount}><input type="hidden" name="partner_id" value={partner.id}/><label>Registered user account UUID<input name="user_id" required placeholder="Partner shares account ID after registration"/></label><button type="submit">Link account & grant partner access</button></form></div><span className="admin-status">INDEPENDENT</span></article>;
+        })}</div> : <p className="admin-empty-note">No partner records yet. Add verified specialists as BABTEK establishes engagements.</p>}
       </section>
       <footer className="admin-footer">BABTEK CORE NIGERIA LIMITED <span>Professional partner records · Owner access</span></footer>
     </section>
