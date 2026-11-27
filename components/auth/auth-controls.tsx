@@ -47,3 +47,15 @@ export function PasswordRecoveryForm({mode,returnTo="/client/login"}:{mode:"requ
  }
  return <form className="admin-login-form" onSubmit={submit}>{mode==="request"?<><label>Email address<input type="email" autoComplete="email" required value={email} onChange={e=>setEmail(e.target.value)}/></label><button className="admin-primary-button" disabled={busy}>{busy?"Sending recovery link…":"Send password recovery link"}</button></>:<><label>New password<input type="password" minLength={8} autoComplete="new-password" required value={password} onChange={e=>setPassword(e.target.value)}/></label><label>Confirm new password<input type="password" minLength={8} autoComplete="new-password" required value={confirm} onChange={e=>setConfirm(e.target.value)}/></label><button className="admin-primary-button" disabled={busy}>{busy?"Updating password…":"Update password"}</button></>}{error&&<p className="admin-error" role="alert">{error}</p>}{notice&&<p className="admin-notice" role="status">{notice}</p>}</form>;
 }
+
+export function AuthRouteMessage({code}:{code?:string}){
+ const messages:Record<string,string>={
+  google_callback:"Google could not complete sign-in. Check that the Google provider and authorised redirect URLs are configured in Supabase Auth, then try again.",
+  confirmation:"Your confirmation link may have expired or already been used. Request a fresh email and open the newest link.",
+  partner_not_linked:"Your Google account is verified, but this email is not linked to an active, approved BABTEK partner record. Use the email registered with your approved partner profile or contact BABTEK.",
+  client_not_linked:"This account does not currently have client portal access. Please contact BABTEK to verify and link your client account.",
+  admin_not_authorised:"This Google account is not authorised for the founder or administration workspace. Use your authorised founder account."
+ };
+ if(!code||!messages[code])return null;
+ return <p className="admin-alert" role="alert">{messages[code]}</p>;
+}
