@@ -62,3 +62,55 @@ export async function registerProjectDocument(formData: FormData) {
   revalidatePath("/admin/projects"); revalidatePath("/partner"); revalidatePath("/client");
   redirect("/admin/projects?document_uploaded=1");
 }
+
+export async function createProjectMilestone(formData: FormData) {
+  const projectId = String(formData.get("project_id") || "");
+  const title = String(formData.get("title") || "").trim().slice(0, 180);
+  const description = String(formData.get("description") || "").trim().slice(0, 3000);
+  const deliverable = String(formData.get("deliverable") || "").trim().slice(0, 3000);
+  const startDate = String(formData.get("start_date") || "").trim();
+  const dueDate = String(formData.get("due_date") || "").trim();
+  const order = Number(formData.get("display_order") || 0);
+  const clientVisible = formData.get("client_visible") === "on";
+  if (!/^[0-9a-f-]{36}$/i.test(projectId) || title.length < 3 || !Number.isInteger(order) || order < 0 || order > 999) redirect("/admin/projects?error=milestone");
+  if (startDate && dueDate && startDate > dueDate) redirect("/admin/projects?error=milestone");
+  const { supabase, user } = await requireProjectManager();
+  const { error } = await supabase.from("project_milestones").insert({
+    project_id: projectId, title, description: description || null, deliverable: deliverable || null,
+    start_date: startDate || null, due_date: dueDate || null, display_order: order,
+    status: "pending", progress_percent: 0, acceptance_status: "not_submitted",
+    client_visible: clientVisible, updated_by: user.id
+  });
+  if (error) { console.error("Project milestone creation failed", error.message); redirect("/admin/projects?error=milestone"); }
+  await supabase.from("audit_logs").insert({ actor_id: user.id, action: "project.milestone_created", table_name: "project_milestones", metadata: { project_id: projectId, title, display_order: order } });
+  revalidatePath("/admin/projects"); revalidatePath("/client");
+  redirect("/admin/projects?milestone_created=1");
+}
+
+export async function updateProjectMilestone(formData: FormData) {
+  const milestoneId = String(formData.get("milestone_id") || "");
+  const projectId = String(formData.get("project_id") || "");
+  const status = String(formData.get("status") || "");
+  const progress = Number(formData.get("progress_percent"));
+  const delayReason = String(formData.get("delay_reason") || "").trim().slice(0, 2000);
+  const acceptance = String(formData.get("acceptance_status") || "not_submitted");
+  const dueDate = String(formData.get("due_date") || "").trim();
+  const clientVisible = formData.get("client_visible") === "on";
+  if (!/^[0-9a-f-]{36}$/i.test(milestoneId) || !/^[0-9a-f-]{36}$/i.test(projectId) ||
+      !["pending","in_progress","completed","delayed","cancelled"].includes(status) ||
+      !Number.isInteger(progress) || progress < 0 || progress > 100 ||
+      !["not_submitted","submitted","accepted","changes_requested"].includes(acceptance) ||
+      (status === "delayed" && delayReason.length < 5)) redirect("/admin/projects?error=milestone");
+  const { supabase, user } = await requireProjectManager();
+  const { error } = await supabase.from("project_milestones").update({
+    status, progress_percent: progress, delay_reason: delayReason || null,
+    acceptance_status: acceptance, due_date: dueDate || null, client_visible: clientVisible,
+    completed_at: status === "completed" ? new Date().toISOString() : null,
+    accepted_at: acceptance === "accepted" ? new Date().toISOString() : null,
+    updated_by: user.id
+  }).eq("id", milestoneId).eq("project_id", projectId);
+  if (error) { console.error("Project milestone update failed", error.message); redirect("/admin/projects?error=milestone"); }
+  await supabase.from("audit_logs").insert({ actor_id: user.id, action: "project.milestone_updated", table_name: "project_milestones", record_id: milestoneId, metadata: { project_id: projectId, status, progress_percent: progress, acceptance_status: acceptance } });
+  revalidatePath("/admin/projects"); revalidatePath("/client");
+  redirect("/admin/projects?milestone_updated=1");
+}
