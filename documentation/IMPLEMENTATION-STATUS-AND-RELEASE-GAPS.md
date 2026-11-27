@@ -91,3 +91,13 @@ Vercel has currently returned HTTP 402 for further deployment creation because t
 - Work remains on `development/platform-foundation`.
 - The `main` branch and production deployment have not been changed by this work.
 - Do not expose the platform to external users until build, auth, RLS, storage and finance tests pass.
+
+
+## Latest database review (27 November 2026)
+- Database health advisor returned no health lints.
+- Payment schedule and payment transaction tables now allow authenticated users to read only through their RLS policies; direct authenticated INSERT/UPDATE/DELETE privileges were revoked. Payment writes must use the two role-checked database functions.
+- The payment transaction table has two SELECT policies: finance staff and the linked partner's own payment records. No direct client-side insert policy exists.
+- Supabase security advisor still reports generic warnings for callable SECURITY DEFINER functions. The payment RPCs deliberately use SECURITY DEFINER to perform atomic writes, but each checks the authenticated user's BABTEK role and validates the requested schedule/engagement. The existing `has_role` and `can_access_project` helpers are also required by RLS. These functions still need a focused security review and adversarial tests.
+- Supabase security advisor flags authenticated-policy access as potentially reachable by anonymous sign-ins across multiple tables and storage. The current Auth user table contains one user and zero anonymous users, but the anonymous sign-in setting itself still needs confirmation in Supabase Auth settings. Disable anonymous sign-ins unless BABTEK deliberately requires them; public enquiry intake does not require anonymous Auth accounts.
+- Supabase security advisor currently reports leaked-password protection as disabled. Re-check the setting in Supabase Authentication → Attack Protection / Password Security even if it was previously toggled.
+- Performance advisor reports 50 unindexed foreign keys, 27 RLS auth-initplan warnings, 37 multiple-permissive-policy warnings and 13 unused indexes. These are optimisation and policy-review items; do not blindly add every index or merge policies without checking query plans and access semantics.
