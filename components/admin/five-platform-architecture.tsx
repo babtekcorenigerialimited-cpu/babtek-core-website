@@ -48,8 +48,8 @@ function TechnologyPreview() {
   </div>;
 }
 export function FivePlatformArchitecture(){
- return <section className="five-architecture" aria-label="Visual showcase of BABTEK's five integrated digital platforms">
-  <div className="five-architecture-heading"><span>THE BABTEK DIGITAL ECOSYSTEM</span><h2>Five experiences.<br/><em>One connected enterprise.</em></h2><p>Explore the visual direction of each part of the BABTEK platform.</p></div>
+ return <section className="five-architecture" aria-label="Founder-only visual showcase of BABTEK's five integrated digital platforms">
+  <div className="five-architecture-heading"><span>THE BABTEK DIGITAL ECOSYSTEM</span><h2>Five experiences.<br/><em>One connected enterprise.</em></h2><p>Private founder view · interface previews for the five connected management areas.</p></div>
   <div className="five-showcase-grid">
     <article className="five-showcase-card showcase-featured"><div className="five-showcase-meta"><span>01 / CORPORATE WEBSITE</span><b>PUBLIC EXPERIENCE</b></div><CorporatePreview/><div className="five-showcase-copy"><h3>Corporate website</h3><p>A confident public presence for the BABTEK brand, services, portfolio and enquiries.</p></div></article>
     <article className="five-showcase-card"><div className="five-showcase-meta"><span>02 / CLIENT MANAGEMENT</span><b>CLIENT EXPERIENCE</b></div><ClientPreview/><div className="five-showcase-copy"><h3>Client management</h3><p>A dedicated space for client accounts, project updates and communication.</p></div></article>
@@ -58,6 +58,6 @@ export function FivePlatformArchitecture(){
     <article className="five-showcase-card showcase-featured showcase-tech-card"><div className="five-showcase-meta"><span>05 / TECHNOLOGY ECOSYSTEM</span><b>INNOVATION EXPERIENCE</b></div><TechnologyPreview/><div className="five-showcase-copy"><h3>Technology ecosystem</h3><p>A growing family of digital products, automation and intelligent workflows.</p></div></article>
   </div>
   <div className="five-showcase-foundation"><div className="foundation-mark">B</div><div><strong>BABTEK CORE</strong><span>ONE SHARED FOUNDATION</span></div><p>IDENTITY&nbsp; · &nbsp;DATA&nbsp; · &nbsp;ACCESS&nbsp; · &nbsp;MESSAGING&nbsp; · &nbsp;DOCUMENTS</p></div>
-  <p className="five-showcase-note">Visual interface concepts. Product availability and operational status are shown separately and will be confirmed as each capability is implemented.</p>
+  <p className="five-showcase-note">FOUNDER-ONLY INTERFACE PREVIEWS · Illustrative screen data, not live client records. Access to this workspace is restricted to the authenticated BABTEK owner.</p>
  </section>;
 }
