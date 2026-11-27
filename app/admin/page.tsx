@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { SignOutButton } from "@/components/admin/signout-button";
 
@@ -49,7 +50,7 @@ export default async function AdminDashboardPage() {
         <a href="/admin" className="admin-sidebar-brand"><span className="admin-brand-mark">B</span><span><strong>BABTEK CORE</strong><small>ENTERPRISE PLATFORM</small></span></a>
         <p className="admin-nav-label">WORKSPACE</p>
         <a className="admin-nav-item active" href="/admin"><span>▦</span> Overview</a>
-        <a className="admin-nav-item" href="/admin#enquiries"><span>✉</span> Enquiries</a>
+        <a className="admin-nav-item" href="/admin/enquiries"><span>✉</span> Enquiries</a>
         <a className="admin-nav-item" href="/admin#projects"><span>▤</span> Projects</a>
         <a className="admin-nav-item" href="/admin#clients"><span>◉</span> Clients</a>
         <a className="admin-nav-item" href="/admin#partners"><span>◇</span> Professional partners</a>
@@ -74,7 +75,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         <div className="admin-content-grid">
-          <section className="admin-panel" id="enquiries"><div className="admin-panel-heading"><div><h2>Recent enquiries</h2><p>Latest messages received by BABTEK.</p></div><span>{enquiryCount.count ?? 0} total</span></div>
+          <section className="admin-panel" id="enquiries"><div className="admin-panel-heading"><div><h2>Recent enquiries</h2><p>Latest messages received by BABTEK.</p><Link className="admin-inline-link" href="/admin/enquiries">Open register →</Link></div><span>{enquiryCount.count ?? 0} total</span></div>
             {recentEnquiries.data?.length ? <div className="admin-record-list">{recentEnquiries.data.map((item) => <article key={item.id}><div><strong>{item.full_name}</strong><p>{item.subject || "General enquiry"} · {item.reference_code || "Unreferenced"}</p></div><span className="admin-status">{item.status}</span></article>)}</div> : <p className="admin-empty-note">No enquiry records are available yet. New website enquiries will appear here once the form is connected to the configured deployment.</p>}
           </section>
           <section className="admin-panel" id="projects"><div className="admin-panel-heading"><div><h2>Recent projects</h2><p>Project delivery register.</p></div><span>{projectCount.count ?? 0} total</span></div>
