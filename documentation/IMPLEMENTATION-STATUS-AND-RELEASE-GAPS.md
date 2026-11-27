@@ -117,3 +117,19 @@ A fresh build of the corrected `ad75c8e` commit is still unverified. Vercel has 
 - Confirmed the old project-wide partner message policies have been replaced by engagement-scoped SELECT and INSERT policies.
 - Confirmed the database check requires a non-null engagement ID for new `partner_update` messages. The constraint is intentionally `NOT VALID` to preserve historical records that cannot safely be attributed to a single partner.
 - Confirmed the GitHub Actions/Vercel commit status remains blocked by Vercel's Hobby deployment-rate limit (build-rate-limit). No new successful build result is available for the latest messaging changes.
+
+
+## Client and partner collaboration expansion (27 November 2026)
+- The five-platform architecture visual is present on the homepage, `/platform`, and founder `/admin/platforms`. Subtle card motion and a restrained animated core indicator have been added. This is a visual architecture explainer, not evidence that every planned capability is complete.
+- Added private client and partner project-file submission workflows. Clients can submit to projects linked to their client contact; partners can submit only against an exact engagement linked to their partner account.
+- Added `project_file_submissions` with uploader identity, project/engagement scope, file metadata, review status and review notes. Files are stored in the private `babtek-private` bucket with 50 MB and MIME restrictions.
+- Added a founder/staff review queue at `/admin/file-submissions`. Accepting a submission atomically creates a project document with both client and partner visibility disabled. BABTEK must explicitly enable sharing later. Clients and partners can see the review state of their own submissions.
+- Storage and database RLS policies enforce client-project and partner-engagement boundaries. End-to-end testing with real client and partner accounts remains outstanding; the database currently has zero file submissions.
+- Expanded the partner relationship model with type, specialties, division affiliations, website and relationship status. New partner records begin as prospects. This is a flexible enterprise relationship network, not an architecture-only directory. Portal-account invitations and self-service claim/acceptance are still future work; current linking remains founder-managed.
+- Added a live workspace refresh indicator and refresh-on-focus / 30-second refresh for founder overview, client portal, partner portal, communications and file review. This is periodic refresh, not push-based realtime messaging. Unread counters, notification inbox, message attachments, typing indicators and email notifications remain outstanding.
+- The partner portal now uses broader "Partner workspace" language. The underlying database table retains its historical `professional_partners` name for compatibility.
+
+## Current build verification after collaboration expansion
+- Vercel preview deployment `dpl_DUUZMrVAjYPqJE5SPqboeLtFFWD8` for commit `57755651069cd7ffb850f4c439e4a3c4cd55145d` compiled successfully, then failed TypeScript validation in `app/admin/commercial/actions.ts` because a nullable quotation record was not narrowed. An explicit redirect guard has since been added in a later development commit.
+- Later development commits have not received a fresh preview build. GitHub status continues to report Vercel `build-rate-limit`; do not claim the latest source passes a production build.
+- Database migrations `20261127174044`, `20261127174055` and `20261127174158` are applied and their matching SQL files are committed in the development branch.
