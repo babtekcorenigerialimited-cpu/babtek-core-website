@@ -539,3 +539,27 @@ a{color:inherit;text-decoration:none}
 .commercial-agreement-form{padding:16px 0}
 @media(max-width:900px){.commercial-line-item{grid-template-columns:1fr 1fr}.commercial-line-item label:first-child{grid-column:1/-1}.commercial-record{grid-template-columns:1fr}.commercial-form-grid{grid-template-columns:1fr}}
 @media(max-width:520px){.commercial-line-item{grid-template-columns:1fr 1fr}.commercial-totals{grid-template-columns:1fr 1fr}}
+
+
+/* Five-platform enterprise architecture visual */
+.five-architecture{margin:28px 0 30px;padding:26px;border:1px solid var(--admin-border,#e5eaf1);border-radius:16px;background:linear-gradient(180deg,#f8fbff 0%,#fff 100%)}
+.five-architecture-heading{text-align:center;max-width:760px;margin:0 auto 22px}
+.five-architecture-heading>span{font-size:10px;font-weight:850;letter-spacing:.16em;color:#3975ad}
+.five-architecture-heading h2{margin:9px 0;color:#123b68;font-size:clamp(20px,3vw,29px)}
+.five-architecture-heading p{margin:0;color:#68798b;font-size:12px;line-height:1.7}
+.five-architecture-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.five-architecture-card{min-width:0;border:1px solid #dbe5ef;border-top:4px solid #3975ad;border-radius:12px;background:#fff;padding:15px 12px;box-shadow:0 5px 18px #183b5b0a}
+.five-architecture-card.clients{border-top-color:#4b8b9a}.five-architecture-card.projects{border-top-color:#5378a8}.five-architecture-card.admin{border-top-color:#1d4268}.five-architecture-card.technology{border-top-color:#7092bd}
+.five-architecture-card-top{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.five-architecture-card-top span{font-size:11px;font-weight:900;color:#28649d}
+.five-architecture-card-top i{font-style:normal;font-size:8px;text-align:right;color:#8190a0}
+.five-architecture-card h3{margin:13px 0 10px;color:#173e66;font-size:13px;line-height:1.3}
+.five-architecture-card ul{margin:0;padding-left:14px;color:#68798b;font-size:10px;line-height:1.65}
+.five-architecture-card li{margin:4px 0}
+.five-architecture-core{display:flex;align-items:center;justify-content:center;gap:13px;max-width:720px;margin:18px auto 0;padding:16px;border-radius:12px;background:#123b68;color:white;text-align:left}
+.five-core-symbol{display:grid;place-items:center;width:42px;height:42px;flex:0 0 42px;border:1px solid #ffffff66;border-radius:11px;font-size:22px;font-weight:900}
+.five-architecture-core div{display:grid;gap:5px}.five-architecture-core strong{font-size:12px;letter-spacing:.08em}.five-architecture-core small{font-size:10px;line-height:1.6;color:#d6e4f1}
+.five-architecture-foot{max-width:780px;margin:14px auto 0;text-align:center;color:#8190a0;font-size:10px;line-height:1.6}
+@media(max-width:1000px){.five-architecture-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:620px){.five-architecture{padding:16px}.five-architecture-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.five-architecture-card{padding:13px 10px}.five-architecture-core{align-items:flex-start}}
+@media(max-width:380px){.five-architecture-grid{grid-template-columns:1fr}}
