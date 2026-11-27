@@ -1,8 +1,37 @@
 import {NextResponse,type NextRequest} from "next/server";
 import {createSupabaseServerClient} from "@/lib/supabase/server";
+
+function failurePath(next:string,origin:string){
+ if(next.startsWith("/auth/reset-password")){
+  const nested=new URL(next,origin).searchParams.get("returnTo")||"/client/login";
+  const allowed=["/admin/login","/client/login","/partner/login"];
+  const returnTo=allowed.includes(nested)?nested:"/client/login";
+  return "/auth/forgot-password?error=callback&returnTo="+encodeURIComponent(returnTo);
+ }
+ if(next==="/partner")return "/partner/login?error=google_callback";
+ if(next==="/client")return "/client/login?error=google_callback";
+ if(next==="/admin")return "/admin/login?error=google_callback";
+ return "/client/login?error=confirmation";
+}
 export async function GET(request:NextRequest){
- const url=new URL(request.url);const code=url.searchParams.get("code");const rawNext=url.searchParams.get("next")||"/";
+ const url=new URL(request.url);
+ const code=url.searchParams.get("code");
+ const rawNext=url.searchParams.get("next")||"/";
  const next=rawNext.startsWith("/")&&!rawNext.startsWith("//")?rawNext:"/";
- if(code){const sb=await createSupabaseServerClient();const {error}=await sb.auth.exchangeCodeForSession(code);if(!error)return NextResponse.redirect(new URL(next,url.origin));}
- return NextResponse.redirect(new URL("/auth/forgot-password?error=callback",url.origin));
+ const fail=(codeName:string)=>NextResponse.redirect(new URL(failurePath(next,url.origin).replace(/([?&])error=[^&]+/,"$1error="+codeName),url.origin));
+ if(!code)return fail("confirmation");
+ const sb=await createSupabaseServerClient();
+ const {error}=await sb.auth.exchangeCodeForSession(code);
+ if(error)return fail("confirmation");
+ const {data:{user}}=await sb.auth.getUser();
+ if(!user)return fail("confirmation");
+ if(next==="/partner"||next==="/client"||next==="/admin"){
+  const {data:roles,error:roleError}=await sb.from("user_roles").select("role").eq("user_id",user.id);
+  if(roleError)return fail("google_callback");
+  const roleList=(roles||[]).map((r:any)=>r.role);
+  if(next==="/partner"&&!roleList.includes("partner"))return NextResponse.redirect(new URL("/partner/login?error=partner_not_linked",url.origin));
+  if(next==="/client"&&!roleList.includes("client"))return NextResponse.redirect(new URL("/client/login?error=client_not_linked",url.origin));
+  if(next==="/admin"&&!roleList.includes("owner")&&!roleList.includes("administrator"))return NextResponse.redirect(new URL("/admin/login?error=admin_not_authorised",url.origin));
+ }
+ return NextResponse.redirect(new URL(next,url.origin));
 }
