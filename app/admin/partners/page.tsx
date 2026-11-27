@@ -7,7 +7,7 @@ import { createPartner } from "./actions";
 import { linkPartnerAccount } from "./link-actions";
 import { reviewPartnerProgress } from "./progress-actions";
 
-export const metadata: Metadata = { title: "Professional Partners | BABTEK Owner Workspace" };
+export const metadata: Metadata = { title: "Partner Network | BABTEK Owner Workspace" };
 export const dynamic = "force-dynamic";
 
 export default async function AdminPartnersPage({ searchParams }: { searchParams: Promise<{ created?: string; linked?: string; reviewed?: string; error?: string }> }) {
@@ -58,12 +58,12 @@ export default async function AdminPartnersPage({ searchParams }: { searchParams
       <div className="admin-sidebar-bottom"><span className="admin-avatar">MD</span><span><strong>Managing Director</strong><small>OWNER ACCESS</small></span></div>
     </aside>
     <section className="admin-main">
-      <header className="admin-topbar"><div><span className="admin-breadcrumb">BABTEK / RELATIONSHIPS / PARTNERS</span><h1>Professional partner register</h1></div><div className="admin-top-actions"><Link className="admin-signout" href="/admin">Overview</Link><SignOutButton /></div></header>
+      <header className="admin-topbar"><div><span className="admin-breadcrumb">BABTEK / RELATIONSHIPS / PARTNERS</span><h1>BABTEK partner network</h1></div><div className="admin-top-actions"><Link className="admin-signout" href="/admin">Overview</Link><SignOutButton /></div></header>
       <div className="admin-welcome admin-register-welcome"><div><p className="admin-kicker">INDEPENDENT PROFESSIONAL NETWORK</p><h2>Coordinate specialist expertise with clarity.</h2><p>Record independent professionals and firms engaged on a project-by-project basis.</p></div><span className="admin-welcome-mark">◇</span></div>
-      {params.created === "1" && <p className="admin-notice">Professional partner record created.</p>}{params.linked === "1" && <p className="admin-notice">Partner login linked and partner access granted.</p>}{params.reviewed === "1" && <p className="admin-notice">Partner progress review saved.</p>}
+      {params.created === "1" && <p className="admin-notice">Partner relationship added to the network.</p>}{params.linked === "1" && <p className="admin-notice">Partner login linked and partner access granted.</p>}{params.reviewed === "1" && <p className="admin-notice">Partner progress review saved.</p>}
       {params.error && <p className="admin-alert">{params.error === "required" ? "A legal or registered name is required." : params.error === "account" ? "That user account or profile was not found. Ask the partner to register and confirm their email first." : params.error === "link" ? "The partner account could not be linked. Check the UUID and permissions." : params.error === "review" ? "The progress review could not be saved." : "The partner record could not be saved. Check permissions and try again."}</p>}
       <section className="admin-panel admin-register-panel">
-        <div className="admin-panel-heading"><div><h2>Add a professional partner</h2><p>Record an independent specialist or professional firm. This does not create a staff position or login.</p></div></div>
+        <div className="admin-panel-heading"><div><h2>Add a partner or relationship</h2><p>Add an individual, firm, technology collaborator, supplier, venture contact, research or strategic relationship. Partners remain independent and are not BABTEK employees.</p></div></div>
         <form action={createPartner} className="admin-create-form">
           <label>Legal / registered name<input name="legal_name" required maxLength={200} /></label>
           <label>Trading name<input name="trading_name" maxLength={200} /></label>
@@ -76,15 +76,15 @@ export default async function AdminPartnersPage({ searchParams }: { searchParams
           <label>Email<input name="email" type="email" maxLength={254} /></label>
           <label>Phone<input name="phone" type="tel" maxLength={40} /></label>
           <label>Registration / qualification details<input name="registration_details" maxLength={500} /></label>
-          <button type="submit">Create partner record</button>
+          <button type="submit">Add to partner network</button>
         </form>
       </section>
       <section className="admin-panel admin-register-panel" style={{marginTop:16}}>
-        <div className="admin-panel-heading"><div><h2>Professional partner network</h2><p>Latest 250 records, newest first.</p></div><span>{partners?.length ?? 0} shown</span></div>
+        <div className="admin-panel-heading"><div><h2>Partner relationship network</h2><p>Latest 250 records, newest first.</p></div><span>{partners?.length ?? 0} shown</span></div>
         {error ? <p className="admin-alert">Partner records could not be loaded.</p> : partners?.length ? <div className="admin-record-list">{partners.map((partner) => {
           const partnerLinks = (links || []).filter((link) => link.partner_id === partner.id);
           return <article key={partner.id} className="partner-admin-record"><div><strong>{partner.trading_name || partner.legal_name}</strong><p>{[partner.partner_type, partner.professional_category, partner.email, partner.phone, partner.relationship_status].filter(Boolean).join(" · ")}{partner.specialties?.length ? <span className="access-role-list">{partner.specialties.map((x:string)=><em key={x}>{x}</em>)}</span> : null}{partner.division_affiliations?.length ? <small>Divisions: {partner.division_affiliations.join(", ")}</small> : null}{partner.website ? <a className="admin-inline-link" href={partner.website} target="_blank" rel="noreferrer">Portfolio / website ↗</a> : null}</p><p>{partnerLinks.length ? "Linked portal user(s): " + partnerLinks.map((link) => profileNames.get(link.user_id) || link.user_id).join(", ") : "No portal account linked yet."}</p></div><div className="partner-link-form"><form action={linkPartnerAccount}><input type="hidden" name="partner_id" value={partner.id}/><label>Registered user account UUID<input name="user_id" required placeholder="Partner shares account ID after registration"/></label><button type="submit">Link account & grant partner access</button></form></div><span className="admin-status">INDEPENDENT</span></article>;
-        })}</div> : <p className="admin-empty-note">No partner records yet. Add verified specialists as BABTEK establishes engagements.</p>}
+        })}</div> : <p className="admin-empty-note">No partner records yet. Add a contact or organisation as BABTEK establishes its wider relationship network.</p>}
       </section>
       <section className="admin-panel admin-register-panel" style={{marginTop:16}}>
         <div className="admin-panel-heading"><div><h2>Partner progress submissions</h2><p>Review updates submitted through the restricted partner workspace.</p></div><span>{progressUpdates?.length ?? 0} shown</span></div>
