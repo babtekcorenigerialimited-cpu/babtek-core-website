@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { createBrowserClient } from "@supabase/ssr";
 import { registerProjectDocument } from "@/app/admin/projects/delivery-actions";
 
 export function ProjectDocumentUploader({ projectId }: { projectId: string }) {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
-  async function submit(event: React.FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const data = new FormData(form);
@@ -27,8 +27,7 @@ export function ProjectDocumentUploader({ projectId }: { projectId: string }) {
     data.set("project_id", projectId);
     data.set("storage_path", path);
     data.delete("file");
-    try { await registerProjectDocument(data); }
-    catch { await sb.storage.from("babtek-private").remove([path]); setBusy(false); setMessage("The document record could not be saved. Please try again."); }
+    await registerProjectDocument(data);
   }
   return <form onSubmit={submit} className="project-engagement-form">
     <input type="hidden" name="project_id" value={projectId}/>
