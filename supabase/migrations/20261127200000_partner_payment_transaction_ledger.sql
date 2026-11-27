@@ -14,7 +14,9 @@ create table if not exists public.partner_payment_transactions (
 );
 create index if not exists partner_payment_transactions_schedule_date_idx on public.partner_payment_transactions(schedule_id,payment_date desc);
 alter table public.partner_payment_transactions enable row level security;
+drop policy if exists "Finance staff read partner payment transactions" on public.partner_payment_transactions;
 create policy "Finance staff read partner payment transactions" on public.partner_payment_transactions for select to authenticated using (public.has_role(array['owner','administrator','finance']::public.app_role[]));
+drop policy if exists "Partners read own payment transactions" on public.partner_payment_transactions;
 create policy "Partners read own payment transactions" on public.partner_payment_transactions for select to authenticated using (
  exists(select 1 from public.partner_payment_schedules s join public.project_partner_engagements e on e.id=s.engagement_id join public.partner_user_links l on l.partner_id=e.partner_id where s.id=partner_payment_transactions.schedule_id and l.user_id=auth.uid())
 );
