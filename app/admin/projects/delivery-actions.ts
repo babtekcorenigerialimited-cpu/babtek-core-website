@@ -23,6 +23,8 @@ export async function createProjectTask(formData: FormData) {
   if (!/^[0-9a-f-]{36}$/i.test(projectId) || title.length < 3 || !["low","normal","high","urgent"].includes(priority) || (partnerId && !/^[0-9a-f-]{36}$/i.test(partnerId))) redirect("/admin/projects?error=task");
   const { supabase, user } = await requireProjectManager();
   if (partnerId) {
+    const { data: partner } = await supabase.from("professional_partners").select("id,relationship_status").eq("id", partnerId).maybeSingle();
+    if (!partner || partner.relationship_status !== "active") redirect("/admin/projects?error=task");
     const { data: engagement } = await supabase.from("project_partner_engagements").select("id").eq("project_id", projectId).eq("partner_id", partnerId).limit(1).maybeSingle();
     if (!engagement) redirect("/admin/projects?error=task");
   }
