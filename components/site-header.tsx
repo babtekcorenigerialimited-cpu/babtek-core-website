@@ -13,6 +13,7 @@ const links = [
   { label: "Technology", href: "/technology" },
   { label: "Platform", href: "/platform" },
   { label: "Insights", href: "/insights" },
+  { label: "Partner network", href: "/partner-network" },
 ];
 
 export function SiteHeader() {
