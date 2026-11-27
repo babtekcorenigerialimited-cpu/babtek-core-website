@@ -290,3 +290,29 @@ a{color:inherit;text-decoration:none}
 @media(max-width:700px){.brand-fields,.brand-colours,.brand-assets{grid-template-columns:1fr}.brand-actions{align-items:stretch}.brand-actions p{flex-basis:100%}}
 
 .brand-logo-image{display:block;max-width:180px;max-height:46px;width:auto;height:auto;object-fit:contain}
+
+/* Enterprise command centre: five integrated platforms */
+.admin-five-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:26px}
+.admin-module-card{display:flex;flex-direction:column;min-width:0;padding:22px;border:1px solid var(--line);border-radius:7px;background:#fff;color:inherit;text-decoration:none;transition:border-color .18s,transform .18s}
+.admin-module-card:hover{border-color:var(--blue);transform:translateY(-2px)}
+.admin-module-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.admin-module-top>span{font-size:11px;font-weight:900;letter-spacing:1px;color:var(--blue)}
+.admin-module-top em{font-style:normal;font-size:9px;font-weight:900;letter-spacing:.7px;color:#58718b;background:#eef4fa;padding:6px 8px;border-radius:3px}
+.admin-module-card h3{font-size:19px;color:var(--blue);margin:18px 0 7px}
+.admin-module-card p{font-size:12px;line-height:1.65;color:var(--muted);margin:0 0 10px}
+.admin-module-card ul{padding-left:17px;margin:0 0 18px;color:var(--ink);font-size:11px;line-height:1.9}
+.admin-module-link{font-size:11px;color:var(--blue);margin-top:auto}
+.admin-module-link.muted{color:var(--muted)}
+.admin-finance-rows{display:grid;gap:0}
+.admin-finance-rows>div{display:flex;justify-content:space-between;gap:14px;padding:13px 0;border-bottom:1px solid var(--line)}
+.admin-finance-rows span{font-size:11px;color:var(--muted)}
+.admin-finance-rows strong{font-size:14px;color:var(--blue);text-align:right}
+.admin-inventory-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:10px 0 18px}
+.admin-inventory-grid>div,.admin-governance-grid>div{display:grid;gap:5px;padding:12px;background:#f5f8fb;border-radius:4px}
+.admin-inventory-grid strong,.admin-governance-grid strong{font-size:19px;color:var(--blue)}
+.admin-inventory-grid span,.admin-governance-grid span{font-size:10px;color:var(--muted)}
+.admin-governance-grid{display:grid;grid-template-columns:130px 1fr;gap:16px;align-items:start}
+.admin-governance-grid p{margin:0;color:var(--muted);font-size:12px;line-height:1.75}
+.admin-audit-panel{margin-top:20px}
+@media(max-width:850px){.admin-five-grid{grid-template-columns:1fr}.admin-inventory-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.admin-governance-grid{grid-template-columns:1fr}.admin-finance-rows>div{align-items:flex-start;flex-direction:column}.admin-finance-rows strong{text-align:left}}
