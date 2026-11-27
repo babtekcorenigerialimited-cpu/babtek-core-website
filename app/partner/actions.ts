@@ -26,15 +26,15 @@ export async function submitPartnerProgress(formData:FormData){
 }
 
 export async function sendPartnerProjectMessage(formData:FormData){
- const projectId=String(formData.get("project_id")||"");const body=String(formData.get("body")||"").trim();
- if(!/^[0-9a-f-]{36}$/i.test(projectId)||body.length<1||body.length>10000)redirect("/partner?error=message");
+ const engagementId=String(formData.get("engagement_id")||"");const body=String(formData.get("body")||"").trim();
+ if(!/^[0-9a-f-]{36}$/i.test(engagementId)||body.length<1||body.length>10000)redirect("/partner?error=message");
  const sb=await createSupabaseServerClient();const {data:{user}}=await sb.auth.getUser();if(!user)redirect("/partner/login");
  const {data:roles}=await sb.from("user_roles").select("role").eq("user_id",user.id);if(!roles?.some((r:any)=>r.role==="partner"))redirect("/partner?error=access");
  const {data:links}=await sb.from("partner_user_links").select("partner_id").eq("user_id",user.id);
  const ids=(links||[]).map((x:any)=>x.partner_id);if(!ids.length)redirect("/partner?error=access");
- const {data:engagement}=await sb.from("project_partner_engagements").select("id").eq("project_id",projectId).in("partner_id",ids).limit(1).maybeSingle();
+ const {data:engagement}=await sb.from("project_partner_engagements").select("id,project_id").eq("id",engagementId).in("partner_id",ids).maybeSingle();
  if(!engagement)redirect("/partner?error=access");
- const {error}=await sb.from("communication_messages").insert({project_id:projectId,sender_id:user.id,body,message_type:"partner_update"});
+ const {error}=await sb.from("communication_messages").insert({project_id:engagement.project_id,partner_engagement_id:engagement.id,sender_id:user.id,body,message_type:"partner_update"});
  if(error){console.error("Partner message failed",error.message);redirect("/partner?error=message");}
  revalidatePath("/partner");revalidatePath("/admin/communications");redirect("/partner?message_sent=1");
 }
