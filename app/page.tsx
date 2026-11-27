@@ -1,4 +1,3 @@
-import {FivePlatformArchitecture} from "@/components/admin/five-platform-architecture";
 
 const divisions = [
   { slug: "design-construction", number: "01", name: "Design & Construction", detail: "Architecture, engineering coordination, construction and project delivery.", group: "BUILT ENVIRONMENT" },
@@ -69,7 +68,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section-space" id="platform"><div className="container"><FivePlatformArchitecture /><div className="detail-cta"><div><p className="eyebrow eyebrow-light">ONE CONNECTED ENTERPRISE</p><h2>Explore the BABTEK platform.</h2><p>See how our five integrated systems connect the public company experience, client relationships, project delivery, administration and technology development.</p></div><a className="button" href="/platform">Explore platform architecture ↗</a></div></div></section>
+
 
       <section className="projects-section section-space" id="projects">
         <div className="container project-grid">
