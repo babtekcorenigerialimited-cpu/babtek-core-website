@@ -25,6 +25,7 @@ export default async function AdminProjectsPage({ searchParams }: { searchParams
   const [projectResult, clientResult, partnerResult] = await Promise.all([
     supabase.from("projects").select("id,project_code,name,description,status,location_label,start_date,target_end_date,client_id,client_fee,currency_code").order("created_at", { ascending: false }).limit(100),
     supabase.from("clients").select("id,display_name,legal_name").limit(500),
+    supabase.from("professional_partners").select("id,legal_name,trading_name,professional_category").order("created_at", { ascending: false }).limit(500),
   ]);
   const clientNames = new Map((clientResult.data || []).map((client) => [client.id, client.display_name || client.legal_name]));
   const projects = projectResult.data || [];
