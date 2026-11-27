@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { AdminLoginForm } from "@/components/admin/login-form";
 import {GoogleSignInButton} from "@/components/auth/auth-controls";
 
