@@ -64,6 +64,7 @@ export default async function CommunicationsPage({ searchParams }: { searchParam
         <Link className="admin-nav-item" href="/admin">▦ Overview</Link>
         <Link className="admin-nav-item" href="/admin/enquiries">✉ Enquiries</Link>
         <Link className="admin-nav-item active" href="/admin/communications">☷ Communication centre</Link>
+        <Link className="admin-nav-item" href="/notifications">◉ Notifications</Link>
         <Link className="admin-nav-item" href="/admin#projects">▤ Projects</Link>
         <Link className="admin-nav-item" href="/admin#clients">◉ Clients</Link>
         <Link className="admin-nav-item" href="/admin/partners">◇ Professional partners</Link>
