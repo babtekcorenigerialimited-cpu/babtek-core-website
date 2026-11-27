@@ -27,7 +27,13 @@ export default async function AdminProjectsPage({ searchParams }: { searchParams
     supabase.from("clients").select("id,display_name,legal_name").limit(500),
   ]);
   const clientNames = new Map((clientResult.data || []).map((client) => [client.id, client.display_name || client.legal_name]));
-  const projects = projectResult.data || [];\n  const partners = partnerResult.data || [];\n  const projectIds = projects.map((project) => project.id);\n  const { data: engagements } = projectIds.length ? await supabase.from("project_partner_engagements").select("id,project_id,partner_id,scope_of_work,agreed_fee,currency_code,payment_terms,status,start_date,due_date").in("project_id", projectIds).order("created_at", { ascending: false }) : { data: [] as any[] };\n  const engagementIds = (engagements || []).map((engagement) => engagement.id);\n  const { data: paymentSchedules } = engagementIds.length ? await supabase.from("partner_payment_schedules").select("id,engagement_id,description,amount,due_date,status,paid_amount").in("engagement_id", engagementIds).order("due_date", { ascending: true }) : { data: [] as any[] };\n  const partnerNames = new Map(partners.map((partner) => [partner.id, partner.trading_name || partner.legal_name]));
+  const projects = projectResult.data || [];
+  const partners = partnerResult.data || [];
+  const projectIds = projects.map((project) => project.id);
+  const { data: engagements } = projectIds.length ? await supabase.from("project_partner_engagements").select("id,project_id,partner_id,scope_of_work,agreed_fee,currency_code,payment_terms,status,start_date,due_date").in("project_id", projectIds).order("created_at", { ascending: false }) : { data: [] as any[] };
+  const engagementIds = (engagements || []).map((engagement) => engagement.id);
+  const { data: paymentSchedules } = engagementIds.length ? await supabase.from("partner_payment_schedules").select("id,engagement_id,description,amount,due_date,status,paid_amount").in("engagement_id", engagementIds).order("due_date", { ascending: true }) : { data: [] as any[] };
+  const partnerNames = new Map(partners.map((partner) => [partner.id, partner.trading_name || partner.legal_name]));
 
   return (
     <main className="admin-shell">
