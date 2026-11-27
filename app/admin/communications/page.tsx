@@ -22,10 +22,13 @@ export default async function CommunicationsPage({ searchParams }: { searchParam
     supabase.from("enquiries").select("id,reference_code,full_name,email,subject,status,created_at").order("created_at", { ascending: false }).limit(100),
     supabase.from("communication_messages").select("id,enquiry_id,project_id,sender_id,body,message_type,created_at").order("created_at", { ascending: false }).limit(300),
   ]);
-  const { data: projectRows } = await supabase.from("projects").select("id,project_code,name,client_id").order("created_at",{ascending:false}).limit(100);\n  const senderIds = [...new Set((messages || []).map((item) => item.sender_id))];
+  const { data: projectRows } = await supabase.from("projects").select("id,project_code,name,client_id").order("created_at",{ascending:false}).limit(100);
+  const senderIds = [...new Set((messages || []).map((item) => item.sender_id))];
   const { data: profiles } = senderIds.length ? await supabase.from("profiles").select("id,full_name").in("id", senderIds) : { data: [] as {id:string;full_name:string|null}[] };
   const senderNames = new Map((profiles || []).map((profile) => [profile.id, profile.full_name || "BABTEK team member"]));
-  const messagesByProject = new Map<string, typeof messages>();\n  for (const message of messages || []) { if (!message.project_id) continue; const current=messagesByProject.get(message.project_id)||[]; current.push(message); messagesByProject.set(message.project_id,current); }\n  const messagesByEnquiry = new Map<string, typeof messages>();
+  const messagesByProject = new Map<string, typeof messages>();
+  for (const message of messages || []) { if (!message.project_id) continue; const current=messagesByProject.get(message.project_id)||[]; current.push(message); messagesByProject.set(message.project_id,current); }
+  const messagesByEnquiry = new Map<string, typeof messages>();
   for (const message of messages || []) {
     if (!message.enquiry_id) continue;
     const current = messagesByEnquiry.get(message.enquiry_id) || [];
