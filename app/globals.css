@@ -270,3 +270,17 @@ a{color:inherit;text-decoration:none}
 .admin-metric[href]{display:block;transition:border-color .2s,transform .2s}
 .admin-metric[href]:hover{border-color:#8bc8f5;transform:translateY(-2px)}
 @media(max-width:650px){.admin-create-form{grid-template-columns:1fr}}
+
+
+/* Detailed capabilities directory */
+.capability-catalog{border-top:1px solid var(--line)}
+.capability-group{display:grid;grid-template-columns:.8fr 1.2fr;gap:65px;padding:38px 0;border-bottom:1px solid var(--line)}
+.capability-group-heading{display:flex;align-items:flex-start;gap:20px}
+.capability-group-heading>span{font-size:11px;font-weight:800;color:var(--mid);letter-spacing:1.5px;padding-top:5px}
+.capability-group-heading .eyebrow{font-size:8px;margin:0 0 9px;letter-spacing:1.3px}
+.capability-group-heading h2{font-size:24px;line-height:1.3;color:var(--blue);margin:0}
+.capability-group-body ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
+.capability-group-body li{font-size:12px;line-height:1.65;color:#304b65;padding:11px 0 11px 18px;border-bottom:1px solid #edf1f5;position:relative}
+.capability-group-body li:before{content:"";position:absolute;left:0;top:19px;width:6px;height:6px;background:var(--sky);border-radius:50%}
+.capability-group-body>p{font-size:10px;line-height:1.8;color:var(--muted);margin:16px 0 0}
+@media(max-width:700px){.capability-group{grid-template-columns:1fr;gap:20px;padding:28px 0}.capability-group-body ul{grid-template-columns:1fr}.capability-group-heading h2{font-size:21px}}
