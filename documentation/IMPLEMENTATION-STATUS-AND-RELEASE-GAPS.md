@@ -38,7 +38,7 @@
 
 ### Communications
 - Client-to-BABTEK project conversation threads.
-- Independent partner-to-BABTEK project conversation threads.
+- Independent partner-to-BABTEK project conversation threads, now scoped to the exact professional engagement rather than only the shared project.
 - Enquiry internal notes are separate and are not client-visible.
 - Conversation messages persist in Supabase. Current implementation is not a real-time chat service: live presence, typing indicators, unread counters, push notifications and outbound email/SMS/WhatsApp delivery are not implemented.
 
@@ -101,3 +101,12 @@ A fresh build of the corrected `ad75c8e` commit is still unverified. Vercel has 
 - Supabase security advisor flags authenticated-policy access as potentially reachable by anonymous sign-ins across multiple tables and storage. The current Auth user table contains one user and zero anonymous users, but the anonymous sign-in setting itself still needs confirmation in Supabase Auth settings. Disable anonymous sign-ins unless BABTEK deliberately requires them; public enquiry intake does not require anonymous Auth accounts.
 - Supabase security advisor currently reports leaked-password protection as disabled. Re-check the setting in Supabase Authentication → Attack Protection / Password Security even if it was previously toggled.
 - Performance advisor reports 50 unindexed foreign keys, 27 RLS auth-initplan warnings, 37 multiple-permissive-policy warnings and 13 unused indexes. These are optimisation and policy-review items; do not blindly add every index or merge policies without checking query plans and access semantics.
+
+
+## Partner conversation privacy hardening (27 November 2026)
+- Added `partner_engagement_id` to `communication_messages`, referencing the exact professional engagement.
+- Replaced project-wide partner read/insert RLS policies with engagement-scoped policies. A linked partner account can read and send only when the engagement belongs to one of its linked professional partner records and the message's project matches that engagement.
+- Updated partner messaging actions to require an engagement ID and derive the project ID from the verified engagement record.
+- Updated partner portal to show a separate thread per engagement, and founder Communication Centre to display/reply to each engagement independently.
+- The new constraint requires engagement linkage for new partner messages. It is `NOT VALID` so historical project-wide partner messages remain in the staff archive without being incorrectly attributed to one professional. Historical partner messages are not automatically exposed to any partner account.
+- This privacy boundary still requires end-to-end tests using two distinct partner accounts assigned to the same project.
