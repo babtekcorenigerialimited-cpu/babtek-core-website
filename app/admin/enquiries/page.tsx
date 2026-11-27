@@ -46,6 +46,10 @@ export default async function AdminEnquiriesPage({ searchParams }: { searchParam
       <section className="admin-main">
         <header className="admin-topbar"><div><span className="admin-breadcrumb">BABTEK / WORKSPACE / ENQUIRIES</span><h1>Enquiry register</h1></div><div className="admin-top-actions"><Link className="admin-signout" href="/admin">Overview</Link><SignOutButton /></div></header>
         <div className="admin-welcome admin-register-welcome"><div><p className="admin-kicker">CLIENT RELATIONSHIP INTAKE</p><h2>Every opportunity starts with a conversation.</h2><p>Review incoming requests and keep their progress status up to date.</p></div><span className="admin-welcome-mark">✉</span></div>
+        <section className="crm-command-grid crm-enquiry-command" aria-label="Enquiry pipeline summary">
+          <article className="crm-command-card crm-command-feature"><span className="crm-command-label">OPEN OPPORTUNITIES</span><strong>{(enquiries ?? []).filter((x) => !["converted","declined","closed"].includes(x.status)).length}</strong><p>Enquiries still moving through review or quotation</p><div className="crm-pipeline-track">{statuses.map((status) => <i key={status} data-stage={status} style={{flexGrow:Math.max(1,(enquiries ?? []).filter((x) => x.status === status).length)}} />)}</div><small>Live status distribution · latest 100 enquiries</small></article>
+          {statuses.slice(0,4).map((status) => <article className="crm-command-card" key={status}><span className="crm-command-label">{status.replaceAll("_"," ").toUpperCase()}</span><strong>{(enquiries ?? []).filter((x) => x.status === status).length}</strong><p>Records in this stage</p></article>)}
+        </section>
         {params.updated === "1" && <p className="admin-notice">Enquiry status updated successfully.</p>}
         {params.error && <p className="admin-alert">The update could not be completed. Please check the record and try again.</p>}
         {error ? <p className="admin-alert">The enquiry register could not be loaded. Check database permissions and try again.</p> : (
