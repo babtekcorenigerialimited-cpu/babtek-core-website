@@ -42,7 +42,7 @@ export function SiteHeader() {
           <Link href="/partner/login">Partner portal</Link>
           <Link className="button button-small" href="/contact">Start a project <span aria-hidden="true">↗</span></Link>
         </nav>
-        <Link className="mobile-contact" href="/divisions">Explore BABTEK ↗</Link><Link className="mobile-contact" href="/partner-network">Partner network ↗</Link>
+        <Link className="mobile-contact" href="/divisions">Explore BABTEK ↗</Link><Link className="mobile-contact" href="/client/login">Client portal ↗</Link><Link className="mobile-contact" href="/partner/login">Partner portal ↗</Link>
       </div>
     </header>
   );
