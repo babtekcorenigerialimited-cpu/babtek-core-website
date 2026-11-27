@@ -51,14 +51,12 @@ export async function POST(request: Request) {
   const { data, error } = await supabase
     .from("enquiries")
     .insert({ full_name, email, phone: phone || null, organisation: organisation || null,
-      subject, message, service_interest: service_interest || null, source: "website" })
-    .select("reference_code")
-    .single();
+      subject, message, service_interest: service_interest || null, source: "website" });
 
-  if (error || !data) {
+  if (error) {
     console.error("Enquiry intake failed", error?.code || "unknown");
     return NextResponse.json({ error: "We could not save your enquiry. Please email BABTEK directly." }, { status: 503 });
   }
 
-  return NextResponse.json({ ok: true, reference: data.reference_code }, { status: 201 });
+  return NextResponse.json({ ok: true, message: "Your enquiry has been received." }, { status: 201 });
 }
