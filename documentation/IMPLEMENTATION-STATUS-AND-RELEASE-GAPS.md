@@ -153,3 +153,11 @@ A fresh build of the corrected `ad75c8e` commit is still unverified. Vercel has 
 ## Alternative deployment and independent CI
 - Vercel's current Hobby team API has been rate-limited for deployment creation. The source repository remains on GitHub and GitHub Actions is configured to run typecheck and build on pushes/PRs, with a manual workflow trigger and Node.js 22.
 - Render has been identified as a possible secondary hosting/deployment option. It is not connected and no migration or deployment has been made. Keep Supabase as the shared backend if a secondary host is adopted; do not duplicate the database or auth system.
+
+
+## Independent build verification (27 November 2026)
+- GitHub Actions workflow run **#302** for commit `909a015b3a7408cedba788e009a34d33a273d784` completed successfully on Node.js 22. Dependency installation, TypeScript type-check and the Next.js production build all passed.
+- This verifies the source at that commit builds successfully in CI. It does not mean a new public preview has been deployed or that end-to-end Supabase workflows have been tested.
+- Vercel's deployment API remains blocked by the team's Hobby-plan deployment rate limit. A Render alternative has been identified and suggested, but it is not connected and no host migration has occurred.
+- The repository currently has no npm lockfile, so CI uses `npm install` rather than `npm ci`. The install output reported two dependency advisories (one moderate, one high); review with `npm audit` and resolve deliberately before production release rather than applying a breaking forced update.
+- The partner application privacy acknowledgement is enforced by both the API route and database policy. Automatic account matching is deliberately conservative: when a verified email maps to multiple active partner records, the system does not automatically grant access across those records.
