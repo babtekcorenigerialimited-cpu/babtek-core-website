@@ -966,3 +966,49 @@ a{color:inherit;text-decoration:none}
 @media(max-width:1050px){.platform-live-pulse{grid-template-columns:1fr 1fr}.platform-pulse-feature{grid-column:1/-1}}
 @media(max-width:650px){.platform-live-pulse{grid-template-columns:1fr}.platform-pulse-feature{grid-column:auto}.platform-pulse-heading{flex-direction:column}.platform-pulse-feature-body{gap:12px}.platform-pulse-ring{width:96px;height:96px;flex-basis:96px}.platform-pulse-facts strong{font-size:18px}}
 @media(prefers-reduced-motion:reduce){.platform-pulse-row>i>b{transition:none}}
+
+
+/* Project operations command view */
+.project-ops-overview{margin:18px 0 22px;padding:22px;border:1px solid #dfe8ef;border-radius:12px;background:radial-gradient(circle at 92% 0%,#eaf5fc 0,transparent 38%),linear-gradient(145deg,#fff,#f7fafc);box-shadow:0 10px 30px rgba(15,48,75,.055)}
+.project-ops-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:18px}
+.project-ops-heading>div>span{font-size:8px;letter-spacing:1.6px;color:#7290a6;font-weight:900}
+.project-ops-heading h2{font-size:21px;line-height:1.3;color:#153f61;margin:5px 0}
+.project-ops-heading p{font-size:10px;color:#7c8f9f;margin:0}
+.project-ops-heading>a{font-size:9px;font-weight:850;color:#2876a9;white-space:nowrap}
+.project-ops-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0}
+.project-ops-metrics article{padding:14px;border:1px solid #e6edf2;border-radius:8px;background:#ffffffd9;display:grid;gap:4px}
+.project-ops-metrics article>span{font-size:7px;letter-spacing:1px;font-weight:900;color:#8195a5}
+.project-ops-metrics article>strong{font-size:26px;line-height:1.2;color:#174b73}
+.project-ops-metrics article>small{font-size:8px;color:#8093a2}
+.project-ops-status{padding-top:15px;border-top:1px solid #e8eef3}
+.project-ops-status-label{display:flex;justify-content:space-between;gap:12px;font-size:9px;color:#526d82}
+.project-ops-status-label span{color:#8a9ba8}
+.project-ops-status-track{display:flex;height:9px;overflow:hidden;border-radius:10px;background:#edf2f6;margin:10px 0}
+.project-ops-status-track i{display:block;min-width:2px;background:#4a91bd}
+.project-ops-status-track i[data-status="proposed"]{background:#9bb9ce}
+.project-ops-status-track i[data-status="ongoing"]{background:#2878bd}
+.project-ops-status-track i[data-status="on_hold"]{background:#d5a34d}
+.project-ops-status-track i[data-status="completed"]{background:#4d9b82}
+.project-ops-status-track i[data-status="cancelled"]{background:#a4adb5}
+.project-ops-legend{display:flex;flex-wrap:wrap;gap:12px 18px}
+.project-ops-legend span{display:flex;align-items:center;gap:5px;font-size:8px;text-transform:capitalize;color:#738797}
+.project-ops-legend i{width:7px;height:7px;border-radius:50%;background:#4a91bd}
+.project-ops-legend i[data-status="proposed"]{background:#9bb9ce}
+.project-ops-legend i[data-status="ongoing"]{background:#2878bd}
+.project-ops-legend i[data-status="on_hold"]{background:#d5a34d}
+.project-ops-legend i[data-status="completed"]{background:#4d9b82}
+.project-ops-legend i[data-status="cancelled"]{background:#a4adb5}
+.project-ops-legend b{color:#355d7b}
+.project-ops-mini-track{margin-top:15px;padding:12px 13px;background:#f7fafc;border:1px solid #e8eef3;border-radius:8px}
+.project-ops-mini-track>div:first-child{display:flex;justify-content:space-between;gap:12px;font-size:8px;color:#708698}
+.project-ops-mini-track>div:first-child strong{color:#365b77}
+.project-ops-mini-trackline{display:flex;align-items:center;gap:0;margin-top:10px;overflow:hidden}
+.project-ops-mini-trackline i{position:relative;display:grid;place-items:center;flex:1;min-width:20px;height:20px;border-radius:50%;background:#dfe8ee;color:#668096;font-size:7px;font-style:normal}
+.project-ops-mini-trackline i:after{content:"";position:absolute;left:100%;width:calc(100% - 2px);height:2px;background:#dfe8ee}
+.project-ops-mini-trackline i:last-child:after{display:none}
+.project-ops-mini-trackline i[data-state="completed"]{background:#d8eee6;color:#27795e}
+.project-ops-mini-trackline i[data-state="in_progress"]{background:#dceefa;color:#1e6a9c;box-shadow:0 0 0 3px #eaf5fc}
+.project-ops-mini-trackline i[data-state="delayed"]{background:#f8e9d5;color:#a66b20}
+.project-ops-mini-trackline i b{position:relative;z-index:1}
+@media(max-width:800px){.project-ops-metrics{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.project-ops-overview{padding:16px}.project-ops-heading{flex-direction:column}.project-ops-heading h2{font-size:19px}.project-ops-metrics article>strong{font-size:22px}.project-ops-mini-trackline{gap:2px}}
