@@ -390,8 +390,11 @@ create policy "tasks internal write" on public.project_tasks for all to authenti
  using(public.has_role(array['owner','administrator','operations']::public.app_role[]))
  with check(public.has_role(array['owner','administrator','operations']::public.app_role[]));
 create policy "project document read" on public.project_documents for select to authenticated
- using((client_visible and public.can_access_project(project_id))
- or public.has_role(array['owner','administrator','operations','finance']::public.app_role[]));
+ using(public.has_role(array['owner','administrator','operations','finance']::public.app_role[])
+ or (client_visible and exists(
+   select 1 from public.projects p join public.client_contacts c on c.client_id=p.client_id
+   where p.id=project_documents.project_id and c.user_id=auth.uid()
+ )));
 create policy "project document write" on public.project_documents for all to authenticated
  using(public.has_role(array['owner','administrator','operations']::public.app_role[]))
  with check(public.has_role(array['owner','administrator','operations']::public.app_role[]));
