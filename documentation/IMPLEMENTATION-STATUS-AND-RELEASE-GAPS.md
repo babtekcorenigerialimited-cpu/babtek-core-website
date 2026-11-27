@@ -170,3 +170,11 @@ A fresh build of the corrected `ad75c8e` commit is still unverified. Vercel has 
 - Paused relationships retain access to their already assigned work so current delivery can be completed, but BABTEK cannot create new engagements or assign new tasks to a paused partner.
 - Reactivating an inactive relationship can restore a unique verified email match. If the email is ambiguous or no account exists, the founder must review and link the correct account.
 - Partner relationship status changes and access-link revocations are recorded in the audit log. These controls require adversarial RLS testing before production.
+
+
+## Supabase security-advisor review (27 November 2026)
+- The health advisor returned no findings.
+- The security advisor still reports seven callable `SECURITY DEFINER` functions for authenticated users. The new partner approval, lifecycle and manual-link RPCs explicitly check the signed-in user has the founder/owner role; other functions support RLS or finance workflows. These remain review items, not a security certification.
+- The advisor reports anonymous-access policy warnings across multiple tables because anonymous sign-ins appear to be enabled. BABTEK does not currently need anonymous Auth accounts. Disable **Allow anonymous sign-ins** in Supabase Authentication settings, then rerun the security advisor and retest public enquiry/application intake.
+- The advisor also reports leaked-password protection as disabled. This conflicts with the earlier confirmation that the setting had been enabled; verify the actual Auth password-security setting in the Supabase dashboard and rerun the advisor.
+- Do not open client or partner access broadly until these configuration warnings are resolved and real client/partner accounts have passed access-isolation tests.
