@@ -18,6 +18,7 @@ export function PartnerApplicationForm(){
    primary_category:String(data.get("primary_category")||""),specialties:String(data.get("specialties")||""),
    division_affiliations:data.getAll("division_affiliations").map(String),website:String(data.get("portfolio_url")||""),
    experience_summary:String(data.get("experience_summary")||""),collaboration_interest:String(data.get("collaboration_interest")||""),
+   privacy_acknowledged:data.get("privacy_acknowledged")==="on",
    website_honeypot:String(data.get("website_honeypot")||"")
   };
   try{
@@ -44,6 +45,7 @@ export function PartnerApplicationForm(){
    <label className="partner-form-wide">How would you like to collaborate with BABTEK? *<textarea name="collaboration_interest" required minLength={20} maxLength={3000} rows={4} placeholder="Describe the opportunities, services, products or partnership you have in mind."/></label>
    <label className="partner-honeypot" aria-hidden="true">Leave this field empty<input name="website_honeypot" tabIndex={-1} autoComplete="off"/></label>
   </div>
+  <label className="partner-privacy-consent"><input type="checkbox" name="privacy_acknowledged" required/> I confirm that the information is accurate and consent to BABTEK using it to assess this application and contact me about the partner network. <a href="/privacy#partner-applications" target="_blank" rel="noreferrer">Read the privacy notice</a>.</label>
   {error&&<p className="admin-alert" role="alert">{error}</p>}
   <button type="submit" disabled={busy}>{busy?"Submitting application…":"Submit partner network application"}</button>
   <small>Submitting an application does not create employment, guarantee a contract or grant access to BABTEK projects. Applications are reviewed before network activation.</small>
