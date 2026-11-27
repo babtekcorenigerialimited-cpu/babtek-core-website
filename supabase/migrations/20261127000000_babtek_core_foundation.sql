@@ -350,7 +350,7 @@ create policy "internal clients" on public.clients for all to authenticated
  using(public.has_role(array['owner','administrator','operations','finance']::public.app_role[]))
  with check(public.has_role(array['owner','administrator','operations','finance']::public.app_role[]));
 create policy "client own organisation" on public.clients for select to authenticated
- using(exists(select 1 from public.client_contacts c where c.client_id=id and c.user_id=auth.uid()));
+ using(exists(select 1 from public.client_contacts c where c.client_id=clients.id and c.user_id=auth.uid()));
 create policy "internal contacts" on public.client_contacts for all to authenticated
  using(public.has_role(array['owner','administrator','operations']::public.app_role[]))
  with check(public.has_role(array['owner','administrator','operations']::public.app_role[]));
@@ -401,7 +401,7 @@ create policy "internal quotations" on public.quotations for all to authenticate
  using(public.has_role(array['owner','administrator','operations','finance']::public.app_role[]))
  with check(public.has_role(array['owner','administrator','operations','finance']::public.app_role[]));
 create policy "client issued quotations" on public.quotations for select to authenticated
- using(status in ('issued','signed') and exists(select 1 from public.client_contacts c where c.client_id=client_id and c.user_id=auth.uid()));
+ using(status in ('issued','signed') and exists(select 1 from public.client_contacts c where c.client_id=quotations.client_id and c.user_id=auth.uid()));
 create policy "internal quotation items" on public.quotation_items for all to authenticated
  using(public.has_role(array['owner','administrator','operations','finance']::public.app_role[]))
  with check(public.has_role(array['owner','administrator','operations','finance']::public.app_role[]));
@@ -412,12 +412,12 @@ create policy "internal agreements" on public.agreements for all to authenticate
  using(public.has_role(array['owner','administrator','operations','finance']::public.app_role[]))
  with check(public.has_role(array['owner','administrator','operations','finance']::public.app_role[]));
 create policy "client issued agreements" on public.agreements for select to authenticated
- using(status in ('issued','signed') and exists(select 1 from public.client_contacts c where c.client_id=client_id and c.user_id=auth.uid()));
+ using(status in ('issued','signed') and exists(select 1 from public.client_contacts c where c.client_id=agreements.client_id and c.user_id=auth.uid()));
 create policy "internal invoices" on public.invoices for all to authenticated
  using(public.has_role(array['owner','administrator','finance']::public.app_role[]))
  with check(public.has_role(array['owner','administrator','finance']::public.app_role[]));
 create policy "client issued invoices" on public.invoices for select to authenticated
- using(status in ('issued','partially_paid','paid','overdue') and exists(select 1 from public.client_contacts c where c.client_id=client_id and c.user_id=auth.uid()));
+ using(status in ('issued','partially_paid','paid','overdue') and exists(select 1 from public.client_contacts c where c.client_id=invoices.client_id and c.user_id=auth.uid()));
 create policy "internal invoice items" on public.invoice_items for all to authenticated
  using(public.has_role(array['owner','administrator','finance']::public.app_role[]))
  with check(public.has_role(array['owner','administrator','finance']::public.app_role[]));
