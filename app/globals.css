@@ -358,3 +358,19 @@ a{color:inherit;text-decoration:none}
 .division-admin-form button{border:0;background:var(--blue);color:#fff;padding:11px 15px;font-size:10px;font-weight:800;cursor:pointer}
 .division-hidden{background:#f7eeee;color:#925252}
 @media(max-width:620px){.division-admin-heading{flex-direction:column}.division-admin-form{align-items:stretch;flex-direction:column}.division-admin-form label,.division-admin-form select,.division-admin-form input[type=number]{width:100%}.division-admin-form .division-public-toggle{flex-direction:row}}
+
+/* Client portal */
+.client-project-card{padding:25px 0;border-bottom:1px solid var(--line)}
+.client-project-card>p{font-size:13px;color:var(--muted)}
+.client-project-facts{display:flex;gap:22px;flex-wrap:wrap;color:var(--muted);font-size:11px;margin:15px 0}
+.client-milestones{margin:20px 0;padding:18px;background:var(--pale);border-radius:8px}
+.client-milestones h4,.client-conversation h4{margin:0 0 12px;color:var(--blue);font-size:14px}
+.client-milestones>div{display:flex;justify-content:space-between;gap:15px;padding:9px 0;border-top:1px solid var(--line);font-size:12px}
+.client-milestones small{color:var(--muted);text-align:right}
+.client-conversation{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+.client-contact-link{flex:1;min-width:min(100%,300px);padding:15px;background:var(--pale);border-radius:8px}
+.client-contact-link .admin-create-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.client-contact-link label{font-size:10px}
+.client-contact-link input{width:100%;min-width:0}
+.client-contact-link button{grid-column:1/-1}
+@media(max-width:650px){.client-contact-link .admin-create-form{grid-template-columns:1fr}.client-milestones>div{display:grid;gap:3px}.client-milestones small{text-align:left}}
