@@ -10,6 +10,7 @@ The dashboard currently reads live, role-protected records from Supabase:
 - A clearly labelled outstanding-invoice snapshot
 - The eight BABTEK divisions
 - An owner-only enquiry register with controlled status updates (new, reviewing, qualified, quoted, converted, declined and closed)
+- An owner-only project register with controlled status updates (proposed, ongoing, on hold, completed and cancelled)
 
 The finance figure is the sum of recorded invoices in issued, partially paid or overdue states within the dashboard's 500-record read window. It is not cash received, profit, a reconciled ledger or an accounts balance. The platform currently has no seeded operational transactions, so empty/zero records are expected until real business data is entered.
 
