@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { SignOutButton } from "@/components/admin/signout-button";
+import { LiveWorkspaceRefresh } from "@/components/portal/live-workspace-refresh";
 import { sendCommunicationMessage, sendClientProjectReply, sendPartnerProjectReply } from "./actions";
 
 export const metadata: Metadata = { title: "Communication Centre | BABTEK" };
