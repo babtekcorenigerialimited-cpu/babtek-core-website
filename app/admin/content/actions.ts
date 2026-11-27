@@ -29,7 +29,7 @@ export async function saveContent(formData:FormData){
  } else if(table==="services"){
   row={...row,name:title,slug,summary,description,delivery_model:textValue(formData.get("delivery_model"),80)||"partner_coordinated",lifecycle:textValue(formData.get("lifecycle"),80)||"developing",display_order:Number(formData.get("display_order")||0)};
  } else if(table==="divisions"){
-  row={...row,name:title,slug,pillar:textValue(formData.get("pillar"),80)||"Built Environment",summary,description,lifecycle:textValue(formData.get("lifecycle"),80)||"developing",display_order:Number(formData.get("display_order")||0),is_public:true};
+  row={name:title,slug,pillar:textValue(formData.get("pillar"),80)||"Built Environment",summary,description,lifecycle:textValue(formData.get("lifecycle"),80)||"developing",display_order:Number(formData.get("display_order")||0),is_public:state==="published"};
  } else if(table==="projects_public"){
   row={...row,title,slug,summary,description,project_type:textValue(formData.get("category"),100),location_label:textValue(formData.get("location"),180),status:textValue(formData.get("project_status"),30)||"proposed",approved_for_publication:formData.get("approved")==="on"};
   if(state==="published"&&row.approved_for_publication!==true) redirect("/admin/content?error=approval");
