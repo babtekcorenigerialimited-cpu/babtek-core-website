@@ -52,8 +52,8 @@ export default async function AdminDashboardPage() {
         <a className="admin-nav-item active" href="/admin"><span>▦</span> Overview</a>
         <a className="admin-nav-item" href="/admin/enquiries"><span>✉</span> Enquiries</a>
         <a className="admin-nav-item" href="/admin/projects"><span>▤</span> Projects</a>
-        <a className="admin-nav-item" href="/admin#clients"><span>◉</span> Clients</a>
-        <a className="admin-nav-item" href="/admin#partners"><span>◇</span> Professional partners</a>
+        <a className="admin-nav-item" href="/admin/clients"><span>◉</span> Clients</a>
+        <a className="admin-nav-item" href="/admin/partners"><span>◇</span> Professional partners</a>
         <p className="admin-nav-label">BUSINESS CONTROL</p>
         <a className="admin-nav-item" href="/admin#finance"><span>₦</span> Finance overview</a>
         <a className="admin-nav-item" href="/admin#divisions"><span>▥</span> Divisions</a>
@@ -70,8 +70,8 @@ export default async function AdminDashboardPage() {
         <div className="admin-metric-grid">
           <article className="admin-metric"><span>OPEN ENQUIRY RECORDS</span><strong>{enquiryCount.count ?? "—"}</strong><small>All recorded enquiries</small></article>
           <article className="admin-metric"><span>PROJECT RECORDS</span><strong>{projectCount.count ?? "—"}</strong><small>Projects registered</small></article>
-          <article className="admin-metric" id="clients"><span>CLIENT RECORDS</span><strong>{clientCount.count ?? "—"}</strong><small>Client organisations and individuals</small></article>
-          <article className="admin-metric" id="partners"><span>PROFESSIONAL PARTNERS</span><strong>{partnerCount.count ?? "—"}</strong><small>Independent specialist network</small></article>
+          <Link className="admin-metric" id="clients" href="/admin/clients"><span>CLIENT RECORDS</span><strong>{clientCount.count ?? "—"}</strong><small>Open client register →</small></Link>
+          <Link className="admin-metric" id="partners" href="/admin/partners"><span>PROFESSIONAL PARTNERS</span><strong>{partnerCount.count ?? "—"}</strong><small>Open partner register →</small></Link>
         </div>
 
         <div className="admin-content-grid">
