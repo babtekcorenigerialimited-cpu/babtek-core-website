@@ -1,0 +1,4 @@
+import Link from "next/link";
+import {PartnerAuthForm} from "@/components/partner/partner-auth-form";
+export const dynamic="force-dynamic";
+export default function PartnerLoginPage(){return <main className="admin-auth-screen"><section className="admin-auth-card"><Link className="admin-brand" href="/">BABTEK <span>CORE</span></Link><p className="admin-kicker">INDEPENDENT PROFESSIONAL ACCESS</p><h1>Partner sign in.</h1><p className="admin-auth-copy">Access project engagements, assigned tasks and your own payment schedule.</p><PartnerAuthForm mode="login"/><p className="admin-form-note">New partner user? <Link href="/partner/register">Create an account</Link></p><Link className="admin-back-link" href="/">← Corporate website</Link></section><p className="admin-auth-foot">BABTEK CORE NIGERIA LIMITED · BUILDING A BETTER FUTURE</p></main>}
