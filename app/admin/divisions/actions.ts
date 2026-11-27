@@ -12,7 +12,7 @@ export async function updateDivision(form:FormData){
  if(!before)redirect("/admin/divisions?error=missing");
  const {error}=await sb.from("divisions").update({lifecycle,is_public:isPublic,display_order:order}).eq("id",id);
  if(error){console.error("Division update failed",error.message);redirect("/admin/divisions?error=save");}
- await sb.from("audit_logs").insert({actor_id:user.id,action:"division.updated",table_name:"divisions",record_id:id,metadata:{slug:before.slug,before:{lifecycle:before.lifecycle,is_public:before.is_public,display_order:before.display_order},after:{lifecycle,is_public,display_order:order}}});
+ await sb.from("audit_logs").insert({actor_id:user.id,action:"division.updated",table_name:"divisions",record_id:id,metadata:{slug:before.slug,before:{lifecycle:before.lifecycle,is_public:before.is_public,display_order:before.display_order},after:{lifecycle,is_public:isPublic,display_order:order}}});
  revalidatePath("/admin");revalidatePath("/admin/divisions");revalidatePath("/divisions");revalidatePath("/");
  redirect("/admin/divisions?saved=1");
 }
