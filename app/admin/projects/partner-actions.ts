@@ -24,6 +24,8 @@ export async function createPartnerEngagement(formData:FormData){
  const dueDate=String(formData.get("due_date")||"").trim();
  if(!/^[0-9a-f-]{36}$/i.test(projectId)||!/^[0-9a-f-]{36}$/i.test(partnerId)||scope.length<10||!Number.isFinite(fee)||fee<0||!/^[A-Z]{3}$/.test(currency)||!["proposed","accepted","in_progress","completed","cancelled"].includes(status))redirect("/admin/projects?error=engagement");
  const {sb,user}=await requireOwner();
+ const {data:partner}=await sb.from("professional_partners").select("id,relationship_status").eq("id",partnerId).maybeSingle();
+ if(!partner||partner.relationship_status!=="active")redirect("/admin/projects?error=engagement");
  const {error}=await sb.from("project_partner_engagements").insert({
   project_id:projectId,partner_id:partnerId,scope_of_work:scope,agreed_fee:fee,currency_code:currency,
   payment_terms:paymentTerms||null,status,start_date:startDate||null,due_date:dueDate||null
