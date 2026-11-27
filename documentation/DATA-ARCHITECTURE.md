@@ -32,5 +32,10 @@ This is a first security baseline, not a production security certification. Befo
 7. Create the founder's Auth account, verify the UUID, then grant the owner role through a trusted SQL session.
 8. Test public, owner, finance, client and partner access paths before entering real company data.
 
+## Enquiry intake implementation
+A Next.js `POST /api/enquiries` route and contact-page form have been added. The route validates fields and payload size, uses a honeypot field, and inserts through the Supabase anonymous key under the public insert-only RLS policy. It deliberately does not read the inserted row or expose enquiry references to anonymous visitors.
+
+The endpoint returns a configuration error until `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are set. A honeypot is only a basic spam deterrent: configure edge/WAF or provider-backed rate limiting, monitoring and abuse controls before public launch. Add CAPTCHA only if abuse patterns justify it.
+
 ## Deferred to later increments
-Supabase app clients, authentication UI, live enquiry endpoint with validation and rate limiting, storage policies, invoice calculations/numbering, payment reconciliation, automatic margin rollups, immutable audit triggers, portals, and production deployment. These require the Supabase project and secure environment configuration.
+Authentication UI, server-side role-aware clients, private Storage policies, invoice calculations/numbering, payment reconciliation, automatic margin rollups, immutable audit triggers, client and partner portals, dashboard modules, and production deployment. These require the Supabase project and secure environment configuration.
