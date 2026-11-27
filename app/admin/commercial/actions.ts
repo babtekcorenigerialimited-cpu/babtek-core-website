@@ -34,7 +34,7 @@ export async function createQuotation(form:FormData){
  const discount=Number(form.get("discount_amount")||0),tax=Number(form.get("tax_amount")||0);
  if(!Number.isFinite(discount)||discount<0||discount>subtotal||!Number.isFinite(tax)||tax<0||tax>1e12)fail("quote");
  const total=Math.round((subtotal-discount+tax)*100)/100;
- const {data:quote,error}=await sb.from("quotations").insert({quotation_number:ref("QT"),project_id:projectId||null,client_id:clientId,status:"draft",issue_date:today(),valid_until:/^\d{4}-\d{2}-\d{2}$/.test(validUntil)?validUntil:null,currency_code:currency,subtotal,discount_amount:discount,tax_amount:tax,total_amount:total,terms:terms||null,created_by:user.id}).select("id").single();
+ const {data:quote,error}=await sb.from("quotations").insert({quotation_number:ref("QT"),project_id:projectId||null,client_id:clientId,status:"draft",issue_date:null,valid_until:/^\d{4}-\d{2}-\d{2}$/.test(validUntil)?validUntil:null,currency_code:currency,subtotal,discount_amount:discount,tax_amount:tax,total_amount:total,terms:terms||null,created_by:user.id}).select("id").single();
  if(error||!quote)fail("quote");
  const {error:itemError}=await sb.from("quotation_items").insert(normalized.map(x=>({...x,quotation_id:quote.id})));
  if(itemError){await sb.from("quotations").delete().eq("id",quote.id);fail("quote_items");}
@@ -52,7 +52,7 @@ export async function updateQuotationStatus(form:FormData){
 export async function createInvoiceFromQuotation(form:FormData){
  const {sb,user}=await access();const id=String(form.get("quotation_id")||"");if(!idPattern.test(id))fail("invoice");
  const {data:q}=await sb.from("quotations").select("id,quotation_number,project_id,client_id,status,currency_code,subtotal,discount_amount,tax_amount,total_amount,terms").eq("id",id).maybeSingle();
- if(!q||!["issued","signed"].includes(q.status))fail("invoice");
+ if(!q||!["issued","signed"].includes(q.status))fail("invoice");\n const {data:existingInvoice}=await sb.from("invoices").select("id").eq("quotation_id",id).limit(1).maybeSingle();if(existingInvoice)fail("invoice");
  const {data:items}=await sb.from("quotation_items").select("description,quantity,unit,unit_price,line_total,display_order").eq("quotation_id",id).order("display_order");
  if(!items?.length)fail("invoice");
  const {data:invoice,error}=await sb.from("invoices").insert({invoice_number:ref("INV"),project_id:q.project_id,client_id:q.client_id,quotation_id:q.id,status:"draft",currency_code:q.currency_code,subtotal:q.subtotal,discount_amount:q.discount_amount,tax_amount:q.tax_amount,total_amount:q.total_amount,notes:q.terms,created_by:user.id}).select("id").single();
@@ -97,8 +97,8 @@ export async function createAgreement(form:FormData){
 export async function updateAgreementStatus(form:FormData){
  const {sb,user}=await access();const id=String(form.get("agreement_id")||"");const status=String(form.get("status")||"");
  if(!idPattern.test(id)||!["issued","signed","superseded","void"].includes(status))fail("agreement_status");
- const {data:a}=await sb.from("agreements").select("id,status").eq("id",id).maybeSingle();if(!a||a.status!=="draft"&&status==="issued")fail("agreement_status");
- const {error}=await sb.from("agreements").update({status,effective_date:status==="issued"?today():undefined}).eq("id",id);if(error)fail("agreement_status");
+ const {data:a}=await sb.from("agreements").select("id,status,effective_date").eq("id",id).maybeSingle();if(!a||a.status!=="draft"&&status==="issued")fail("agreement_status");
+ const {error}=await sb.from("agreements").update({status,effective_date:status==="issued"?(a.effective_date||today()):undefined}).eq("id",id);if(error)fail("agreement_status");
  await sb.from("audit_logs").insert({actor_id:user.id,action:"agreement.status_changed",table_name:"agreements",record_id:id,metadata:{status}});
  refresh();redirect("/admin/commercial?updated=agreement");
 }
