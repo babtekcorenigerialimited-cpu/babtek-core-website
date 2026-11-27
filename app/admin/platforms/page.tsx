@@ -20,7 +20,7 @@ export default async function PlatformManagementPage(){
  const {data:roles}=await sb.from("user_roles").select("role").eq("user_id",user.id);if(!roles?.some((r:any)=>r.role==="owner"))redirect("/admin");
  const tables=["site_pages","services","divisions","projects_public","insights","media_assets","enquiries","clients","quotations","invoices","projects","project_milestones","project_tasks","professional_partners","product_initiatives","expenses","client_payments","partner_payment_schedules","user_roles","audit_logs","partner_network_applications","agreements"];
  const counts=await Promise.all(tables.map(t=>liveCount(sb,t)));const n=Object.fromEntries(tables.map((t,i)=>[t,counts[i]])) as Record<string,number|null>;
- const [recentEnquiries,recentProjects,brand]=await Promise.all([
+ const [recentEnquiries,recentProjects,brand,projectsPulse,enquiriesPulse,milestonePulse]=await Promise.all([
   sb.from("enquiries").select("id,full_name,subject,status,created_at").order("created_at",{ascending:false}).limit(4),
   sb.from("projects").select("id,name,status,target_end_date").order("created_at",{ascending:false}).limit(4),
   sb.from("brand_settings").select("is_published").eq("id",true).maybeSingle(),
