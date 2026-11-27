@@ -20,14 +20,11 @@ export async function createPartnerPaymentSchedule(form:FormData){
  const amount=Number(form.get("amount"));
  const dueDate=String(form.get("due_date")||"");
  if(!uuid.test(engagementId)||description.length<3||!Number.isFinite(amount)||amount<=0||amount>1e12||!(dueDate===""||/^\d{4}-\d{2}-\d{2}$/.test(dueDate)))fail("schedule");
- const {data:engagement}=await sb.from("project_partner_engagements").select("id,agreed_fee,currency_code,status").eq("id",engagementId).maybeSingle();
+ const {data:engagement}=await sb.from("project_partner_engagements").select("id,status").eq("id",engagementId).maybeSingle();
  if(!engagement||engagement.status==="cancelled")fail("schedule");
- const {data:existing}=await sb.from("partner_payment_schedules").select("amount,status").eq("engagement_id",engagementId).neq("status","cancelled");
- const committed=(existing||[]).reduce((s:number,x:any)=>s+Number(x.amount||0),0);
- if(committed+amount>Number(engagement.agreed_fee)+0.005)fail("schedule_over");
- const {error}=await sb.from("partner_payment_schedules").insert({engagement_id:engagementId,description,amount,due_date:dueDate||null,status:"planned",paid_amount:0});
- if(error){console.error("Partner schedule create failed",error.message);fail("schedule");}
- await sb.from("audit_logs").insert({actor_id:user.id,action:"partner_payment_schedule.created",table_name:"partner_payment_schedules",metadata:{engagement_id:engagementId,amount,currency_code:engagement.currency_code}});
+ const {error}=await sb.rpc("create_partner_payment_schedule",{p_engagement_id:engagementId,p_description:description,p_amount:amount,p_due_date:dueDate||null});
+ if(error){console.error("Partner schedule create failed",error.message);fail(error.message.toLowerCase().includes("exceed")?"schedule_over":"schedule");}
+ await sb.from("audit_logs").insert({actor_id:user.id,action:"partner_payment_schedule.created_by_ui",table_name:"partner_payment_schedules",metadata:{engagement_id:engagementId,amount}});
  revalidatePath("/admin/finance/partners");revalidatePath("/admin/finance");revalidatePath("/partner");
  redirect("/admin/finance/partners?saved=schedule");
 }
