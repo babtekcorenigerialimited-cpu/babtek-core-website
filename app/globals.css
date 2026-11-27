@@ -1075,3 +1075,14 @@ a{color:inherit;text-decoration:none}
 .crm-enquiry-command{grid-template-columns:1.4fr repeat(4,minmax(0,1fr))}
 @media(max-width:1050px){.crm-enquiry-command{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:700px){.crm-command-grid,.crm-enquiry-command{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.crm-command-card{padding:15px;min-height:128px}.crm-command-card strong{font-size:26px}.crm-command-feature{grid-column:1/-1}}
+
+
+/* Communication centre live activity summary */
+.comms-command-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:22px 0}
+.comms-command-card{min-width:0;padding:19px 20px;background:linear-gradient(145deg,#fff,#f5f8fb);border:1px solid #dce5ee;border-radius:12px;box-shadow:0 5px 18px #153b5c08}
+.comms-command-card>span{display:block;font-size:9px;letter-spacing:1.25px;font-weight:800;color:#71869a}
+.comms-command-card strong{display:block;margin-top:10px;color:#123b68;font-size:30px;line-height:1.2;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.comms-command-card small{display:block;margin-top:8px;font-size:10px;line-height:1.55;color:#6d8092}
+.comms-command-latest strong{font-size:18px;letter-spacing:-.3px;margin-top:15px}
+@media(max-width:900px){.comms-command-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.comms-command-grid{gap:8px}.comms-command-card{padding:14px;min-height:118px}.comms-command-card strong{font-size:24px}.comms-command-latest strong{font-size:16px}}
