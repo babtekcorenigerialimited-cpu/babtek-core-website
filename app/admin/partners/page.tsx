@@ -5,6 +5,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { SignOutButton } from "@/components/admin/signout-button";
 import { createPartner } from "./actions";
 import { linkPartnerAccount } from "./link-actions";
+import { reviewPartnerProgress } from "./progress-actions";
 
 export const metadata: Metadata = { title: "Professional Partners | BABTEK Owner Workspace" };
 export const dynamic = "force-dynamic";
@@ -29,6 +30,19 @@ export default async function AdminPartnersPage({ searchParams }: { searchParams
     ? await supabase.from("profiles").select("id,full_name").in("id", linkedUserIds)
     : { data: [] as { id: string; full_name: string | null }[] };
   const profileNames = new Map((linkedProfiles || []).map((profile) => [profile.id, profile.full_name || profile.id]));
+  const { data: engagements } = partnerIds.length
+    ? await supabase.from("project_partner_engagements").select("id,partner_id,project_id,scope_of_work").in("partner_id", partnerIds)
+    : { data: [] as { id: string; partner_id: string; project_id: string; scope_of_work: string }[] };
+  const engagementIds = (engagements || []).map((item) => item.id);
+  const projectIds = [...new Set((engagements || []).map((item) => item.project_id))];
+  const [{ data: progressUpdates }, { data: projectRows }] = engagementIds.length
+    ? await Promise.all([
+        supabase.from("partner_progress_updates").select("id,engagement_id,task_id,update_text,progress_percent,review_status,review_note,created_at").in("engagement_id", engagementIds).order("created_at", { ascending: false }).limit(200),
+        supabase.from("projects").select("id,project_code,name").in("id", projectIds),
+      ])
+    : [{ data: [] as any[] }, { data: [] as any[] }];
+  const projectNames = new Map((projectRows || []).map((project) => [project.id, project.project_code + " · " + project.name]));
+  const engagementMap = new Map((engagements || []).map((engagement) => [engagement.id, engagement]));
 
   return <main className="admin-shell">
     <aside className="admin-sidebar">
@@ -46,7 +60,7 @@ export default async function AdminPartnersPage({ searchParams }: { searchParams
     <section className="admin-main">
       <header className="admin-topbar"><div><span className="admin-breadcrumb">BABTEK / RELATIONSHIPS / PARTNERS</span><h1>Professional partner register</h1></div><div className="admin-top-actions"><Link className="admin-signout" href="/admin">Overview</Link><SignOutButton /></div></header>
       <div className="admin-welcome admin-register-welcome"><div><p className="admin-kicker">INDEPENDENT PROFESSIONAL NETWORK</p><h2>Coordinate specialist expertise with clarity.</h2><p>Record independent professionals and firms engaged on a project-by-project basis.</p></div><span className="admin-welcome-mark">◇</span></div>
-      {params.created === "1" && <p className="admin-notice">Professional partner record created.</p>}{params.linked === "1" && <p className="admin-notice">Partner login linked and partner access granted.</p>}
+      {params.created === "1" && <p className="admin-notice">Professional partner record created.</p>}{params.linked === "1" && <p className="admin-notice">Partner login linked and partner access granted.</p>}{params.reviewed === "1" && <p className="admin-notice">Partner progress review saved.</p>}
       {params.error && <p className="admin-alert">{params.error === "required" ? "A legal or registered name is required." : params.error === "account" ? "That user account or profile was not found. Ask the partner to register and confirm their email first." : params.error === "link" ? "The partner account could not be linked. Check the UUID and permissions." : "The partner record could not be saved. Check permissions and try again."}</p>}
       <section className="admin-panel admin-register-panel">
         <div className="admin-panel-heading"><div><h2>Add a professional partner</h2><p>Record an independent specialist or professional firm. This does not create a staff position or login.</p></div></div>
@@ -66,6 +80,14 @@ export default async function AdminPartnersPage({ searchParams }: { searchParams
           const partnerLinks = (links || []).filter((link) => link.partner_id === partner.id);
           return <article key={partner.id} className="partner-admin-record"><div><strong>{partner.trading_name || partner.legal_name}</strong><p>{[partner.professional_category, partner.email, partner.phone, partner.registration_details].filter(Boolean).join(" · ")}</p><p>{partnerLinks.length ? "Linked portal user(s): " + partnerLinks.map((link) => profileNames.get(link.user_id) || link.user_id).join(", ") : "No portal account linked yet."}</p></div><div className="partner-link-form"><form action={linkPartnerAccount}><input type="hidden" name="partner_id" value={partner.id}/><label>Registered user account UUID<input name="user_id" required placeholder="Partner shares account ID after registration"/></label><button type="submit">Link account & grant partner access</button></form></div><span className="admin-status">INDEPENDENT</span></article>;
         })}</div> : <p className="admin-empty-note">No partner records yet. Add verified specialists as BABTEK establishes engagements.</p>}
+      </section>
+      <section className="admin-panel admin-register-panel" style={{marginTop:16}}>
+        <div className="admin-panel-heading"><div><h2>Partner progress submissions</h2><p>Review updates submitted through the restricted partner workspace.</p></div><span>{progressUpdates?.length ?? 0} shown</span></div>
+        {progressUpdates?.length ? <div className="admin-record-list">{progressUpdates.map((update) => {
+          const engagement = engagementMap.get(update.engagement_id);
+          const partner = (partners || []).find((item) => item.id === engagement?.partner_id);
+          return <article key={update.id} className="partner-admin-record"><div><strong>{partner?.trading_name || partner?.legal_name || "Professional partner"} · {projectNames.get(engagement?.project_id || "") || "Project"}</strong><p>{update.update_text}</p><p>{update.progress_percent === null ? "Progress not specified" : update.progress_percent + "% reported"} · {new Date(update.created_at).toLocaleString("en-NG")}</p>{update.review_note && <p>BABTEK review: {update.review_note}</p>}</div><div className="partner-review-form"><span className="admin-status">{update.review_status.replaceAll("_", " ")}</span>{update.review_status === "submitted" && <form action={reviewPartnerProgress}><input type="hidden" name="update_id" value={update.id}/><label>Review note<input name="review_note" maxLength={2000} placeholder="Optional feedback"/></label><div className="partner-review-actions"><button type="submit" name="review_status" value="reviewed">Mark reviewed</button><button type="submit" name="review_status" value="changes_requested">Request changes</button></div></form>}</div></article>;
+        })}</div> : <p className="admin-empty-note">No partner progress updates have been submitted yet.</p>}
       </section>
       <footer className="admin-footer">BABTEK CORE NIGERIA LIMITED <span>Professional partner records · Owner access</span></footer>
     </section>
