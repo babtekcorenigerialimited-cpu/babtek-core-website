@@ -37,6 +37,12 @@ export default async function CommunicationsPage({ searchParams }: { searchParam
     if (message.project_id && message.message_type==="client_reply") { const current=messagesByProject.get(message.project_id)||[]; current.push(message); messagesByProject.set(message.project_id,current); }
     if (message.partner_engagement_id && message.message_type==="partner_update") { const current=messagesByEngagement.get(message.partner_engagement_id)||[]; current.push(message); messagesByEngagement.set(message.partner_engagement_id,current); }
   }
+  const clientThreadCount = messagesByProject.size;
+  const partnerThreadCount = messagesByEngagement.size;
+  const enquiryThreadCount = messagesByEnquiry.size;
+  const latestMessageAt = messages?.[0]?.created_at ?? null;
+  const clientMessageCount = (messages || []).filter((item) => item.message_type === "client_reply").length;
+  const partnerMessageCount = (messages || []).filter((item) => item.message_type === "partner_update").length;
   const messagesByEnquiry = new Map<string, typeof messages>();
   for (const message of messages || []) {
     if (!message.enquiry_id) continue;
@@ -67,6 +73,12 @@ export default async function CommunicationsPage({ searchParams }: { searchParam
         <div className="admin-welcome admin-register-welcome"><div><p className="admin-kicker">RELATIONSHIP & PROJECT RECORD</p><h2>Keep every project conversation organised.</h2><p>Internal notes are attached to enquiry records and visible to authorised BABTEK staff.</p></div><span className="admin-welcome-mark">☷</span></div>
         {params.sent === "1" && <p className="admin-notice">Internal note saved to the enquiry record.</p>}{params.replied === "1" && <p className="admin-notice">Client-facing project reply saved and is visible in the client portal.</p>}{params.partner_replied==="1"&&<p className="admin-notice">Partner reply saved and is visible to linked partner accounts.</p>}
         {params.error && <p className="admin-alert">The message could not be saved. Check the text and your access, then try again.</p>}
+        <section className="comms-command-grid" aria-label="Communication activity summary">
+          <article className="comms-command-card"><span>ENQUIRY THREADS</span><strong>{enquiryThreadCount}</strong><small>{enquiries?.length ?? 0} enquiries in current register view</small></article>
+          <article className="comms-command-card"><span>CLIENT PROJECT THREADS</span><strong>{clientThreadCount}</strong><small>{clientMessageCount} client-visible messages recorded</small></article>
+          <article className="comms-command-card"><span>PARTNER ENGAGEMENT THREADS</span><strong>{partnerThreadCount}</strong><small>{partnerMessageCount} partner updates recorded</small></article>
+          <article className="comms-command-card comms-command-latest"><span>LATEST MESSAGE</span><strong>{latestMessageAt ? dateLabel(latestMessageAt) : "—"}</strong><small>{messages?.length ?? 0} messages loaded · latest 300 records</small></article>
+        </section>
         <div className="admin-comms-notice"><strong>Current release: project conversations and internal notes</strong><p>Linked clients can exchange project messages with authorised BABTEK staff. Assigned independent partners can exchange project messages with authorised BABTEK staff. Enquiry notes remain internal to BABTEK. Messages are stored in the platform; email, WhatsApp, SMS, live presence, unread counters and push notifications are not yet connected.</p></div>
         {enquiryError || messageError ? <p className="admin-alert">Communication records could not be loaded. Check database permissions.</p> : (
           <section className="admin-panel admin-register-panel">
