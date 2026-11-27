@@ -68,7 +68,9 @@ The original `index.html` is retained during the transition and is not the new a
 - Verify project statuses and professional credentials where relevant.
 - Apply and review the Supabase migration in a BABTEK-controlled project.
 - Configure private Storage buckets and bucket-level access policies.
-- Implement and test secure enquiry submission, authentication and portal access controls.
+- Configure the Supabase URL and anon/publishable key, then test the enquiry form end-to-end.
+- Add provider-backed rate limiting and abuse monitoring before public launch.
+- Implement and test authentication and portal access controls.
 - Configure hosting, backups, monitoring and deployment workflows.
 
 ## Development status
