@@ -5,9 +5,9 @@ import {SignOutButton} from "@/components/admin/signout-button";
 
 export const dynamic="force-dynamic";
 const money=(v:number)=>new Intl.NumberFormat("en-NG",{style:"currency",currency:"NGN",maximumFractionDigits:0}).format(v);
-async function countRows(sb:any,table:string){const {count,error}=await sb.from(table).select("id",{count:"exact",head:true});return error?null:(count??0);}
+async function countRows(sb:any,table:string){const {count,error}=await sb.from(table).select(table==="user_roles"?"user_id":"id",{count:"exact",head:true});return error?null:(count??0);}
 function Stat({label,value,detail,href}:{label:string;value:string|number;detail:string;href?:string}){
- const C=href?Link:"div";return <C className="admin-metric" {...(href?{href}:{})}><span>{label}</span><strong>{value}</strong><small>{detail}</small></C>;
+ const body=<><span>{label}</span><strong>{value}</strong><small>{detail}</small></>;return href?<Link className="admin-metric" href={href}>{body}</Link>:<div className="admin-metric">{body}</div>;
 }
 function Module({number,title,description,status,href,items}:{number:string;title:string;description:string;status:string;href?:string;items:string[]}){
  const inner=<><div className="admin-module-top"><span>{number}</span><em>{status}</em></div><h3>{title}</h3><p>{description}</p><ul>{items.map(x=><li key={x}>{x}</li>)}</ul>{href?<strong className="admin-module-link">Open workspace →</strong>:<strong className="admin-module-link muted">Control centre module · staged rollout</strong>}</>;
