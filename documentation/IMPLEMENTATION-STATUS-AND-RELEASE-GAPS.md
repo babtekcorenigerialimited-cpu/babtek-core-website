@@ -137,7 +137,7 @@ A fresh build of the corrected `ad75c8e` commit is still unverified. Vercel has 
 
 ## Open partner network intake (27 November 2026)
 - Added a public **/partner-network** page and website navigation entry. The application is open to professionals, technology collaborators, suppliers, ventures, strategic partners, researchers, educators and other suitable organisations or individuals. No personal invitation is required.
-- Public application intake stores contact information, partner category, specialties, relevant divisions, website/portfolio URL, experience and collaboration interests. The public can submit but cannot read or retrieve applications.
+- Public application intake stores contact information, partner category, specialties, relevant divisions, website/portfolio URL, experience and collaboration interests. Applicants must acknowledge the partner-application privacy notice. The public can submit but cannot read or retrieve applications.
 - Added founder-only review at **/admin/partner-applications** with pending, under-review, more-information-required, approved and declined outcomes.
 - Approval creates the BABTEK partner relationship record, preserves the applicant's capability and collaboration details, and automatically links an existing email-verified account matching the application email. A person who registers later with the same verified email is also linked automatically after confirmation.
 - Partner portal access remains limited to projects and engagements explicitly assigned by BABTEK. Approval to join the network is not employment, a guarantee of work, or access to confidential projects.
