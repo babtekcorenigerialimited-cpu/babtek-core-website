@@ -12,7 +12,7 @@ async function access(){
  if(!roles?.some((r:any)=>["owner","administrator","finance","operations"].includes(r.role)))redirect("/admin");
  return {sb,user};
 }
-const idPattern=/^[0-9a-f-]{36}$/i;
+async function financeAccess(){\n const result=await access();\n const {data:roles}=await result.sb.from("user_roles").select("role").eq("user_id",result.user.id);\n if(!roles?.some((r:any)=>["owner","administrator","finance"].includes(r.role)))redirect("/admin");\n return result;\n}\nconst idPattern=/^[0-9a-f-]{36}$/i;
 const today=()=>new Date().toISOString().slice(0,10);
 const ref=(prefix:string)=>prefix+"-"+today().replaceAll("-","")+"-"+randomUUID().slice(0,6).toUpperCase();
 const fail=(code:string):never=>redirect("/admin/commercial?error="+code);
