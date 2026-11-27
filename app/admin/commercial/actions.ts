@@ -64,12 +64,12 @@ export async function createInvoiceFromQuotation(form:FormData){
  if(!["issued","signed"].includes(q.status))fail("invoice");
  const {data:existingInvoice}=await sb.from("invoices").select("id").eq("quotation_id",id).limit(1).maybeSingle();if(existingInvoice)fail("invoice");
  const {data:items}=await sb.from("quotation_items").select("description,quantity,unit,unit_price,line_total,display_order").eq("quotation_id",id).order("display_order");
- if(!items?.length)fail("invoice");
+ const invoiceItems=items||[];if(!invoiceItems.length)fail("invoice");
  const {data:invoice,error}=await sb.from("invoices").insert({invoice_number:ref("INV"),project_id:q.project_id,client_id:q.client_id,quotation_id:q.id,status:"draft",currency_code:q.currency_code,subtotal:q.subtotal,discount_amount:q.discount_amount,tax_amount:q.tax_amount,total_amount:q.total_amount,notes:q.terms,created_by:user.id}).select("id").single();
  if(error)fail("invoice");
  if(!invoice)redirect("/admin/commercial?error=invoice");
  const invoiceId=invoice.id;
- const {error:itemError}=await sb.from("invoice_items").insert(items.map(x=>({...x,invoice_id:invoiceId})));
+ const {error:itemError}=await sb.from("invoice_items").insert(invoiceItems.map(x=>({...x,invoice_id:invoiceId})));
  if(itemError){await sb.from("invoices").delete().eq("id",invoiceId);fail("invoice");}
  await sb.from("audit_logs").insert({actor_id:user.id,action:"invoice.created_from_quotation",table_name:"invoices",record_id:invoiceId,metadata:{quotation_id:q.id,total:q.total_amount}});
  refresh();redirect("/admin/commercial?created=invoice");
@@ -77,7 +77,7 @@ export async function createInvoiceFromQuotation(form:FormData){
 export async function issueInvoice(form:FormData){
  const {sb,user}=await access();const id=String(form.get("invoice_id")||"");const due=String(form.get("due_date")||"");
  if(!idPattern.test(id)||!/^\d{4}-\d{2}-\d{2}$/.test(due))fail("invoice");
- const {data:inv}=await sb.from("invoices").select("id,status,total_amount").eq("id",id).maybeSingle();if(!inv||inv.status!=="draft"||Number(inv.total_amount)<=0)fail("invoice");
+ const {data:inv}=await sb.from("invoices").select("id,status,total_amount").eq("id",id).maybeSingle();if(!inv)fail("invoice");const invoiceRecord=inv!;if(invoiceRecord.status!=="draft"||Number(invoiceRecord.total_amount)<=0)fail("invoice");
  const {error}=await sb.from("invoices").update({status:"issued",issue_date:today(),due_date:due}).eq("id",id);if(error)fail("invoice");
  await sb.from("audit_logs").insert({actor_id:user.id,action:"invoice.issued",table_name:"invoices",record_id:id,metadata:{due_date:due}});
  refresh();redirect("/admin/commercial?updated=invoice");
@@ -85,17 +85,17 @@ export async function issueInvoice(form:FormData){
 export async function recordClientPayment(form:FormData){
  const {sb,user}=await access();const invoiceId=String(form.get("invoice_id")||"");const amount=Number(form.get("amount"));const method=String(form.get("method")||"").trim().slice(0,80);const reference=String(form.get("transaction_reference")||"").trim().slice(0,160);const date=String(form.get("payment_date")||today());
  if(!idPattern.test(invoiceId)||!Number.isFinite(amount)||amount<=0||amount>1e12||!method||!reference||!/^\d{4}-\d{2}-\d{2}$/.test(date))fail("payment");
- const {data:inv}=await sb.from("invoices").select("id,status,total_amount,currency_code").eq("id",invoiceId).maybeSingle();if(!inv||!["issued","partially_paid","overdue"].includes(inv.status))fail("payment");
+ const {data:inv}=await sb.from("invoices").select("id,status,total_amount,currency_code").eq("id",invoiceId).maybeSingle();if(!inv)fail("payment");const invoiceRecord=inv!;if(!["issued","partially_paid","overdue"].includes(invoiceRecord.status))fail("payment");
  const {data:existing}=await sb.from("client_payments").select("amount,status").eq("invoice_id",invoiceId);
  const already=(existing||[]).filter((x:any)=>["confirmed","paid","completed"].includes(String(x.status).toLowerCase())).reduce((s:number,x:any)=>s+Number(x.amount),0);
- if(amount>Number(inv.total_amount)-already+0.005)fail("payment_exceeds");
- const {data:payment,error}=await sb.from("client_payments").insert({invoice_id:invoiceId,amount,currency_code:inv.currency_code,payment_date:date,method,transaction_reference:reference,status:"confirmed",recorded_by:user.id}).select("id").single();
+ if(amount>Number(invoiceRecord.total_amount)-already+0.005)fail("payment_exceeds");
+ const {data:payment,error}=await sb.from("client_payments").insert({invoice_id:invoiceId,amount,currency_code:invoiceRecord.currency_code,payment_date:date,method,transaction_reference:reference,status:"confirmed",recorded_by:user.id}).select("id").single();
  if(error)fail("payment");
  if(!payment)redirect("/admin/commercial?error=payment");
  const paymentId=payment.id;
- const newTotal=already+amount;const newStatus=newTotal+0.005>=Number(inv.total_amount)?"paid":"partially_paid";
+ const newTotal=already+amount;const newStatus=newTotal+0.005>=Number(invoiceRecord.total_amount)?"paid":"partially_paid";
  const {error:updateError}=await sb.from("invoices").update({status:newStatus}).eq("id",invoiceId);if(updateError)fail("payment");
- await sb.from("audit_logs").insert({actor_id:user.id,action:"client_payment.recorded",table_name:"client_payments",record_id:paymentId,metadata:{invoice_id:invoiceId,amount,currency_code:inv.currency_code,reference}});
+ await sb.from("audit_logs").insert({actor_id:user.id,action:"client_payment.recorded",table_name:"client_payments",record_id:paymentId,metadata:{invoice_id:invoiceId,amount,currency_code:invoiceRecord.currency_code,reference}});
  refresh();redirect("/admin/commercial?created=payment");
 }
 export async function createAgreement(form:FormData){
@@ -113,8 +113,8 @@ export async function createAgreement(form:FormData){
 export async function updateAgreementStatus(form:FormData){
  const {sb,user}=await access();const id=String(form.get("agreement_id")||"");const status=String(form.get("status")||"");
  if(!idPattern.test(id)||!["issued","signed","superseded","void"].includes(status))fail("agreement_status");
- const {data:a}=await sb.from("agreements").select("id,status,effective_date").eq("id",id).maybeSingle();if(!a||a.status!=="draft"&&status==="issued")fail("agreement_status");
- const {error}=await sb.from("agreements").update({status,effective_date:status==="issued"?(a.effective_date||today()):undefined}).eq("id",id);if(error)fail("agreement_status");
+ const {data:a}=await sb.from("agreements").select("id,status,effective_date").eq("id",id).maybeSingle();if(!a)fail("agreement_status");const agreementRecord=a!;if(agreementRecord.status!=="draft"&&status==="issued")fail("agreement_status");
+ const {error}=await sb.from("agreements").update({status,effective_date:status==="issued"?(agreementRecord.effective_date||today()):undefined}).eq("id",id);if(error)fail("agreement_status");
  await sb.from("audit_logs").insert({actor_id:user.id,action:"agreement.status_changed",table_name:"agreements",record_id:id,metadata:{status}});
  refresh();redirect("/admin/commercial?updated=agreement");
 }
