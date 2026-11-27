@@ -12,7 +12,13 @@ async function access(){
  if(!roles?.some((r:any)=>["owner","administrator","finance","operations"].includes(r.role)))redirect("/admin");
  return {sb,user};
 }
-async function financeAccess(){\n const result=await access();\n const {data:roles}=await result.sb.from("user_roles").select("role").eq("user_id",result.user.id);\n if(!roles?.some((r:any)=>["owner","administrator","finance"].includes(r.role)))redirect("/admin");\n return result;\n}\nconst idPattern=/^[0-9a-f-]{36}$/i;
+async function financeAccess(){
+ const result=await access();
+ const {data:roles}=await result.sb.from("user_roles").select("role").eq("user_id",result.user.id);
+ if(!roles?.some((r:any)=>["owner","administrator","finance"].includes(r.role)))redirect("/admin");
+ return result;
+}
+const idPattern=/^[0-9a-f-]{36}$/i;
 const today=()=>new Date().toISOString().slice(0,10);
 const ref=(prefix:string)=>prefix+"-"+today().replaceAll("-","")+"-"+randomUUID().slice(0,6).toUpperCase();
 const fail=(code:string):never=>redirect("/admin/commercial?error="+code);
@@ -52,7 +58,8 @@ export async function updateQuotationStatus(form:FormData){
 export async function createInvoiceFromQuotation(form:FormData){
  const {sb,user}=await access();const id=String(form.get("quotation_id")||"");if(!idPattern.test(id))fail("invoice");
  const {data:q}=await sb.from("quotations").select("id,quotation_number,project_id,client_id,status,currency_code,subtotal,discount_amount,tax_amount,total_amount,terms").eq("id",id).maybeSingle();
- if(!q||!["issued","signed"].includes(q.status))fail("invoice");\n const {data:existingInvoice}=await sb.from("invoices").select("id").eq("quotation_id",id).limit(1).maybeSingle();if(existingInvoice)fail("invoice");
+ if(!q||!["issued","signed"].includes(q.status))fail("invoice");
+ const {data:existingInvoice}=await sb.from("invoices").select("id").eq("quotation_id",id).limit(1).maybeSingle();if(existingInvoice)fail("invoice");
  const {data:items}=await sb.from("quotation_items").select("description,quantity,unit,unit_price,line_total,display_order").eq("quotation_id",id).order("display_order");
  if(!items?.length)fail("invoice");
  const {data:invoice,error}=await sb.from("invoices").insert({invoice_number:ref("INV"),project_id:q.project_id,client_id:q.client_id,quotation_id:q.id,status:"draft",currency_code:q.currency_code,subtotal:q.subtotal,discount_amount:q.discount_amount,tax_amount:q.tax_amount,total_amount:q.total_amount,notes:q.terms,created_by:user.id}).select("id").single();
