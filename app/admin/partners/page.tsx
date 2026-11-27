@@ -52,7 +52,7 @@ export default async function AdminPartnersPage({ searchParams }: { searchParams
       <Link className="admin-nav-item" href="/admin/enquiries">✉ Enquiries</Link>
       <Link className="admin-nav-item" href="/admin/projects">▤ Projects</Link>
       <Link className="admin-nav-item" href="/admin/clients">◉ Clients</Link>
-      <Link className="admin-nav-item active" href="/admin/partners">◇ Professional partners</Link>
+      <Link className="admin-nav-item active" href="/admin/partners">◇ Partner network</Link>\n      <Link className="admin-nav-item" href="/admin/partner-applications">Applications</Link>
       <p className="admin-nav-label">BUSINESS CONTROL</p>
       <Link className="admin-nav-item" href="/admin#finance">₦ Finance overview</Link>
       <div className="admin-sidebar-bottom"><span className="admin-avatar">MD</span><span><strong>Managing Director</strong><small>OWNER ACCESS</small></span></div>
@@ -80,7 +80,7 @@ export default async function AdminPartnersPage({ searchParams }: { searchParams
         </form>
       </section>
       <section className="admin-panel admin-register-panel" style={{marginTop:16}}>
-        <div className="admin-panel-heading"><div><h2>Partner relationship network</h2><p>Latest 250 records, newest first.</p></div><span>{partners?.length ?? 0} shown</span></div>
+        <div className="admin-panel-heading"><div><h2>Partner relationship network</h2><p>Latest 250 records, newest first. <Link className="admin-inline-link" href="/admin/partner-applications">Review open applications →</Link></p></div><span>{partners?.length ?? 0} shown</span></div>
         {error ? <p className="admin-alert">Partner records could not be loaded.</p> : partners?.length ? <div className="admin-record-list">{partners.map((partner) => {
           const partnerLinks = (links || []).filter((link) => link.partner_id === partner.id);
           return <article key={partner.id} className="partner-admin-record"><div><strong>{partner.trading_name || partner.legal_name}</strong><p>{[partner.partner_type, partner.professional_category, partner.email, partner.phone, partner.relationship_status].filter(Boolean).join(" · ")}{partner.specialties?.length ? <span className="access-role-list">{partner.specialties.map((x:string)=><em key={x}>{x}</em>)}</span> : null}{partner.division_affiliations?.length ? <small>Divisions: {partner.division_affiliations.join(", ")}</small> : null}{partner.website ? <a className="admin-inline-link" href={partner.website} target="_blank" rel="noreferrer">Portfolio / website ↗</a> : null}</p><p>{partnerLinks.length ? "Linked portal user(s): " + partnerLinks.map((link) => profileNames.get(link.user_id) || link.user_id).join(", ") : "No portal account linked yet."}</p></div><div className="partner-link-form"><form action={linkPartnerAccount}><input type="hidden" name="partner_id" value={partner.id}/><label>Registered user account UUID<input name="user_id" required placeholder="Partner shares account ID after registration"/></label><button type="submit">Link account & grant partner access</button></form></div><span className="admin-status">INDEPENDENT</span></article>;
