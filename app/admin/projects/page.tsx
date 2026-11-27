@@ -85,7 +85,7 @@ export default async function AdminProjectsPage({ searchParams }: { searchParams
               <section className="project-delivery-manager">
                 <div className="admin-panel-heading"><div><h4>Project document library</h4><p>Store project files privately and explicitly choose who may see each file.</p></div><span>{(projectDocuments || []).filter((doc) => doc.project_id === item.id).length} files</span></div>
                 <div className="project-document-list">{(projectDocuments || []).filter((doc) => doc.project_id === item.id).map((doc) => <article key={doc.id}><div><strong>{doc.title}</strong><p>{doc.document_type || "Project document"} · {doc.version_label || "No version label"}</p></div><span className={doc.client_visible ? "admin-status" : "admin-status muted"}>Client: {doc.client_visible ? "Visible" : "Private"}</span><span className={doc.partner_visible ? "admin-status" : "admin-status muted"}>Partner: {doc.partner_visible ? "Visible" : "Private"}</span></article>)}{!(projectDocuments || []).some((doc) => doc.project_id === item.id) && <p className="admin-empty-note">No documents have been uploaded.</p>}</div>
-                <ProjectDocumentUploader projectId={item.id}/>         </form>
+                <ProjectDocumentUploader projectId={item.id}/>
               </section>
               <section className="project-partner-manager">
                 <div className="admin-panel-heading"><div><h4>Independent specialist engagements</h4><p>Assign a verified professional partner to a defined project scope.</p></div><span>{(engagements || []).filter((e) => e.project_id === item.id).length} assigned</span></div>
