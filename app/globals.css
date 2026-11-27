@@ -502,3 +502,40 @@ a{color:inherit;text-decoration:none}
 .project-finance-table{min-width:1120px}
 .project-finance-table td small{display:block;margin-top:4px;color:var(--admin-muted,#64748b);font-size:11px}
 @media(max-width:760px){.finance-method-grid{grid-template-columns:1fr}}
+
+
+/* Commercial transaction centre */
+.commercial-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.commercial-form-grid label,.commercial-record-actions label{display:grid;gap:6px;font-size:12px;font-weight:650;color:var(--admin-ink,#172033)}
+.commercial-form-grid input,.commercial-form-grid select,.commercial-form-grid textarea,.commercial-record-actions input{width:100%;min-width:0;border:1px solid var(--admin-border,#dce3ed);border-radius:9px;padding:11px;background:#fff;color:var(--admin-ink,#172033);font:inherit}
+.commercial-quote-form{padding:0}
+.commercial-items-heading{display:flex;align-items:center;justify-content:space-between;margin:22px 0 12px}
+.commercial-line-item{display:grid;grid-template-columns:minmax(180px,2fr) 90px 110px minmax(120px,1fr) auto auto;gap:10px;align-items:end;padding:12px 0;border-top:1px solid var(--admin-border,#e5eaf1)}
+.commercial-line-item label{display:grid;gap:5px;font-size:11px;font-weight:650}
+.commercial-line-item input{min-width:0;width:100%;border:1px solid var(--admin-border,#dce3ed);border-radius:8px;padding:10px}
+.commercial-line-item>strong{font-size:12px;white-space:nowrap;padding-bottom:10px}
+.commercial-secondary{background:#eef4fb!important;color:#174a7e!important;border:1px solid #d8e5f3!important}
+.commercial-remove{background:transparent!important;color:#a33!important;border:0!important;padding:8px!important;font-size:11px}
+.commercial-remove:disabled{opacity:.35}
+.commercial-totals{margin:18px 0;padding:14px;border-radius:12px;background:#f6f8fb;align-items:end}
+.commercial-totals>div{display:grid;gap:4px;padding:0 10px}
+.commercial-totals>div small{font-size:11px;color:var(--admin-muted,#64748b)}
+.commercial-totals>div strong{font-size:16px}
+.commercial-list-panel{margin-top:18px}
+.commercial-record-list{display:grid;gap:0}
+.commercial-record{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,300px);gap:22px;padding:20px 0;border-top:1px solid var(--admin-border,#e5eaf1)}
+.commercial-record-main h3{margin:10px 0 4px;font-size:16px}
+.commercial-record-main p,.commercial-record-main li{font-size:12px;color:var(--admin-muted,#64748b);line-height:1.65}
+.commercial-record-main ul{margin:10px 0;padding-left:18px}
+.commercial-total{display:inline-block;margin-top:8px;font-size:18px}
+.commercial-record-actions{display:grid;align-content:start;gap:12px}
+.commercial-record-actions form{display:grid;gap:9px}
+.commercial-record-actions button,.commercial-quote-form>button,.commercial-agreement-form>button{border:0;border-radius:9px;padding:11px 14px;background:#1559a5;color:white;font-weight:700;cursor:pointer}
+.commercial-invoice-summary{display:flex;flex-wrap:wrap;gap:16px;margin:12px 0}
+.commercial-invoice-summary span{display:grid;gap:3px;font-size:11px;color:var(--admin-muted,#64748b)}
+.commercial-invoice-summary strong{font-size:13px;color:var(--admin-ink,#172033)}
+.commercial-payment-line{display:block;margin:5px 0;color:var(--admin-muted,#64748b)}
+.commercial-payment-form{padding:14px;border:1px solid var(--admin-border,#e5eaf1);border-radius:12px}
+.commercial-agreement-form{padding:16px 0}
+@media(max-width:900px){.commercial-line-item{grid-template-columns:1fr 1fr}.commercial-line-item label:first-child{grid-column:1/-1}.commercial-record{grid-template-columns:1fr}.commercial-form-grid{grid-template-columns:1fr}}
+@media(max-width:520px){.commercial-line-item{grid-template-columns:1fr 1fr}.commercial-totals{grid-template-columns:1fr 1fr}}
