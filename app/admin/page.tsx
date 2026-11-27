@@ -51,7 +51,7 @@ export default async function AdminDashboardPage() {
         <p className="admin-nav-label">WORKSPACE</p>
         <a className="admin-nav-item active" href="/admin"><span>▦</span> Overview</a>
         <a className="admin-nav-item" href="/admin/enquiries"><span>✉</span> Enquiries</a>
-        <a className="admin-nav-item" href="/admin#projects"><span>▤</span> Projects</a>
+        <a className="admin-nav-item" href="/admin/projects"><span>▤</span> Projects</a>
         <a className="admin-nav-item" href="/admin#clients"><span>◉</span> Clients</a>
         <a className="admin-nav-item" href="/admin#partners"><span>◇</span> Professional partners</a>
         <p className="admin-nav-label">BUSINESS CONTROL</p>
@@ -78,7 +78,7 @@ export default async function AdminDashboardPage() {
           <section className="admin-panel" id="enquiries"><div className="admin-panel-heading"><div><h2>Recent enquiries</h2><p>Latest messages received by BABTEK.</p><Link className="admin-inline-link" href="/admin/enquiries">Open register →</Link></div><span>{enquiryCount.count ?? 0} total</span></div>
             {recentEnquiries.data?.length ? <div className="admin-record-list">{recentEnquiries.data.map((item) => <article key={item.id}><div><strong>{item.full_name}</strong><p>{item.subject || "General enquiry"} · {item.reference_code || "Unreferenced"}</p></div><span className="admin-status">{item.status}</span></article>)}</div> : <p className="admin-empty-note">No enquiry records are available yet. New website enquiries will appear here once the form is connected to the configured deployment.</p>}
           </section>
-          <section className="admin-panel" id="projects"><div className="admin-panel-heading"><div><h2>Recent projects</h2><p>Project delivery register.</p></div><span>{projectCount.count ?? 0} total</span></div>
+          <section className="admin-panel" id="projects"><div className="admin-panel-heading"><div><h2>Recent projects</h2><p>Project delivery register.</p><Link className="admin-inline-link" href="/admin/projects">Open register →</Link></div><span>{projectCount.count ?? 0} total</span></div>
             {recentProjects.data?.length ? <div className="admin-record-list">{recentProjects.data.map((item) => <article key={item.id}><div><strong>{item.name}</strong><p>{item.project_code || "Project"}{item.target_end_date ? " · Due " + item.target_end_date : ""}</p></div><span className="admin-status">{item.status}</span></article>)}</div> : <p className="admin-empty-note">No projects have been registered in the platform yet.</p>}
           </section>
         </div>
