@@ -1646,3 +1646,39 @@ a{color:inherit;text-decoration:none}
 .wc-footer{display:flex;justify-content:space-between;gap:12px;margin-top:19px;padding-top:13px;border-top:1px solid #edf1f4;font-size:8px;letter-spacing:.7px;color:#8495a4}.wc-footer span:first-child{font-weight:900}
 @media(max-width:760px){.workspace-command{padding:16px}.wc-heading{display:block}.wc-live{display:inline-flex;margin-top:13px}.wc-corporate,.wc-clients,.wc-projects,.wc-finance,.wc-tech{grid-template-columns:1fr}.wc-project-summary{grid-row:auto;min-height:170px}.wc-client-actions{grid-template-columns:repeat(2,1fr)}.wc-division-strip{grid-template-columns:1fr}.wc-division-strip a{grid-column:auto;grid-row:auto}.wc-footer{flex-direction:column}.wc-project-metrics{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:480px){.wc-stat-stack{grid-template-columns:repeat(2,1fr)}.wc-client-actions{grid-template-columns:1fr 1fr}.wc-project-metrics{grid-template-columns:1fr}.wc-ledger-row{grid-template-columns:20px 1fr auto}.wc-finance-links{display:grid}.wc-tech-counts{grid-template-columns:1fr 1fr}}
+
+/* Page-level identities for the operational applications inside Founder Portal */
+.admin-register-page .admin-main{min-width:0}
+.admin-register-page .admin-topbar{padding-bottom:18px;border-bottom:1px solid #e1e9f0}
+.admin-register-page .admin-topbar h1{letter-spacing:-.7px}
+.admin-register-page .admin-section-heading{align-items:flex-end;margin:25px 0 13px}
+.admin-register-page .admin-section-heading h2{letter-spacing:-.45px}
+.admin-register-page .admin-panel{border-radius:12px;border-color:#e0e8ef;box-shadow:0 8px 26px #173c5b08}
+.admin-register-page .admin-panel-heading{padding-bottom:14px;border-bottom:1px solid #edf1f5}
+.admin-register-page .admin-table-wrap{border-radius:9px;overflow:auto}
+.admin-register-page input:not([type=checkbox]),.admin-register-page select,.admin-register-page textarea{border-radius:8px;min-height:42px}
+.admin-register-page button,.admin-register-page .admin-button,.admin-register-page .admin-inline-link{transition:transform .16s ease,box-shadow .16s ease}
+.admin-register-page button:hover,.admin-register-page .admin-button:hover{transform:translateY(-1px)}
+.admin-client-register-page .admin-welcome{background:linear-gradient(115deg,#10434b,#126c70 70%,#238b89)}
+.admin-client-register-page .admin-panel-heading>span{background:#e7f5f3;color:#147d83;border-radius:20px;padding:6px 10px;font-weight:800}
+.admin-client-register-page .admin-metric{border-top:3px solid #238b89}
+.admin-project-register-page .admin-welcome{background:linear-gradient(115deg,#17345f,#28568c 70%,#477ab0)}
+.admin-project-register-page .admin-panel-heading>span{background:#edf3fb;color:#315b91;border-radius:20px;padding:6px 10px;font-weight:800}
+.admin-project-register-page .admin-metric{border-top:3px solid #477ab0}
+.admin-finance-centre-page .admin-welcome{background:linear-gradient(115deg,#4b3b24,#80602d 70%,#a17c3e)}
+.admin-finance-centre-page .admin-panel{border-color:#eee6d8}
+.admin-finance-centre-page .admin-panel-heading>span{background:#f8f1e5;color:#916c32;border-radius:20px;padding:6px 10px;font-weight:800}
+.admin-finance-centre-page .admin-metric{border-top:3px solid #a17c3e}
+.admin-partner-network-page .admin-welcome{background:linear-gradient(115deg,#173d55,#205e78 70%,#32849a)}
+.admin-partner-network-page .admin-panel-heading>span{background:#e9f3f6;color:#286b83;border-radius:20px;padding:6px 10px;font-weight:800}
+.admin-content-studio-page .admin-welcome{background:linear-gradient(115deg,#102f50,#1a527b 70%,#347fa9)}
+.admin-content-studio-page .admin-panel{box-shadow:0 10px 30px #123b680c}
+.admin-content-studio-page .admin-section-heading{padding-bottom:12px;border-bottom:1px solid #e3ebf2}
+.admin-technology-portfolio-page .admin-welcome{background:linear-gradient(115deg,#30274f,#594587 70%,#7861a9)}
+.admin-technology-portfolio-page .admin-panel-heading>span{background:#f1edfa;color:#6546a5;border-radius:20px;padding:6px 10px;font-weight:800}
+.admin-division-management-page .admin-welcome{background:linear-gradient(115deg,#123d5b,#1d6688 70%,#3a91a9)}
+.admin-division-management-page .division-admin-list{display:grid;gap:12px}
+.admin-delivery-intelligence-page .admin-welcome{background:linear-gradient(115deg,#14304e,#1b527b 70%,#347ba1)}
+.admin-delivery-intelligence-page .admin-metric{border-top:3px solid #347ba1}
+@media(max-width:700px){.admin-register-page .admin-section-heading{align-items:flex-start;flex-direction:column;gap:9px}.admin-register-page .admin-panel{padding:14px}.admin-register-page .admin-topbar{gap:12px}}
+@media(prefers-reduced-motion:reduce){.admin-register-page button,.admin-register-page .admin-button,.admin-register-page .admin-inline-link{transition:none}}
