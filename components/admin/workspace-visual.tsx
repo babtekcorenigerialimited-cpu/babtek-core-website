@@ -11,7 +11,7 @@ const copy:Record<string,{title:string;intro:string;focus:string}> = {
 };
 export function WorkspaceVisual({kind,metrics,sections}:{kind:string;metrics:Metric[];sections:Section[]}){
  const variant=copy[kind]??copy.projects;
- const total=metrics.reduce((sum,m)=>sum+Number(m.value.replace(/,/g,"")||0),0);
+ const total=metrics.reduce((sum,m)=>{const parsed=Number(m.value.replace(/,/g,""));return sum+(Number.isFinite(parsed)?parsed:0);},0);
  const accent=kind==="clients"?"teal":kind==="finance"?"gold":kind==="technology"?"violet":kind==="projects"?"blue":"sky";
  return <section className={"workspace-visual workspace-command workspace-command-"+kind} aria-label={variant.title}>
   <header className="wc-heading">
