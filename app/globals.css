@@ -1522,3 +1522,51 @@ a{color:inherit;text-decoration:none}
 .founder-workspace-technology .wd-kicker,.founder-workspace-technology .wd-panel-head span{color:#6546a5}
 @media(max-width:760px){.founder-workspace-main{padding:0 14px 26px}.founder-workspace-page .founder-workspace-hero{padding:23px 20px;min-height:150px}.founder-workspace-page .founder-workspace-hero .admin-welcome-mark{font-size:60px}.founder-workspace-page .founder-workspace-tools{grid-template-columns:1fr}.founder-workspace-page .admin-section-heading{align-items:flex-start;flex-direction:column;gap:8px}}
 @media(prefers-reduced-motion:reduce){.founder-workspace-page .founder-workspace-tools .admin-module-card,.founder-workspace-page .wd-tool{transition:none}}
+
+
+/* Client and partner portals: stronger product-grade workspace finish */
+.admin-shell:has(.client-visual-dashboard),.admin-shell:has(.partner-visual-dashboard){background:#f3f6fa}
+.admin-shell:has(.client-visual-dashboard) .admin-main,.admin-shell:has(.partner-visual-dashboard) .admin-main{max-width:1600px;margin:0 auto;padding:0 clamp(16px,3vw,42px) 34px}
+.admin-shell:has(.client-visual-dashboard) .admin-topbar,.admin-shell:has(.partner-visual-dashboard) .admin-topbar{min-height:82px;border-bottom:1px solid #dfe8ef}
+.admin-shell:has(.client-visual-dashboard) .admin-topbar h1,.admin-shell:has(.partner-visual-dashboard) .admin-topbar h1{font-size:21px;letter-spacing:-.45px;color:#173b58}
+.client-visual-dashboard{background:linear-gradient(115deg,#103c55 0%,#145c70 64%,#178080 100%);border-radius:14px;min-height:315px;box-shadow:0 16px 38px #0b45531c}
+.client-visual-dashboard:after{content:"";position:absolute;right:2%;bottom:-150px;width:360px;height:360px;border:1px solid #ffffff24;border-radius:50%;box-shadow:0 0 0 28px #ffffff08,0 0 0 58px #ffffff06}
+.client-visual-dashboard .portal-visual-kicker{color:#9be4dc}
+.client-visual-dashboard .portal-visual-floating-card span{color:#147d83}
+.partner-visual-dashboard{border-radius:14px;min-height:315px;background:linear-gradient(115deg,#14283e 0%,#1c4059 64%,#28627a 100%);box-shadow:0 16px 38px #0b263d20}
+.partner-visual-dashboard:after{content:"";position:absolute;right:2%;bottom:-150px;width:360px;height:360px;border:1px solid #ffffff24;border-radius:50%;box-shadow:0 0 0 28px #ffffff08,0 0 0 58px #ffffff06}
+.partner-visual-dashboard .portal-visual-kicker{color:#a8d4ec}
+.portal-section-nav{position:sticky;top:66px;z-index:12;background:#ffffffed;backdrop-filter:blur(12px);box-shadow:0 4px 16px #102e5008}
+.portal-section-nav a{transition:background .18s ease,color .18s ease,transform .18s ease}
+.portal-section-nav a:hover{transform:translateY(-1px)}
+.admin-shell:has(.client-visual-dashboard) .admin-metric,.admin-shell:has(.partner-visual-dashboard) .admin-metric{border:1px solid #e0e8f0;border-radius:11px;box-shadow:0 5px 16px #102e5008;transition:transform .18s ease,box-shadow .18s ease}
+.admin-shell:has(.client-visual-dashboard) .admin-metric:hover,.admin-shell:has(.partner-visual-dashboard) .admin-metric:hover{transform:translateY(-2px);box-shadow:0 12px 22px #102e5010}
+.admin-shell:has(.client-visual-dashboard) .admin-panel,.admin-shell:has(.partner-visual-dashboard) .admin-panel{border:1px solid #e0e8f0;border-radius:11px;box-shadow:0 5px 17px #102e5008}
+.admin-shell:has(.client-visual-dashboard) .admin-panel-heading h2,.admin-shell:has(.partner-visual-dashboard) .admin-panel-heading h2{font-size:15px;letter-spacing:-.2px;color:#173b58}
+.admin-shell:has(.client-visual-dashboard) .admin-register-panel,.admin-shell:has(.partner-visual-dashboard) .admin-register-panel{scroll-margin-top:100px}
+.admin-shell:has(.client-visual-dashboard) .client-project-card,.admin-shell:has(.partner-visual-dashboard) .partner-task{border:1px solid #e1e9f0;border-radius:10px;box-shadow:0 4px 14px #102e5007}
+.admin-shell:has(.client-visual-dashboard) .client-project-card:hover,.admin-shell:has(.partner-visual-dashboard) .partner-task:hover{border-color:#a9c9dc;box-shadow:0 10px 22px #102e500d}
+@media(max-width:760px){.admin-shell:has(.client-visual-dashboard) .admin-main,.admin-shell:has(.partner-visual-dashboard) .admin-main{padding:0 13px 25px}.portal-section-nav{top:58px;overflow-x:auto;flex-wrap:nowrap;white-space:nowrap}.client-visual-dashboard,.partner-visual-dashboard{min-height:0}.client-visual-dashboard:after,.partner-visual-dashboard:after{width:230px;height:230px;bottom:-120px}}
+@media(prefers-reduced-motion:reduce){.admin-shell:has(.client-visual-dashboard) .admin-metric,.admin-shell:has(.partner-visual-dashboard) .admin-metric,.portal-section-nav a{transition:none}}
+
+/* Corporate content studio: editorial hierarchy and clear publishing workspace */
+.admin-shell:has(.cms-type-nav){background:#f3f6fa}
+.admin-shell:has(.cms-type-nav) .admin-main{max-width:1600px;margin:0 auto;padding:0 clamp(16px,3vw,42px) 36px}
+.admin-shell:has(.cms-type-nav) .admin-welcome{border-radius:14px;min-height:170px;background:linear-gradient(112deg,#102e50,#155b96 72%,#287eae);box-shadow:0 14px 32px #102e5018}
+.admin-shell:has(.cms-type-nav) .admin-welcome h2{font-size:clamp(23px,2.8vw,32px);letter-spacing:-.65px}
+.admin-shell:has(.cms-type-nav) .cms-type-nav{display:flex;gap:7px;overflow-x:auto;padding:10px;margin:0 0 17px;background:#fff;border:1px solid #e0e8f0;border-radius:10px;box-shadow:0 4px 14px #102e5007}
+.admin-shell:has(.cms-type-nav) .cms-type-nav a{flex:0 0 auto;padding:9px 12px;border-radius:6px;color:#55718a;font-size:10px;font-weight:800;transition:background .18s,color .18s}
+.admin-shell:has(.cms-type-nav) .cms-type-nav a.active{background:#eaf3fa;color:#155b96}
+.admin-shell:has(.cms-type-nav) .cms-layout{gap:17px;align-items:start}
+.admin-shell:has(.cms-type-nav) .cms-layout>.admin-panel{border:1px solid #e0e8f0;border-radius:11px;box-shadow:0 5px 17px #102e5008}
+.admin-shell:has(.cms-type-nav) .cms-layout>.admin-panel:first-child{position:sticky;top:85px}
+.admin-shell:has(.cms-type-nav) .cms-form label{font-size:10px;font-weight:800;color:#36536b}
+.admin-shell:has(.cms-type-nav) .cms-form input,.admin-shell:has(.cms-type-nav) .cms-form textarea,.admin-shell:has(.cms-type-nav) .cms-form select{border:1px solid #dbe5ed;border-radius:7px;background:#fbfdff}
+.admin-shell:has(.cms-type-nav) .cms-form input:focus,.admin-shell:has(.cms-type-nav) .cms-form textarea:focus,.admin-shell:has(.cms-type-nav) .cms-form select:focus{outline:2px solid #b9d9ef;outline-offset:1px;border-color:#6ea7ce}
+.admin-shell:has(.cms-type-nav) .admin-record-list article{padding:15px 0;border-bottom:1px solid #edf1f5}
+.admin-shell:has(.cms-type-nav) .admin-record-list article:last-child{border-bottom:0}
+.admin-shell:has(.cms-type-nav) .admin-record-list article>div>strong{font-size:12px;color:#173b58}
+.admin-shell:has(.cms-type-nav) .admin-record-list article p{font-size:9px;line-height:1.6;color:#71869a}
+.admin-shell:has(.cms-type-nav) .admin-record-list .admin-inline-link{font-size:9px;color:#21699e}
+@media(max-width:850px){.admin-shell:has(.cms-type-nav) .cms-layout{grid-template-columns:1fr}.admin-shell:has(.cms-type-nav) .cms-layout>.admin-panel:first-child{position:static}}
+@media(prefers-reduced-motion:reduce){.admin-shell:has(.cms-type-nav) .cms-type-nav a{transition:none}}
