@@ -20,12 +20,26 @@ export async function updateProjectDocumentSharing(formData:FormData){
  const sb=await createSupabaseServerClient(),{data:{user}}=await sb.auth.getUser();if(!user)redirect("/admin/login");
  const {data:roles}=await sb.from("user_roles").select("role").eq("user_id",user.id);
  if(!roles?.some((r:any)=>["owner","administrator","operations"].includes(r.role)))redirect("/admin");
- const {data:submission,error:submissionError}=await sb.from("project_file_submissions").select("storage_path,review_status").eq("id",id).maybeSingle();
+ const {data:submission,error:submissionError}=await sb.from("project_file_submissions").select("storage_path,review_status,project_id").eq("id",id).maybeSingle();
  if(submissionError||!submission||submission.review_status!=="accepted")redirect("/admin/file-submissions?error=sharing");
- const {data:document,error:documentError}=await sb.from("project_documents").select("id").eq("storage_path",submission.storage_path).maybeSingle();
+ const {data:document,error:documentError}=await sb.from("project_documents").select("id,client_visible,partner_visible").eq("storage_path",submission.storage_path).maybeSingle();
  if(documentError||!document)redirect("/admin/file-submissions?error=sharing");
- const {error}=await sb.from("project_documents").update({client_visible:clientValue==="true",partner_visible:partnerValue==="true"}).eq("id",document.id);
+ const nextClientVisible=clientValue==="true",nextPartnerVisible=partnerValue==="true";
+ const {error}=await sb.from("project_documents").update({client_visible:nextClientVisible,partner_visible:nextPartnerVisible}).eq("id",document.id);
  if(error){console.error("Project document sharing update failed",error.message);redirect("/admin/file-submissions?error=sharing");}
+ const {error:auditError}=await sb.from("audit_logs").insert({
+  actor_id:user.id,
+  action:"project_document.sharing_updated",
+  table_name:"project_documents",
+  record_id:document.id,
+  metadata:{
+   project_id:submission.project_id,
+   submission_id:id,
+   before:{client_visible:document.client_visible,partner_visible:document.partner_visible},
+   after:{client_visible:nextClientVisible,partner_visible:nextPartnerVisible}
+  }
+ });
+ if(auditError)console.error("Project document sharing audit log failed",auditError.message);
  revalidatePath("/admin/file-submissions");revalidatePath("/client");revalidatePath("/partner");
- redirect("/admin/file-submissions?sharing_saved=1");
+ redirect(auditError?"/admin/file-submissions?sharing_saved=1&sharing_audit=failed":"/admin/file-submissions?sharing_saved=1");
 }
