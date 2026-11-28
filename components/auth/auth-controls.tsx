@@ -54,7 +54,9 @@ export function AuthRouteMessage({code}:{code?:string}){
   confirmation:"Your confirmation link may have expired or already been used. Request a fresh email and open the newest link.",
   partner_not_linked:"Your Google account is verified, but this email is not linked to an active, approved BABTEK partner record. Use the email registered with your approved partner profile or contact BABTEK.",
   client_not_linked:"This account does not currently have client portal access. Please contact BABTEK to verify and link your client account.",
-  admin_not_authorised:"This Google account is not authorised for the founder or administration workspace. Use your authorised founder account."
+  admin_not_authorised:"This Google account is not authorised for the founder or administration workspace. Use your authorised founder account.",
+  partner_not_linked:"Your Google account is verified, but it is not linked to an active BABTEK partner relationship. Contact BABTEK if your partner application has been approved.",
+  client_not_linked:"Your Google account is verified, but it is not linked to a BABTEK client record. Contact BABTEK to verify your client access."
  };
  if(!code||!messages[code])return null;
  return <p className="admin-alert" role="alert">{messages[code]}</p>;
