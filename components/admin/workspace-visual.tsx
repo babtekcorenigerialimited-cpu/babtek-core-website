@@ -1,25 +1,33 @@
-import React from "react";
+import Link from "next/link";
 
 type Metric={label:string;value:string};
-export function WorkspaceVisual({kind,metrics}:{kind:string;metrics:Metric[]}){
- const parsed=metrics.map(metric=>({ ...metric, amount:Number(metric.value.replace(/,/g,"")) })).filter(metric=>Number.isFinite(metric.amount));
+type Section={title:string;description:string;href:string};
+export function WorkspaceVisual({kind,metrics,sections}:{kind:string;metrics:Metric[];sections:Section[]}){
+ const parsed=metrics.map(metric=>({...metric,amount:Number(metric.value.replace(/,/g,""))})).filter(metric=>Number.isFinite(metric.amount));
  const max=Math.max(1,...parsed.map(metric=>metric.amount));
+ const total=parsed.reduce((sum,metric)=>sum+metric.amount,0);
  const descriptions:Record<string,string>={
-  corporate:"Published corporate content and service catalogue records.",
-  clients:"Client relationship and communication records currently held in the platform.",
-  projects:"Project delivery records and specialist coordination activity.",
-  finance:"Recorded commercial documents and payment or expense entries.",
-  technology:"Technology initiatives and related published information."
+  corporate:"Published corporate content, divisions and service catalogue records.",
+  clients:"Client relationships, enquiries, conversations and document submissions.",
+  projects:"Project delivery records, tasks, milestones and specialist coordination.",
+  finance:"Recorded invoices, receipts, expenses and partner payment schedules.",
+  technology:"Technology initiatives and published information in the BABTEK ecosystem."
  };
- return <section className="workspace-visual workspace-record-pulse" aria-label="Database record summary">
-  <div className="wv-topline"><span>BABTEK CORE / {kind.toUpperCase()}</span><span className="wv-snapshot-label">DATABASE SNAPSHOT</span></div>
-  <div className="wv-pulse-heading"><div><small>RECORD OVERVIEW</small><h2>What is currently recorded</h2><p>{descriptions[kind]??"Current records in this workspace."} No sample activity is included.</p></div><span className="wv-pulse-mark">B</span></div>
-  <div className="wv-record-bars">
-   {parsed.map(metric=><div className="wv-record-row" key={metric.label}>
-    <div className="wv-record-meta"><span>{metric.label}</span><strong>{metric.value}</strong></div>
-    <div className="wv-record-track" role="img" aria-label={metric.label+": "+metric.value+" records"}><span style={{width:((metric.amount/max)*100)+"%"}}/></div>
-   </div>)}
+ const labels:Record<string,string>={corporate:"Publishing overview",clients:"Relationship pipeline",projects:"Delivery overview",finance:"Commercial records",technology:"Innovation portfolio"};
+ return <section className={"workspace-visual workspace-dashboard workspace-dashboard-"+kind} aria-label={labels[kind]??"Workspace dashboard"}>
+  <div className="wd-head"><div><span className="wd-kicker">BABTEK CORE / {kind.toUpperCase()} / LIVE OVERVIEW</span><h2>{labels[kind]??"Workspace overview"}</h2><p>{descriptions[kind]??"Current records in this workspace."}</p></div><span className="wd-live"><i/> LIVE DATABASE</span></div>
+  <div className="wd-kpis">
+   {parsed.map((metric,index)=><article className="wd-kpi" key={metric.label}><span>{metric.label}</span><strong>{metric.value}</strong><small>{index===0?"Current records":"Recorded to date"}</small><div className="wd-kpi-line"><i style={{width:((metric.amount/max)*100)+"%"}}/></div></article>)}
   </div>
-  <p className="wv-record-note">Counts are read from BABTEK's database when this page loads. A zero means no records have been entered yet; it does not mean the capability is unavailable.</p>
+  <div className="wd-lower">
+   <section className="wd-chart-panel"><div className="wd-panel-head"><div><span>DATA VISUALISATION</span><h3>Records by category</h3></div><b>{total.toLocaleString("en-NG")} total</b></div>
+    {total>0?<div className="wd-bars">{parsed.map(metric=><div className="wd-bar-row" key={metric.label}><span>{metric.label}</span><div><i style={{width:((metric.amount/max)*100)+"%"}}/></div><strong>{metric.value}</strong></div>)}</div>:<div className="wd-empty-chart"><span className="wd-empty-icon">＋</span><strong>Your live chart will build as records are added.</strong><p>No records are available in this workspace yet. Nothing has been filled with sample data.</p></div>}
+    <p className="wd-footnote">Bars compare the current record counts in this workspace; they are not revenue, completion or performance percentages.</p>
+   </section>
+   <section className="wd-tools-panel"><div className="wd-panel-head"><div><span>QUICK ACCESS</span><h3>Go to a working tool</h3></div></div>
+    <div className="wd-tools">{sections.map((section,index)=><Link href={section.href} key={section.href} className="wd-tool"><span>{String(index+1).padStart(2,"0")}</span><div><strong>{section.title}</strong><small>{section.description}</small></div><b>↗</b></Link>)}</div>
+   </section>
+  </div>
+  <p className="wd-record-note">All figures are read from BABTEK's connected database when this page loads. A zero means no records have been entered yet; it does not mean the capability is unavailable.</p>
  </section>;
 }
