@@ -7,15 +7,22 @@ import {getPublicDivisions,getPublicContent} from "@/lib/public-content";
 export const dynamic="force-dynamic";
 export async function generateStaticParams(){return fallback.map(d=>({slug:d.slug}));}
 async function resolveDivision(slug:string){
+ const base=fallback.find(d=>d.slug===slug)||null;
  const live=await getPublicDivisions();const record=live.find((d:any)=>d.slug===slug);
- if(record)return {slug:record.slug,name:record.name,pillar:record.pillar,summary:record.summary||"",overview:record.description||record.summary||"",deliveryNote:"BABTEK confirms the scope, availability and involvement of appropriately qualified independent professionals for each engagement.",capabilities:[] as string[]};
- return fallback.find(d=>d.slug===slug)||null;
+ if(record)return {
+  id:record.id,slug:record.slug,name:record.name,pillar:record.pillar,
+  summary:record.summary||base?.summary||"",
+  overview:record.description||base?.overview||record.summary||"",
+  deliveryNote:base?.deliveryNote||"BABTEK confirms the scope, availability and involvement of appropriately qualified independent professionals for each engagement.",
+  capabilities:base?.capabilities||[]
+ };
+ return base;
 }
 export async function generateMetadata({params}:{params:Promise<{slug:string}>}):Promise<Metadata>{const {slug}=await params;const d=await resolveDivision(slug);return {title:d?`BABTEK ${d.name}`:"Division"};}
 export default async function DivisionDetailPage({params}:{params:Promise<{slug:string}>}){
- const {slug}=await params;const [division,services]=await Promise.all([resolveDivision(slug),getPublicContent<any>("services","id,name,slug,summary,description,delivery_model,lifecycle,division_id","display_order")]);
+ const {slug}=await params;const [division,services]=await Promise.all([resolveDivision(slug),getPublicContent<any>("services","id,name,slug,summary,description,delivery_model,lifecycle,division_id,display_order","display_order")]);
  if(!division)notFound();
- const related=services.filter((s:any)=>s.slug?.includes(slug)||s.name?.toLowerCase().includes(division.name.toLowerCase()));
+ const related=services.filter((s:any)=>division.id?s.division_id===division.id:(s.slug?.startsWith(slug+"-")||s.name?.toLowerCase().includes(division.name.toLowerCase())));
  const capabilities=division.capabilities||[];
  const visualBySlug:Record<string,{image:string;label:string;accent:string}>={
   "design-construction":{image:"https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1800&q=85",label:"ARCHITECTURE / ENGINEERING / DELIVERY",accent:"Designing with purpose."},
