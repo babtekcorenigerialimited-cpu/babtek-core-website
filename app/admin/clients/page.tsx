@@ -9,17 +9,28 @@ import { addClientContact } from "./contact-actions";
 export const metadata: Metadata = { title: "Clients | BABTEK Owner Workspace" };
 export const dynamic = "force-dynamic";
 
-export default async function AdminClientsPage({ searchParams }: { searchParams: Promise<{ created?: string; contact?: string; error?: string }> }) {
+export default async function AdminClientsPage({ searchParams }: { searchParams: Promise<{ created?: string; contact?: string; error?: string; q?: string }> }) {
   const params = await searchParams;
+  const searchTerm = (params.q || "").trim().slice(0, 80).replace(/[,%()_*\\.]/g, " ");
   const supabase = await createSupabaseServerClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) redirect("/admin/login");
   const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", user.id);
   if (!roles?.some((item) => item.role === "owner")) redirect("/admin");
 
-  const { data: clients, error } = await supabase.from("clients")
+  let clientQuery = supabase.from("clients")
     .select("id,legal_name,display_name,email,phone,created_at")
-    .order("created_at", { ascending: false }).limit(250);
+    .order("created_at", { ascending: false });
+  if (searchTerm) {
+    const term = `%${searchTerm}%`;
+    clientQuery = clientQuery.or([
+      `legal_name.ilike.${term}`,
+      `display_name.ilike.${term}`,
+      `email.ilike.${term}`,
+      `phone.ilike.${term}`
+    ].join(","));
+  }
+  const { data: clients, error } = await clientQuery.limit(250);
 
   return <main className="admin-shell">
     <aside className="admin-sidebar">
@@ -55,8 +66,12 @@ export default async function AdminClientsPage({ searchParams }: { searchParams:
         </form>
       </section>
       <section className="admin-panel admin-register-panel" style={{marginTop:16}}>
-        <div className="admin-panel-heading"><div><h2>Registered clients</h2><p>Latest 250 records, newest first.</p></div><span>{clients?.length ?? 0} shown</span></div>
-        {error ? <p className="admin-alert">Client records could not be loaded.</p> : clients?.length ? <div className="admin-record-list">{clients.map((client) => <article key={client.id}><div><strong>{client.display_name || client.legal_name}</strong><p>{client.legal_name}{client.email ? " · " + client.email : ""}{client.phone ? " · " + client.phone : ""}</p></div><div className="client-contact-link"><form action={addClientContact} className="admin-create-form"><input type="hidden" name="client_id" value={client.id}/><label>Contact full name<input name="full_name" required maxLength={160}/></label><label>Contact email<input name="email" type="email" required maxLength={254}/></label><label>Phone<input name="phone" type="tel" maxLength={40}/></label><label>Client account user UUID (optional)<input name="user_id" placeholder="Link after client registration"/></label><button type="submit">Add contact / link account</button></form></div><span className="admin-status">CLIENT</span></article>)}</div> : <p className="admin-empty-note">No client records yet. Add genuine client records as engagements are established.</p>}
+        <div className="admin-panel-heading"><div><h2>Registered clients</h2><p>{searchTerm ? "Matching client records." : "Latest 250 records, newest first."} Search the client register by organisation, contact email or phone.</p></div><span>{clients?.length ?? 0} shown</span></div>
+        <form method="get" action="/admin/clients" className="enquiry-filter-bar client-filter-bar">
+          <label>Find a client<input type="search" name="q" placeholder="Organisation, display name, email or phone" defaultValue={params.q || ""} maxLength={80}/></label>
+          <div className="enquiry-filter-actions"><button type="submit">Search clients</button><Link href="/admin/clients">Clear</Link></div>
+        </form>
+        {error ? <p className="admin-alert">Client records could not be loaded.</p> : clients?.length ? <div className="admin-record-list">{clients.map((client) => <article key={client.id}><div><strong>{client.display_name || client.legal_name}</strong><p>{client.legal_name}{client.email ? " · " + client.email : ""}{client.phone ? " · " + client.phone : ""}</p></div><div className="client-contact-link"><form action={addClientContact} className="admin-create-form"><input type="hidden" name="client_id" value={client.id}/><label>Contact full name<input name="full_name" required maxLength={160}/></label><label>Contact email<input name="email" type="email" required maxLength={254}/></label><label>Phone<input name="phone" type="tel" maxLength={40}/></label><label>Client account user UUID (optional)<input name="user_id" placeholder="Link after client registration"/></label><button type="submit">Add contact / link account</button></form></div><span className="admin-status">CLIENT</span></article>)}</div> : <p className="admin-empty-note">{searchTerm ? "No client records match this search. Try a different name, email or phone number." : "No client records yet. Add genuine client records as engagements are established."}</p>}
       </section>
       <footer className="admin-footer">BABTEK CORE NIGERIA LIMITED <span>Client records · Owner access</span></footer>
     </section>
