@@ -20,6 +20,7 @@ export default async function ContentAdmin({searchParams}:{searchParams:Promise<
  const sb=await createSupabaseServerClient();const {data:{user}}=await sb.auth.getUser();if(!user)redirect("/admin/login");
  const {data:roles}=await sb.from("user_roles").select("role").eq("user_id",user.id);if(!roles?.some((r:any)=>r.role==="owner"))redirect("/admin");
  const {data:records,error}=await sb.from(selected.key).select("*").order("updated_at",{ascending:false}).limit(100);
+ const {data:divisionOptions}=selected.key==="services"?await sb.from("divisions").select("id,name").order("display_order"):{data:[] as any[]};
  const editing=params.edit?records?.find((r:any)=>r.id===params.edit):null;
  const currentState=selected.key==="divisions"?(editing?.is_public?"published":"draft"):(editing?.visibility||"draft");
  const bodyText=typeof editing?.body==="object"?(editing.body?.text||""):String(editing?.body||"");
@@ -32,6 +33,7 @@ export default async function ContentAdmin({searchParams}:{searchParams:Promise<
  <div className="admin-content-grid cms-layout"><section className="admin-panel"><div className="admin-panel-heading"><div><h2>{editing?"Edit":"Create"} {selected.label.toLowerCase()} record</h2><p>Required fields are marked. Use accurate, approved company information.</p></div><span>OWNER ONLY</span></div>
  <form action={saveContent} className="cms-form"><input type="hidden" name="table" value={selected.key}/>{editing&&<input type="hidden" name="id" value={editing.id}/>}<label>Title / name *<input name="title" required maxLength={180} defaultValue={editing?.[selected.title]||""}/></label><label>URL slug<input name="slug" placeholder="generated-from-title" defaultValue={editing?.slug||""}/></label><label>Short summary<textarea name="summary" rows={3} defaultValue={editing?.[selected.sub]||""}/></label><label>Description / body<textarea name="description" rows={6} defaultValue={editing?.description||bodyText}/></label>
  {(selected.key==="divisions")&&<label>Business pillar<input name="pillar" defaultValue={editing?.pillar||"Built Environment"}/></label>}
+ {selected.key==="services"&&<label>Division *<select name="division_id" required defaultValue={editing?.division_id||""}><option value="" disabled>Select a division</option>{(divisionOptions||[]).map((d:any)=><option key={d.id} value={d.id}>{d.name}</option>)}</select></label>}
  {(selected.key==="services"||selected.key==="divisions")&&<><label>Delivery lifecycle<input name="lifecycle" defaultValue={editing?.lifecycle||"developing"}/></label><label>Display order<input name="display_order" type="number" defaultValue={editing?.display_order??0}/></label></>}
  {(selected.key==="careers"||selected.key==="partnership_opportunities"||selected.key==="product_initiatives"||selected.key==="projects_public")&&<label>Category / type / status<input name="category" placeholder="e.g. Architecture, Software, Partner" defaultValue={editing?.category||editing?.project_type||editing?.employment_type||editing?.status||""}/></label>}
  {(selected.key==="careers"||selected.key==="projects_public")&&<label>Location<input name="location" defaultValue={editing?.location_label||""}/></label>}
