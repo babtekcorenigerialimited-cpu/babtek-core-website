@@ -27,7 +27,7 @@ export async function saveContent(formData:FormData){
  if(table==="site_pages"||table==="insights"){
   row={...row,title,slug,excerpt:summary,body:{text:description},...(table==="insights"?{author_id:user.id,published_at:state==="published"?new Date().toISOString():null}:{created_by:user.id,updated_by:user.id})};
  } else if(table==="services"){
-  row={...row,name:title,slug,summary,description,delivery_model:textValue(formData.get("delivery_model"),80)||"partner_coordinated",lifecycle:textValue(formData.get("lifecycle"),80)||"developing",display_order:Number(formData.get("display_order")||0)};
+  row={...row,name:title,slug,summary,description,division_id:textValue(formData.get("division_id"),64)||null,delivery_model:textValue(formData.get("delivery_model"),80)||"partner_coordinated",lifecycle:textValue(formData.get("lifecycle"),80)||"developing",display_order:Number(formData.get("display_order")||0)};
  } else if(table==="divisions"){
   row={name:title,slug,pillar:textValue(formData.get("pillar"),80)||"Built Environment",summary,description,lifecycle:textValue(formData.get("lifecycle"),80)||"developing",display_order:Number(formData.get("display_order")||0),is_public:state==="published"};
  } else if(table==="projects_public"){
