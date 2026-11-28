@@ -32,7 +32,7 @@ export default async function AdminClientsPage({ searchParams }: { searchParams:
   }
   const { data: clients, error } = await clientQuery.limit(250);
 
-  return <main className="admin-shell">
+  return <main className="admin-shell admin-register-page admin-client-register-page">
     <aside className="admin-sidebar">
       <a href="/admin" className="admin-sidebar-brand"><span className="admin-brand-mark">B</span><span><strong>BABTEK CORE</strong><small>ENTERPRISE PLATFORM</small></span></a>
       <p className="admin-nav-label">WORKSPACE</p>
