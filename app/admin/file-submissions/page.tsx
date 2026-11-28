@@ -10,7 +10,7 @@ export default async function FileSubmissionReview({searchParams}:{searchParams:
  const {data:roles}=await sb.from("user_roles").select("role").eq("user_id",user.id);if(!roles?.some((r:any)=>["owner","administrator","operations"].includes(r.role)))redirect("/admin");
  const {data:rows,error}=await sb.from("project_file_submissions").select("id,project_id,partner_engagement_id,uploader_id,uploader_kind,title,original_filename,mime_type,file_size_bytes,storage_path,notes,review_status,review_note,created_at").order("created_at",{ascending:false}).limit(250);
  const projectIds=[...new Set((rows||[]).map((r:any)=>r.project_id))],userIds=[...new Set((rows||[]).map((r:any)=>r.uploader_id))],acceptedPaths=(rows||[]).filter((r:any)=>r.review_status==="accepted").map((r:any)=>r.storage_path);
- const [{data:projects},{data:profiles}]=await Promise.all([
+ const [{data:projects},{data:profiles},{data:documents}]=await Promise.all([
   projectIds.length?sb.from("projects").select("id,project_code,name").in("id",projectIds):Promise.resolve({data:[] as any[]}),
   userIds.length?sb.from("profiles").select("id,full_name").in("id",userIds):Promise.resolve({data:[] as any[]}),
   acceptedPaths.length?sb.from("project_documents").select("id,storage_path,client_visible,partner_visible").in("storage_path",acceptedPaths):Promise.resolve({data:[] as any[]})
