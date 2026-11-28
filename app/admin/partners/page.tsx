@@ -53,7 +53,7 @@ export default async function AdminPartnersPage({ searchParams }: { searchParams
   const projectNames = new Map((projectRows || []).map((project) => [project.id, project.project_code + " · " + project.name]));
   const engagementMap = new Map((engagements || []).map((engagement) => [engagement.id, engagement]));
 
-  return <main className="admin-shell">
+  return <main className="admin-shell admin-register-page admin-partner-network-page">
     <aside className="admin-sidebar">
       <a href="/admin" className="admin-sidebar-brand"><span className="admin-brand-mark">B</span><span><strong>BABTEK CORE</strong><small>ENTERPRISE PLATFORM</small></span></a>
       <p className="admin-nav-label">WORKSPACE</p>
