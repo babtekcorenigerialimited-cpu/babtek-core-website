@@ -42,7 +42,7 @@ export default async function DeliveryDashboardPage() {
     openTasks: tasks.filter(t => t.project_id === projectId && !["completed","cancelled"].includes(t.status)).length
   });
 
-  return <main className="admin-shell">
+  return <main className="admin-shell admin-register-page admin-delivery-intelligence-page">
     <aside className="admin-sidebar">
       <Link href="/admin" className="admin-sidebar-brand"><span className="admin-brand-mark">B</span><span><strong>BABTEK CORE</strong><small>ENTERPRISE CONTROL</small></span></Link>
       <p className="admin-nav-label">COMMAND CENTRE</p>
