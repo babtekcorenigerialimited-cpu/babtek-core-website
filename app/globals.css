@@ -1121,3 +1121,35 @@ a{color:inherit;text-decoration:none}
 
 .auth-divider{display:flex;align-items:center;gap:14px;margin:16px 0;color:var(--muted);font-size:9px;font-weight:800;letter-spacing:1.6px}.auth-divider:before,.auth-divider:after{content:"";height:1px;background:var(--line);flex:1}
 @media(max-width:650px){.header-inner{gap:9px;flex-wrap:wrap;padding-top:8px;padding-bottom:8px;height:auto;min-height:72px}.site-header{height:auto;min-height:72px}.mobile-contact{font-size:10px;white-space:nowrap}.mobile-contact:first-of-type{display:none}}
+
+/* Shared Founder Portal navigation */
+.founder-global-nav{position:sticky;top:0;z-index:60;background:#082744;color:#fff;box-shadow:0 5px 20px #09274718;font-family:Arial,Helvetica,sans-serif}
+.founder-global-top{min-height:58px;padding:8px clamp(16px,3.5vw,52px);display:flex;align-items:center;justify-content:space-between;gap:20px;border-bottom:1px solid #ffffff20}
+.founder-global-brand{display:flex;align-items:center;gap:10px;color:#fff}
+.founder-global-mark{width:34px;height:34px;display:grid;place-items:center;background:#fff;color:#123b68;font-size:20px;font-weight:900}
+.founder-global-brand strong,.founder-global-brand small{display:block;line-height:1.25}
+.founder-global-brand strong{font-size:11px;letter-spacing:1.1px}
+.founder-global-brand small{font-size:7px;letter-spacing:1.8px;color:#a9c7df;margin-top:3px}
+.founder-global-meta{display:flex;align-items:center;gap:20px}
+.founder-global-meta span{font-size:8px;letter-spacing:1.3px;color:#a9c7df;font-weight:800}
+.founder-global-meta a{font-size:10px;color:#e3eef7;font-weight:700}
+.founder-global-meta a:hover,.founder-tool-tabs a:hover{color:#8bc8f5}
+.founder-space-tabs{display:flex;align-items:stretch;gap:3px;padding:0 clamp(12px,3vw,46px);overflow-x:auto;scrollbar-width:thin;scrollbar-color:#5b7892 #082744;border-bottom:1px solid #ffffff20}
+.founder-space-tabs>a{display:flex;align-items:center;gap:8px;white-space:nowrap;padding:13px 14px 12px;color:#c4d5e4;font-size:10px;font-weight:800;border-bottom:3px solid transparent}
+.founder-space-tabs>a span{font-size:8px;color:#8bc8f5;letter-spacing:.5px}
+.founder-space-tabs>a:hover,.founder-space-tabs>a.is-active{color:#fff;background:#ffffff0b;border-bottom-color:#78bdf0}
+.founder-tool-tabs{display:flex;align-items:center;gap:22px;padding:0 clamp(16px,3.5vw,52px);min-height:39px;background:#f3f7fb;overflow-x:auto;white-space:nowrap;border-bottom:1px solid #dce5ed}
+.founder-tool-tabs a{font-size:9px;color:#587087;font-weight:800;padding:11px 0}
+.founder-tool-tabs a.is-current{color:#123b68;border-bottom:2px solid #2878bd}
+.admin-shell>.admin-sidebar{display:none}
+.admin-shell>.admin-main{width:100%;max-width:none;padding:0 clamp(16px,3.5vw,52px) 28px}
+@media(max-width:650px){
+ .founder-global-top{min-height:52px;padding:7px 13px}
+ .founder-global-meta{gap:12px}
+ .founder-global-meta span{display:none}
+ .founder-global-meta a{font-size:9px}
+ .founder-space-tabs{padding:0 8px}
+ .founder-space-tabs>a{padding:12px 10px 10px;font-size:9px}
+ .founder-tool-tabs{gap:17px;padding:0 14px;min-height:37px}
+ .admin-shell>.admin-main{padding:0 14px 22px}
+}
