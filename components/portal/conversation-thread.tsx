@@ -28,7 +28,7 @@ export function ConversationThread({ title, subtitle, messageIds, unreadCount, c
     let cancelled = false;
     async function markIncomingMessagesRead() {
       setMarking(true);
-      const supabase = createBrowserClient(url, key);
+      const supabase = createBrowserClient(url!, key!);
       const { data: { user }, error: authError } = await supabase.auth.getUser();
       if (!authError && user) {
         const { error } = await supabase
