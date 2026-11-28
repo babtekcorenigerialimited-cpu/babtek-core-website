@@ -93,7 +93,7 @@ export default function HomePage() {
             {["AEC WORKSPACE","COMMERCIAL","CADWAL-X","WAL-X PORTFOLIO","BABTEK AI","BABTEK-OS"].map((item,i)=><span className={`tech-ecosystem-node node-${i}`} key={item}>{item}</span>)}
             <svg viewBox="0 0 520 300" aria-hidden="true"><path d="M260 150 L80 55 M260 150 L440 55 M260 150 L55 150 M260 150 L465 150 M260 150 L80 245 M260 150 L440 245"/></svg>
           </div>
-          <p className="technology-note">These are product concepts and development initiatives, not claims of currently released software.</p><p className="technology-note">Product concepts and development initiatives will be labelled accurately until officially released.</p></div>
+          <p className="technology-note">These are product concepts and development initiatives, not claims of currently released software.</p></div>
         </div>
       </section>
 
