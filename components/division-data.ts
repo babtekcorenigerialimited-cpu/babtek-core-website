@@ -1,4 +1,5 @@
 export type Division = {
+  id?: string;
   slug: string;
   number: string;
   name: string;
