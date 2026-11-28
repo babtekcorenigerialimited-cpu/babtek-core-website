@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState, type ReactNode, type SyntheticEvent } from "react";
 import { useRouter } from "next/navigation";
 import { createBrowserClient } from "@supabase/ssr";
 
@@ -18,7 +18,7 @@ export function ConversationThread({ title, subtitle, messageIds, unreadCount, c
   const [marking, setMarking] = useState(false);
   const [marked, setMarked] = useState(false);
 
-  async function handleToggle(event: React.SyntheticEvent<HTMLDetailsElement>) {
+  async function handleToggle(event: SyntheticEvent<HTMLDetailsElement>) {
     const open = event.currentTarget.open;
     setIsOpen(open);
     if (!open || marked || marking || messageIds.length === 0) return;
