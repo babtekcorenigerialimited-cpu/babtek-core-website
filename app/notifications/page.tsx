@@ -14,7 +14,7 @@ export default async function NotificationsPage({searchParams}:{searchParams:Pro
  const params=await searchParams;
  const sb=await createSupabaseServerClient();
  const {data:{user},error}=await sb.auth.getUser();
- if(error||!user)redirect("/admin/login");
+ if(error||!user)redirect("/");
  const [{data:rows,error:loadError},{data:roles}]=await Promise.all([
   sb.from("user_notifications").select("id,event_type,title,body,href,entity_id,created_at,read_at").eq("recipient_id",user.id).order("created_at",{ascending:false}).limit(100),
   sb.from("user_roles").select("role").eq("user_id",user.id)
