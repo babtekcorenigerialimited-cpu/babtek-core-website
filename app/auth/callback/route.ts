@@ -1,6 +1,17 @@
 import {NextResponse,type NextRequest} from "next/server";
 import {createSupabaseServerClient} from "@/lib/supabase/server";
 
+function safeNext(value:string){
+ const allowed=["/","/client","/partner","/admin"];
+ if(allowed.includes(value))return value;
+ try{
+  const candidate=new URL(value,"https://babtek.invalid");
+  if(candidate.origin!=="https://babtek.invalid"||candidate.pathname!=="/auth/reset-password")return "/";
+  const returnTo=candidate.searchParams.get("returnTo")||"/client/login";
+  const allowedReturnTos=["/admin/login","/client/login","/partner/login"];
+  return "/auth/reset-password?returnTo="+encodeURIComponent(allowedReturnTos.includes(returnTo)?returnTo:"/client/login");
+ }catch{return "/";}
+}
 function failurePath(next:string,origin:string){
  if(next.startsWith("/auth/reset-password")){
   const nested=new URL(next,origin).searchParams.get("returnTo")||"/client/login";
@@ -18,7 +29,7 @@ export async function GET(request:NextRequest){
  const code=url.searchParams.get("code");
  const oauthError=url.searchParams.get("error");
  const rawNext=url.searchParams.get("next")||"/";
- const next=rawNext.startsWith("/")&&!rawNext.startsWith("//")?rawNext:"/";
+ const next=safeNext(rawNext);
  const fail=(codeName:string)=>NextResponse.redirect(new URL(failurePath(next,url.origin).replace(/([?&])error=[^&]+/,"$1error="+codeName),url.origin));
  if(oauthError)return fail(next.startsWith("/auth/reset-password")?"confirmation":"google_callback");
  if(!code)return fail("confirmation");
