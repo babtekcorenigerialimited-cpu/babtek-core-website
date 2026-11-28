@@ -22,7 +22,7 @@ export async function addClientContact(formData:FormData){
   console.error("Client contact creation or verified account linking failed",error?.message||"No contact ID returned");
   redirect("/admin/clients?error="+(userId?"account":"contact"));
  }
- await sb.from("audit_logs").insert({actor_id:user.id,action:"client.contact_created",table_name:"client_contacts",record_id:contactId,metadata:{client_id:clientId,email,account_linked:!!userId}});
+ await sb.from("audit_logs").insert({actor_id:user.id,action:"client.contact_created",table_name:"client_contacts",metadata:{client_id:clientId,email,account_linked:!!userId}});
  revalidatePath("/admin/clients");
  revalidatePath("/client");
  redirect("/admin/clients?contact=1");
