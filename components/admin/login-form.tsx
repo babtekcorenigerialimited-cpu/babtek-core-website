@@ -23,14 +23,19 @@ export function AdminLoginForm() {
       return;
     }
     const supabase = createBrowserClient(url, key);
-    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-    if (signInError) {
-      setError("Sign-in failed. Check your email and password, then try again.");
+    try {
+      const { error: signInError } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+      if (signInError) {
+        setError("Sign-in failed. Check your email and password, then try again.");
+        setBusy(false);
+        return;
+      }
+      router.replace("/admin");
+      router.refresh();
+    } catch {
+      setError("The sign-in service could not be reached. Check your connection and try again.");
       setBusy(false);
-      return;
     }
-    router.replace("/admin");
-    router.refresh();
   }
 
   return (
