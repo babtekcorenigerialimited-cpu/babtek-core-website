@@ -102,7 +102,7 @@ export default async function AdminProjectsPage({ searchParams }: { searchParams
         {params.error && <p className="admin-alert">{params.error === "engagement" ? "Partner engagement could not be created. Check the project, partner and scope." : params.error === "schedule" ? "Payment schedule could not be created. Check the engagement and amount." : params.error === "task" ? "Task could not be created. Confirm the project and any selected partner engagement." : params.error === "document" ? "Document upload failed. Check the file type, size (maximum 50 MB) and project access." : params.error === "milestone" ? "Milestone could not be saved. Check dates, progress, status and any required delay reason." : "The project update could not be completed. Please check the record and try again."}</p>}
         {projectResult.error || clientResult.error || partnerResult.error ? <p className="admin-alert">The project register could not be loaded. Check database permissions and try again.</p> : (
           <section className="admin-panel admin-register-panel">
-            <div className="admin-panel-heading"><div><h2>Registered projects</h2><p>Latest 100 records, newest first. No sample projects are fabricated.</p></div><span>{projects.length} shown</span></div>
+            <div className="admin-panel-heading"><div><h2>{searchTerm || selectedStatus ? "Matching projects" : "Registered projects"}</h2><p>{searchTerm || selectedStatus ? "Up to 100 projects matching the selected search and status filters." : "Latest 100 records, newest first. No sample projects are fabricated."}</p></div><span>{projects.length} shown</span></div>
             {projects.length ? <div className="admin-project-list">{projects.map((item) => <article key={item.id} className="admin-project-record">
               <div className="admin-project-main"><div className="admin-enquiry-meta"><strong>{item.project_code || "PROJECT RECORD"}</strong><span className="admin-status">{item.status.replaceAll("_"," ")}</span></div>
                 <h3>{item.name}</h3><p className="admin-enquiry-person">{item.client_id ? clientNames.get(item.client_id) || "Client record" : "Client not linked"}{item.location_label ? " · " + item.location_label : ""}</p>
@@ -179,7 +179,7 @@ export default async function AdminProjectsPage({ searchParams }: { searchParams
                   {!partners.length && <small>Add the professional partner in the Partner Register before creating an engagement.</small>}
                 </form>
               </section>
-            </article>)}</div> : <p className="admin-empty-note">No projects have been registered yet. Create genuine project records as BABTEK wins and formally accepts engagements; do not use sample projects as company track record.</p>}
+            </article>)}</div> : <p className="admin-empty-note">{searchTerm || selectedStatus ? "No projects match these filters. Broaden the search or clear the filters." : "No projects have been registered yet. Create genuine project records as BABTEK wins and formally accepts engagements; do not use sample projects as company track record."}</p>}
           </section>
         )}
         <footer className="admin-footer">BABTEK CORE NIGERIA LIMITED <span>Project operations · Owner access</span></footer>
