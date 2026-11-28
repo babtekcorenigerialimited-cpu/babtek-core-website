@@ -9,6 +9,6 @@ export async function submitPartnerProjectFile(formData:FormData){
  const prefix=user.id+"/"+projectId+"/"+engagementId+"/";
  if(!/^[0-9a-f-]{36}$/i.test(projectId)||!/^[0-9a-f-]{36}$/i.test(engagementId)||title.length<2||title.length>180||!path.startsWith(prefix)||path.slice(prefix.length).includes("/")||!filename||filename.length>255||!allowed.includes(mime)||!Number.isInteger(size)||size<1||size>52428800)redirect("/partner?error=upload");
  const {error}=await sb.from("project_file_submissions").insert({project_id:projectId,partner_engagement_id:engagementId,uploader_id:user.id,uploader_kind:"partner",title,original_filename:filename,mime_type:mime,file_size_bytes:size,storage_path:path,notes:notes||null});
- if(error){console.error("Partner file submission failed",error.message);redirect("/partner?error=upload");}
+ if(error){console.error("Partner file submission failed",error.message);const {error:cleanupError}=await sb.storage.from("babtek-private").remove([path]);if(cleanupError)console.error("Unattached upload cleanup failed",cleanupError.message);redirect("/partner?error=upload");}
  revalidatePath("/partner");redirect("/partner?file_submitted=1");
 }
