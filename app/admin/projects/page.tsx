@@ -14,8 +14,10 @@ export const dynamic = "force-dynamic";
 const statuses = ["proposed", "ongoing", "on_hold", "completed", "cancelled"] as const;
 const money = (value: number, currency: string) => new Intl.NumberFormat("en-NG", { style: "currency", currency: currency || "NGN", maximumFractionDigits: 0 }).format(value);
 
-export default async function AdminProjectsPage({ searchParams }: { searchParams: Promise<{ updated?: string; engaged?: string; scheduled?: string; task_created?: string; document_uploaded?: string; milestone_created?: string; milestone_updated?: string; error?: string }> }) {
+export default async function AdminProjectsPage({ searchParams }: { searchParams: Promise<{ updated?: string; engaged?: string; scheduled?: string; task_created?: string; document_uploaded?: string; milestone_created?: string; milestone_updated?: string; error?: string; q?: string; status?: string }> }) {
   const params = await searchParams;
+  const searchTerm = (params.q || "").trim().slice(0, 80).replace(/[,%()_*\\.]/g, " ");
+  const selectedStatus = statuses.includes(params.status as (typeof statuses)[number]) ? params.status : "";
   let supabase;
   try { supabase = await createSupabaseServerClient(); }
   catch { return <main className="admin-empty"><h1>Platform configuration required</h1><p>Configure the Supabase environment before using the project register.</p></main>; }
@@ -24,8 +26,14 @@ export default async function AdminProjectsPage({ searchParams }: { searchParams
   const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", user.id);
   if (!roles?.some((item) => item.role === "owner")) redirect("/admin");
 
+  let projectQuery = supabase.from("projects").select("id,project_code,name,description,status,location_label,start_date,target_end_date,client_id,client_fee,currency_code").order("created_at", { ascending: false });
+  if (selectedStatus) projectQuery = projectQuery.eq("status", selectedStatus);
+  if (searchTerm) {
+    const term = `%${searchTerm}%`;
+    projectQuery = projectQuery.or([`project_code.ilike.${term}`, `name.ilike.${term}`, `description.ilike.${term}`, `location_label.ilike.${term}`].join(","));
+  }
   const [projectResult, clientResult, partnerResult] = await Promise.all([
-    supabase.from("projects").select("id,project_code,name,description,status,location_label,start_date,target_end_date,client_id,client_fee,currency_code").order("created_at", { ascending: false }).limit(100),
+    projectQuery.limit(100),
     supabase.from("clients").select("id,display_name,legal_name").limit(500),
     supabase.from("professional_partners").select("id,legal_name,trading_name,professional_category").order("created_at", { ascending: false }).limit(500),
   ]);
@@ -72,8 +80,13 @@ export default async function AdminProjectsPage({ searchParams }: { searchParams
       <section className="admin-main">
         <header className="admin-topbar"><div><span className="admin-breadcrumb">BABTEK / WORKSPACE / PROJECTS</span><h1>Project register</h1></div><div className="admin-top-actions"><Link className="admin-signout" href="/admin">Overview</Link><SignOutButton /></div></header>
         <div className="admin-welcome admin-register-welcome"><div><p className="admin-kicker">PROJECT DELIVERY CONTROL</p><h2>One coordinated view of every project.</h2><p>Track project status, client relationships and delivery timelines.</p></div><span className="admin-welcome-mark">▤</span></div>
+        <form method="get" action="/admin/projects" className="admin-panel enquiry-filter-bar project-filter-bar">
+          <label>Search projects<input type="search" name="q" placeholder="Project name, code, description or location" defaultValue={params.q || ""} maxLength={80}/></label>
+          <label>Project status<select name="status" defaultValue={selectedStatus}><option value="">All project statuses</option>{statuses.map((status)=><option key={status} value={status}>{status.replaceAll("_"," ")}</option>)}</select></label>
+          <div className="enquiry-filter-actions"><button type="submit">Apply filters</button><Link href="/admin/projects">Clear</Link></div>
+        </form>
         <section className="project-ops-overview">
-          <div className="project-ops-heading"><div><span>PORTFOLIO CONTROL / LIVE RECORDS</span><h2>Delivery command view</h2><p>A visual operating summary built from registered projects, milestones and tasks.</p></div><Link href="/admin/delivery">Portfolio intelligence ↗</Link></div>
+          <div className="project-ops-heading"><div><span>PORTFOLIO CONTROL / LIVE RECORDS</span><h2>Delivery command view</h2><p>{searchTerm || selectedStatus ? "Filtered project records and their linked milestones and tasks." : "A visual operating summary built from registered projects, milestones and tasks."}</p></div><Link href="/admin/delivery">Portfolio intelligence ↗</Link></div>
           <div className="project-ops-metrics">
             <article><span>PROJECTS IN VIEW</span><strong>{projects.length}</strong><small>{activeProjectCount} proposed / ongoing</small></article>
             <article><span>MILESTONE PROGRESS</span><strong>{averageProgress===null?"—":averageProgress+"%"}</strong><small>{milestoneRows.length} milestones · {trackedProjectCount} tracked projects</small></article>
