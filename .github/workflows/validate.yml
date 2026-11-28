@@ -28,6 +28,10 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
+      - name: Dependency security audit
+        run: |
+          npm audit --json > "$RUNNER_TEMP/npm-audit.json" || true
+          node -e 'const fs=require("fs"); const report=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+"/npm-audit.json","utf8")); const items=Object.entries(report.vulnerabilities||{}); if(!items.length){console.log("No dependency advisories reported."); process.exit(0);} for(const [name,v] of items){console.log(JSON.stringify({package:name,severity:v.severity,direct:v.isDirect,range:v.range,fixAvailable:v.fixAvailable}));} console.log("Total advisories:",JSON.stringify(report.metadata?.vulnerabilities||{}));'
       - name: Type-check
         run: npm run typecheck
       - name: Build application
