@@ -44,7 +44,7 @@ export async function GET(request:NextRequest){
   const roleList=(roles||[]).map((r:any)=>r.role);
   if(next==="/partner"&&!roleList.includes("partner"))return NextResponse.redirect(new URL("/partner/login?error=partner_not_linked",url.origin));
   if(next==="/client"&&!roleList.includes("client"))return NextResponse.redirect(new URL("/client/login?error=client_not_linked",url.origin));
-  if(next==="/admin"&&!roleList.includes("owner")&&!roleList.includes("administrator"))return NextResponse.redirect(new URL("/admin/login?error=admin_not_authorised",url.origin));
+  if(next==="/admin"&&!roleList.includes("owner"))return NextResponse.redirect(new URL("/admin/login?error=admin_not_authorised",url.origin));
  }
  return NextResponse.redirect(new URL(next,url.origin));
 }
