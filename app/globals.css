@@ -1447,3 +1447,31 @@ a{color:inherit;text-decoration:none}
 @media(max-width:1050px){.founder-command-page .founder-workspace-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.founder-command-page .admin-main{padding:0 14px 24px}.founder-command-page .admin-welcome{padding:24px 21px;min-height:165px}.founder-command-page .admin-welcome-mark{font-size:76px}.founder-command-page .founder-section-heading{align-items:flex-start;flex-direction:column}.founder-command-page .founder-workspace-grid{grid-template-columns:1fr}.founder-command-page .founder-workspace-card{min-height:0}.founder-command-page .admin-module-card>p{min-height:0}}
 @media(prefers-reduced-motion:reduce){.founder-command-page .admin-metric,.founder-command-page .founder-workspace-card,.founder-command-page .founder-enter-link span{transition:none}}
+
+
+/* Distinct visual identities for each founder workspace */
+.workspace-dashboard{position:relative;overflow:hidden}
+.workspace-dashboard:before{content:"";position:absolute;left:0;top:0;width:100%;height:4px;background:linear-gradient(90deg,#155b96,#4eb5e8)}
+.workspace-dashboard-clients:before{background:linear-gradient(90deg,#147d83,#63c4bd)}
+.workspace-dashboard-projects:before{background:linear-gradient(90deg,#315b9a,#8bb8ee)}
+.workspace-dashboard-finance:before{background:linear-gradient(90deg,#9b7130,#e1bd72)}
+.workspace-dashboard-technology:before{background:linear-gradient(90deg,#6546a5,#b49ae8)}
+.workspace-dashboard-corporate:before{background:linear-gradient(90deg,#155b96,#4eb5e8)}
+.workspace-dashboard-clients .wd-kicker,.workspace-dashboard-clients .wd-panel-head span{color:#147d83}
+.workspace-dashboard-projects .wd-kicker,.workspace-dashboard-projects .wd-panel-head span{color:#315b9a}
+.workspace-dashboard-finance .wd-kicker,.workspace-dashboard-finance .wd-panel-head span{color:#9b7130}
+.workspace-dashboard-technology .wd-kicker,.workspace-dashboard-technology .wd-panel-head span{color:#6546a5}
+.workspace-dashboard-clients .wd-kpi-line i,.workspace-dashboard-clients .wd-bar-row>div>i{background:linear-gradient(90deg,#147d83,#63c4bd)}
+.workspace-dashboard-projects .wd-kpi-line i,.workspace-dashboard-projects .wd-bar-row>div>i{background:linear-gradient(90deg,#315b9a,#8bb8ee)}
+.workspace-dashboard-finance .wd-kpi-line i,.workspace-dashboard-finance .wd-bar-row>div>i{background:linear-gradient(90deg,#9b7130,#e1bd72)}
+.workspace-dashboard-technology .wd-kpi-line i,.workspace-dashboard-technology .wd-bar-row>div>i{background:linear-gradient(90deg,#6546a5,#b49ae8)}
+.workspace-dashboard-clients .wd-tool>span{background:#e6f5f3;color:#147d83}
+.workspace-dashboard-projects .wd-tool>span{background:#edf2fa;color:#315b9a}
+.workspace-dashboard-finance .wd-tool>span{background:#f8f2e8;color:#9b7130}
+.workspace-dashboard-technology .wd-tool>span{background:#f1edfa;color:#6546a5}
+.workspace-dashboard .wd-tool{border-radius:6px;padding:11px 8px}
+.workspace-dashboard .wd-tool:hover{background:#f6f9fc}
+.workspace-dashboard .wd-chart-panel,.workspace-dashboard .wd-tools-panel{box-shadow:0 5px 16px #143b5b08}
+.workspace-dashboard .wd-kpi{transition:transform .18s ease,box-shadow .18s ease}
+.workspace-dashboard .wd-kpi:hover{transform:translateY(-2px);box-shadow:0 9px 20px #143b5b10}
+@media(prefers-reduced-motion:reduce){.workspace-dashboard .wd-kpi{transition:none}}
