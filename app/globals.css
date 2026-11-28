@@ -1277,3 +1277,21 @@ a{color:inherit;text-decoration:none}
 .client-project-card,.admin-comms-thread,.partner-task{scroll-margin-top:24px}
 @media(max-width:760px){.portal-visual-dashboard{grid-template-columns:1fr;gap:10px}.portal-visual-copy{max-width:none}.portal-visual-art{min-height:215px}.portal-visual-stats{gap:22px}.portal-building-window{width:85%;height:175px}.partner-board-window{width:90%}}
 @media(max-width:480px){.portal-section-nav{gap:3px;padding:6px}.portal-section-nav a{padding:8px 9px;font-size:9px}.portal-visual-dashboard{padding:20px 17px;min-height:0}.portal-visual-copy h2{font-size:25px}.portal-visual-stats{gap:17px}.portal-visual-stats strong{font-size:21px}.portal-visual-stats span{font-size:6px}.portal-visual-art{min-height:190px}.portal-building-window{height:155px}.portal-visual-floating-card{width:210px;padding:11px 12px}.partner-board-window{width:100%;min-height:175px;padding:10px}.partner-board-columns>div{padding:7px;min-height:80px}}
+
+
+/* Truthful, database-derived founder workspace record visualisation */
+.workspace-record-pulse{padding:24px 26px;background:linear-gradient(135deg,#f8fbff 0%,#fff 72%);border:1px solid #dce7f1;border-radius:12px}
+.wv-snapshot-label{font-size:8px;font-weight:900;letter-spacing:1.2px;color:#54718c}
+.wv-pulse-heading{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:23px 0 18px}
+.wv-pulse-heading small{font-size:9px;font-weight:900;letter-spacing:1.5px;color:#3978a8}
+.wv-pulse-heading h2{margin:7px 0 5px;font-size:clamp(19px,2.2vw,27px);font-weight:800;letter-spacing:-.7px;color:#153653}
+.wv-pulse-heading p{margin:0;max-width:600px;font-size:12px;line-height:1.65;color:#647b90}
+.wv-pulse-mark{display:grid;place-items:center;width:58px;height:58px;flex:0 0 58px;border-radius:14px;background:#e8f1fa;color:#15558b;font-size:25px;font-weight:900}
+.wv-record-bars{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 28px;padding:16px 0}
+.wv-record-row{min-width:0}
+.wv-record-meta{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:9px;color:#425e76;font-size:11px}
+.wv-record-meta strong{font-size:16px;color:#143b5b;font-variant-numeric:tabular-nums}
+.wv-record-track{height:7px;overflow:hidden;border-radius:99px;background:#e8eef4}
+.wv-record-track span{display:block;height:100%;min-width:0;border-radius:99px;background:linear-gradient(90deg,#1b5d91,#55a0cf);transition:width .35s ease}
+.wv-record-note{margin:12px 0 0;padding-top:13px;border-top:1px solid #e7edf3;font-size:10px;line-height:1.6;color:#71869a}
+@media(max-width:640px){.workspace-record-pulse{padding:16px}.wv-record-bars{grid-template-columns:1fr;gap:13px}.wv-pulse-heading{padding:17px 0 12px}.wv-pulse-mark{width:44px;height:44px;flex-basis:44px;font-size:19px}}
