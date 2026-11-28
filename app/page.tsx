@@ -1,13 +1,13 @@
 
 const divisions = [
-  { slug: "design-construction", number: "01", name: "Design & Construction", detail: "Architecture, engineering coordination, construction and project delivery.", group: "BUILT ENVIRONMENT" },
-  { slug: "interiors", number: "02", name: "Interiors", detail: "Interior architecture, space planning, furniture and finishing solutions.", group: "BUILT ENVIRONMENT" },
-  { slug: "real-estate", number: "03", name: "Real Estate", detail: "Property development, consultancy, acquisition and investment opportunities.", group: "BUILT ENVIRONMENT" },
-  { slug: "smart-solutions", number: "04", name: "Smart Solutions", detail: "Software, automation, digital transformation and professional technology.", group: "TECHNOLOGY & INNOVATION" },
-  { slug: "academy", number: "05", name: "Academy", detail: "Technical learning, CAD, BIM, visualisation and professional development.", group: "BUSINESS & ENTERPRISE" },
-  { slug: "ventures", number: "06", name: "Ventures", detail: "Strategic partnerships, business development and venture opportunities.", group: "BUSINESS & ENTERPRISE" },
-  { slug: "products-supply", number: "07", name: "Products & Supply", detail: "Building products, materials, procurement and equipment sourcing.", group: "BUSINESS & ENTERPRISE" },
-  { slug: "research-innovation", number: "08", name: "Research & Innovation", detail: "Sustainable systems, smart buildings, research and emerging technologies.", group: "TECHNOLOGY & INNOVATION" },
+  { slug: "design-construction", number: "01", name: "Design & Construction", detail: "Architecture, engineering coordination, construction and project delivery.", image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=900&q=85", group: "BUILT ENVIRONMENT" },
+  { slug: "interiors", number: "02", name: "Interiors", detail: "Interior architecture, space planning, furniture and finishing solutions.", image: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=900&q=85", group: "BUILT ENVIRONMENT" },
+  { slug: "real-estate", number: "03", name: "Real Estate", detail: "Property development, consultancy, acquisition and investment opportunities.", image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=900&q=85", group: "BUILT ENVIRONMENT" },
+  { slug: "smart-solutions", number: "04", name: "Smart Solutions", detail: "Software, automation, digital transformation and professional technology.", image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=900&q=85", group: "TECHNOLOGY & INNOVATION" },
+  { slug: "academy", number: "05", name: "Academy", detail: "Technical learning, CAD, BIM, visualisation and professional development.", image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=85", group: "BUSINESS & ENTERPRISE" },
+  { slug: "ventures", number: "06", name: "Ventures", detail: "Strategic partnerships, business development and venture opportunities.", image: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=900&q=85", group: "BUSINESS & ENTERPRISE" },
+  { slug: "products-supply", number: "07", name: "Products & Supply", detail: "Building products, materials, procurement and equipment sourcing.", image: "https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=900&q=85", group: "BUSINESS & ENTERPRISE" },
+  { slug: "research-innovation", number: "08", name: "Research & Innovation", detail: "Sustainable systems, smart buildings, research and emerging technologies.", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=85", group: "TECHNOLOGY & INNOVATION" },
 ];
 
 export default function HomePage() {
@@ -57,10 +57,10 @@ export default function HomePage() {
           <div className="division-grid">
             {divisions.map((division) => (
               <article className="division-card" key={division.number}>
-                <div className="division-meta"><span>{division.number}</span><span>{division.group}</span></div>
-                <h3>BABTEK {division.name}</h3>
+                <div className="division-image" role="img" aria-label={division.name + " visual reference"} style={{ backgroundImage: `url(${division.image})` }}><span>{division.number}</span><small>{division.group}</small></div>
+                <div className="division-card-copy"><h3>BABTEK {division.name}</h3>
                 <p>{division.detail}</p>
-                <a href={`/divisions/${division.slug}`} aria-label={`Explore BABTEK ${division.name}`}>Explore division <span aria-hidden="true">↗</span></a>
+                <a href={`/divisions/${division.slug}`} aria-label={`Explore BABTEK ${division.name}`}>Explore division <span aria-hidden="true">↗</span></a></div>
               </article>
             ))}
           </div>
@@ -75,13 +75,25 @@ export default function HomePage() {
           <div><p className="eyebrow">SELECTED WORK</p><h2 className="section-heading">Ideas taking<br /><span>shape.</span></h2></div>
           <div className="project-copy"><p>Our portfolio will present verified projects, design proposals and coordinated assignments across the company's areas of activity.</p><p className="project-status">Every entry will be clearly identified by its status: proposed, ongoing or completed.</p><a className="text-link" href="#contact">Discuss a project <span aria-hidden="true">→</span></a></div>
         </div>
-        <div className="container portfolio-placeholder"><div><span>PROJECT PORTFOLIO</span><strong>Verified BABTEK project photography and case studies will appear here.</strong></div></div>
+        <div className="container capability-gallery">
+          <article className="capability-feature"><div className="capability-photo capability-photo-architecture"/><div><span>01 / BUILT ENVIRONMENT</span><strong>Spaces shaped by thoughtful design.</strong><p>Architectural and engineering coordination, planned around each project's brief and delivery requirements.</p></div></article>
+          <div className="capability-side">
+            <article><div className="capability-photo capability-photo-interior"/><span>02 / INTERIOR ENVIRONMENTS</span><strong>Purposeful spaces. Considered details.</strong></article>
+            <article><div className="capability-photo capability-photo-digital"/><span>03 / TECHNOLOGY & INNOVATION</span><strong>Connected tools for modern work.</strong></article>
+          </div>
+          <p className="gallery-disclaimer">Visual references illustrate areas of interest and capability—not a claim that these are completed BABTEK projects. Verified project case studies will be published separately with their correct status.</p>
+        </div>
       </section>
 
       <section className="technology-section section-space" id="technology">
         <div className="container technology-grid">
           <div><p className="eyebrow eyebrow-light">THE NEXT FRONTIER</p><h2 className="section-heading section-heading-light">Professional expertise.<br /><span>Powered by technology.</span></h2></div>
-          <div><p>BABTEK's technology direction includes digital tools and proprietary products intended to improve how projects, professional workflows and business operations are managed.</p><div className="product-list"><span>BABTEK AEC Workspace</span><span>BABTEK Commercial</span><span>CADWAL-X</span><span>WAL-X Portfolio</span><span>BABTEK AI & future platforms</span></div><p className="technology-note">Product concepts and development initiatives will be labelled accurately until officially released.</p></div>
+          <div><p>BABTEK's technology direction includes digital tools and proprietary products intended to improve how projects, professional workflows and business operations are managed.</p><div className="tech-ecosystem-visual" aria-label="Illustrative BABTEK technology ecosystem">
+            <div className="tech-ecosystem-core">BABTEK<br/><b>CORE</b></div>
+            {["AEC WORKSPACE","COMMERCIAL","CADWAL-X","WAL-X PORTFOLIO","BABTEK AI","BABTEK-OS"].map((item,i)=><span className={`tech-ecosystem-node node-${i}`} key={item}>{item}</span>)}
+            <svg viewBox="0 0 520 300" aria-hidden="true"><path d="M260 150 L80 55 M260 150 L440 55 M260 150 L55 150 M260 150 L465 150 M260 150 L80 245 M260 150 L440 245"/></svg>
+          </div>
+          <p className="technology-note">These are product concepts and development initiatives, not claims of currently released software.</p><p className="technology-note">Product concepts and development initiatives will be labelled accurately until officially released.</p></div>
         </div>
       </section>
 
