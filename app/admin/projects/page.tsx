@@ -63,7 +63,7 @@ export default async function AdminProjectsPage({ searchParams }: { searchParams
   const overdueTaskCount = taskRows.filter((task)=>task.due_date && task.due_date < new Date().toISOString().slice(0,10) && !["completed","cancelled"].includes(task.status)).length;
 
   return (
-    <main className="admin-shell">
+    <main className="admin-shell admin-register-page admin-project-register-page">
       <aside className="admin-sidebar">
         <a href="/admin" className="admin-sidebar-brand"><span className="admin-brand-mark">B</span><span><strong>BABTEK CORE</strong><small>ENTERPRISE PLATFORM</small></span></a>
         <p className="admin-nav-label">WORKSPACE</p>
